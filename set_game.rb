@@ -1,5 +1,6 @@
 #Author: Mike, Channing
 #Create Date: 5/22
+<<<<<<< HEAD
 require_relative 'card'
 class SetGame
 
@@ -20,12 +21,20 @@ class SetGame
 	    end
 	  end
 		deck
+=======
+class SetGame
+
+	def get_deck
+		print(valid_syntax? true)
+		return (1..81).to_a
+>>>>>>> 354780f082354f06aa42392bc3aa70970c19905f
 	end
 
 	def shuffle(deck)
 		deck.shuffle!
 	end
 
+<<<<<<< HEAD
 	#Author: Gail
 	def get_hand(deck, top_card)
 		hand = []
@@ -41,6 +50,13 @@ class SetGame
 		for card in 0..hand.size-1
 	    puts "#{card+1}: #{hand[card].color}, #{hand[card].shading}, #{hand[card].symbol}, #{hand[card].number}"
 	  end
+=======
+	#change
+	def get_hand(deck, top_card)
+	end
+
+	def show_hand(hand)
+>>>>>>> 354780f082354f06aa42392bc3aa70970c19905f
 	end
 
 	def find_set(hand)
@@ -63,6 +79,7 @@ class SetGame
 	def update(hand,user_input,top_card)
 	end
 
+<<<<<<< HEAD
 	#Author: Gail
 	def replace3(deck,hand,user_input,top_card)
 		for card in 0..2
@@ -79,11 +96,18 @@ class SetGame
 	    top_card += 1
 	  end
 		return hand, top_card
+=======
+	def replace3(hand,user_input,top_card)
+	end
+
+	def add3(hand,top_card)
+>>>>>>> 354780f082354f06aa42392bc3aa70970c19905f
 	end
 
 	game = SetGame.new
 	deck = game.get_deck
 	game.shuffle(deck)
+<<<<<<< HEAD
 	top_card = 0
 	hand, top_card = game.get_hand(deck,top_card)
 	game.show_hand(hand)
@@ -111,3 +135,16 @@ class SetGame
 	# end
 	# print "Good Game"
 end
+=======
+	hand, top_card=game.get_hand(deck,top_card)
+	game.show_hand(hand)
+	hint=game.find_set(hand)
+	while(hand.length>0)
+		user_input = game.get_user_input
+		valid_set = game.check_set?user_input
+		top_card = update(hand,user_input,top_card)
+	end
+	print "Good Game"
+end
+
+>>>>>>> 354780f082354f06aa42392bc3aa70970c19905f

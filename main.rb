@@ -3,8 +3,11 @@ require_relative 'get_deck'
 require_relative 'print_deck'
 require_relative 'get_hand'
 require_relative 'show_hand'
+<<<<<<< HEAD
 require_relative 'replace3'
 require_relative 'add3'
+=======
+>>>>>>> 354780f082354f06aa42392bc3aa70970c19905f
 
 $deck=[]
 $Colors=['red','purple','green']
@@ -16,6 +19,7 @@ get_deck
 $deck = $deck.shuffle
 print_deck
 
+<<<<<<< HEAD
 puts "show original hand"
 $hand = []
 get_hand
@@ -35,3 +39,10 @@ add3
 show_hand
 puts "top card index = #{$top_card}"
 puts ""
+=======
+$hand = []
+get_hand
+show_hand
+$top_card += 1
+puts $top_card
+>>>>>>> 354780f082354f06aa42392bc3aa70970c19905f
