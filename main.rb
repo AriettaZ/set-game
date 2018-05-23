@@ -11,3 +11,9 @@ $Numbers=['1','2','3']
 get_deck
 $deck=$deck.shuffle
 print_deck
+
+$hand = []
+get_hand
+show_hand
+$top_card += 1
+puts $top_card
