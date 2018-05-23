@@ -1,10 +1,13 @@
+
 class Card
-  def initialize(color, shading, shape,number)
+  # initialize Card class
+  def initialize(color, shading, shape, number)
       @color = color
       @shading = shading
       @symbol = shape
       @number = number
   end
+  # get instance variables
   attr_reader :color
   attr_reader :shading
   attr_reader :symbol
