@@ -2,7 +2,6 @@
 #Create Date: 5/22
 #Edit: Mike 5/23 move global variables from main.rb to card.rb
 
-$deck=[]
 $Colors=['red','purple','green']
 $Shadings=['striped','solid','open']
 $Symbols=['diamond','squiggle','oval']

@@ -1,3 +1,4 @@
+#Description: Check in order, whether the provided cards form a set
 #Author: Mike
 #Create Date: 5/23
 
@@ -17,19 +18,25 @@ def check_attr?(attr,card1,card2,card3)
 	return true
 end
 
-def check_set?(user_input,hand)
-	if user_input.length==0
-		return false
+def check_set?(card1, card2, card3, check_order)
+	
+	result=true
+	for i in 0...check_order.length
+		case check_order[i]
+			when "color"
+				result = result && check_attr?(:color, card1, card2, card3)
+			when "shading"
+				result = result && check_attr?(:shading, card1, card2, card3)
+			when "symbol"
+				result = result && check_attr?(:symbol, card1, card2, card3)
+			when "number"
+				result = result && check_attr?(:number, card1, card2, card3)
+		end
+		if(result==false)
+			return false
+		end
 	end
-	
-	card1 = hand[user_input[0]]
-	card2 = hand[user_input[1]]
-	card3 = hand[user_input[2]]
-	
-	result = check_attr?(:color, card1, card2, card3)
-	result = result && check_attr?(:shading, card1, card2, card3)
-	result = result && check_attr?(:symbol, card1, card2, card3)
-	result = result && check_attr?(:number, card1, card2, card3)
+	return result
 	
 end
 
