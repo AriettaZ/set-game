@@ -15,4 +15,4 @@ Also list if people worked together (pair programmed) on a particular section.
   * Group came up with the overall algorithm and structure together
   * Channing and Mike: sample testing plan
   * Ariel and Gail: Card class and deck generation
-  * 
+  *
