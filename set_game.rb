@@ -149,54 +149,7 @@ class SetGame
 	# game.show_hand(hand)
 	# puts top_card
 
-	# test update, user no set, hand add 3
-	puts ""
-	puts "show hand after user_input='none',hand.length<21,top_card< 81:"
-	hand, top_card = game.update(hand,"none",top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-	# test update, user wrong set, don't change hand
-	puts ""
-	puts "show hand after user_input='[2, 5, 9]',hand.length<21,top_card< 81:"
-	game.update(hand,'[2,5,9]',top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-	# test update, user correct set, replace 3 cards
-	puts ""
-	puts "show hand after user_input='[19, 20, 21]'(correct set),hand.length<21,top_card< 81:"
-	card1=Card.new('red', 'solid', 'oval', '3')
-	card2=Card.new('red', 'solid', 'oval', '2')
-	card3=Card.new('red', 'solid', 'oval', '1')
-	hand.push(card1)
-	hand.push(card2)
-	hand.push(card3)
-	top_card=top_card+3
-	game.update(hand,'[19, 20, 21]',top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-	# test update,user no set and has 21 on hand, don't change hand
-	puts ""
-	puts "show hand after user_input='none',hand.length=21,top_card< 81:"
-	game.update(hand,'none',top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-
+	
 
 	# hint=game.find_set(hand)
 	# while(hand.length>0)
