@@ -172,7 +172,7 @@ end
 		elsif (hand.length == 21 or top_card==81)&&user_input=='none'
 			puts 'At least one set'
 		else
-			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],hand)
+			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
 				puts 'Correct set! 3 cards will be replaced'
 				hand, top_card = replace3(deck,hand,user_input,top_card)
 			else

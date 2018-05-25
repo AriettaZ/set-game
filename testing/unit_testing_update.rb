@@ -20,6 +20,7 @@ class TestUpdate < Test::Unit::TestCase
   9. user_input is correct set, hand.length=21,top_card< 81
   10. user_input is correct set,hand.length=21,top_card= 81
 =end
+  Card = Struct.new(:color,:shading,:symbol,:number)
   CARD1 = Card.new('red','open','oval','1')
   CARD2 = Card.new('red','open','oval','2')
   CARD3 = Card.new('red','open','oval','3')
@@ -43,14 +44,15 @@ class TestUpdate < Test::Unit::TestCase
   CARD21 = Card.new('green','solid','diamond','2')
   CARD22 = Card.new('green','solid','diamond','3')
   CARD_21CARDS= [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
-  CARD_3CARDS= [CARD1, CARD4, CARD5]
+  CORRECT_SET= [0, 1, 2]
+  WRONG_SET=[0, 1, 3]
   CARD_18CARDS= [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18]
   CARD_12CARDS= [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
 
   def test_update_1
     game = SetGame.new
     deck= game.get_deck
-    hand = CARD_12CARDS
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
     top_card = 12
     hand, top_card = game.update hand,"none",top_card,deck
     assert_equal deck[12], hand[12]
@@ -62,7 +64,7 @@ class TestUpdate < Test::Unit::TestCase
   def test_update_2
     game = SetGame.new
     deck= game.get_deck
-    hand = CARD_18CARDS
+    hand =[CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18]
     top_card = 54
     hand, top_card = game.update hand,"none",top_card,deck
     assert_equal deck[54], hand[18]
@@ -74,7 +76,7 @@ class TestUpdate < Test::Unit::TestCase
   def test_update_3
     game = SetGame.new
     deck= game.get_deck
-    hand = CARD_21CARDS
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
     top_card = 57
     hand, top_card = game.update hand,"none",top_card,deck
     assert_equal CARD19, hand[18]
@@ -86,8 +88,9 @@ class TestUpdate < Test::Unit::TestCase
   def test_update_4
     game = SetGame.new
     deck= game.get_deck
-    hand = CARD_18CARDS
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18]
     top_card = 81
+    assert_equal 18, hand.size
     hand, top_card = game.update hand,"none",top_card,deck
     assert_equal CARD16, hand[15]
     assert_equal CARD17, hand[16]
@@ -96,105 +99,64 @@ class TestUpdate < Test::Unit::TestCase
     assert_equal 81, top_card
   end
 
-
-=begin
-	Test plan for testing show_hand method:
-	1. user_input='none' and correct,hand.length<21,top_card< 81
-	2. user_input='none' and wrong,hand.length=21,top_card< 81
-	3. user_input='none' and wrong,hand.length=21,top_card= 81
-  4. user_input is wrong set,hand.length<21,top_card< 81
-	5. user_input is wrong set, hand.length=21,top_card< 81
-	6. user_input is wrong set,hand.length=21,top_card= 81
-  7. user_input is correct set,hand.length<21,top_card< 81
-  8. user_input is correct set, hand.length=21,top_card< 81
-  9. user_input is correct set,hand.length=21,top_card= 81
-=end
-# test update, user no set, hand add 3
-# puts ""
-# puts "show hand after user_input='none',hand.length<21,top_card< 81:"
-# hand, top_card = game.update(hand,"none",top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-# # test update, user wrong set, don't change hand
-# puts ""
-# puts "show hand after user_input='[2, 5, 9]',hand.length<21,top_card< 81:"
-# game.update(hand,'[2,5,9]',top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-# # test update, user correct set, replace 3 cards
-# puts ""
-# puts "show hand after user_input='[19, 20, 21]'(correct set),hand.length<21,top_card< 81:"
-# card1=Card.new('red', 'solid', 'oval', '3')
-# card2=Card.new('red', 'solid', 'oval', '2')
-# card3=Card.new('red', 'solid', 'oval', '1')
-# hand.push(card1)
-# hand.push(card2)
-# hand.push(card3)
-# top_card=top_card+3
-# game.update(hand,'[19, 20, 21]',top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-# # test update, user no set, hand add 3
-# puts ""
-# puts "show hand after user_input='none',hand.length<21,top_card< 81:"
-# hand, top_card = game.update(hand,"none",top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-# # test update, user wrong set, don't change hand
-# puts ""
-# puts "show hand after user_input='[2, 5, 9]',hand.length<21,top_card< 81:"
-# game.update(hand,'[2,5,9]',top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-# # test update, user correct set, replace 3 cards
-# puts ""
-# puts "show hand after user_input='[19, 20, 21]'(correct set),hand.length<21,top_card< 81:"
-# card1=Card.new('red', 'solid', 'oval', '3')
-# card2=Card.new('red', 'solid', 'oval', '2')
-# card3=Card.new('red', 'solid', 'oval', '1')
-# hand.push(card1)
-# hand.push(card2)
-# hand.push(card3)
-# top_card=top_card+3
-# game.update(hand,'[19, 20, 21]',top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-# # test update,user no set and has 21 on hand, don't change hand
-# puts ""
-# puts "show hand after user_input='none',hand.length=21,top_card< 81:"
-# game.update(hand,'none',top_card,deck)
-# game.show_hand(hand)
-# print "top_card is ",top_card
-# puts ""
-# print "hand.length is ",hand.length
-# puts ""
-#
-
-
-
-
+  def test_update_5
+    game = SetGame.new
+    deck= game.get_deck
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
+    top_card = 12
+    assert_equal false, game.check_set?(hand[WRONG_SET[0]], hand[WRONG_SET[1]],hand[WRONG_SET[2]],["color","shading","symbol","number"])
+    hand, top_card = game.update hand,WRONG_SET,top_card,deck
+    assert_equal 12, hand.size
+    assert_equal 12, top_card
+  end
+  def test_update_6
+    game = SetGame.new
+    deck= game.get_deck
+    hand =[CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
+    top_card = 54
+    assert_equal false, game.check_set?(hand[WRONG_SET[0]], hand[WRONG_SET[1]],hand[WRONG_SET[2]],["color","shading","symbol","number"])
+    hand, top_card = game.update hand,WRONG_SET,top_card,deck
+    assert_equal 21, hand.size
+    assert_equal 54, top_card
+  end
+  def test_update_7
+    game = SetGame.new
+    deck= game.get_deck
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
+    top_card = 81
+    assert_equal false, game.check_set?(hand[WRONG_SET[0]], hand[WRONG_SET[1]],hand[WRONG_SET[2]],["color","shading","symbol","number"])
+    hand, top_card = game.update hand,WRONG_SET,top_card,deck
+    assert_equal 21, hand.size
+    assert_equal 81, top_card
+  end
+  def test_update_8
+    game = SetGame.new
+    deck= game.get_deck
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
+    top_card = 12
+    assert_equal true, game.check_set?(hand[CORRECT_SET[0]], hand[CORRECT_SET[1]],hand[CORRECT_SET[2]],["color","shading","symbol","number"])
+    hand, top_card = game.update hand,CORRECT_SET,top_card,deck
+    assert_equal 12, hand.size
+    assert_equal 15, top_card
+  end
+  def test_update_9
+    game = SetGame.new
+    deck= game.get_deck
+    hand =[CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
+    top_card = 54
+    assert_equal true, game.check_set?(hand[CORRECT_SET[0]], hand[CORRECT_SET[1]],hand[CORRECT_SET[2]],["color","shading","symbol","number"])
+    hand, top_card = game.update hand,CORRECT_SET,top_card,deck
+    assert_equal 21, hand.size
+    assert_equal 57, top_card
+  end
+  def test_update_10
+    game = SetGame.new
+    deck= game.get_deck
+    hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
+    top_card = 81
+    assert_equal true, game.check_set?(hand[CORRECT_SET[0]], hand[CORRECT_SET[1]],hand[CORRECT_SET[2]],["color","shading","symbol","number"])
+    hand, top_card = game.update hand,CORRECT_SET,top_card,deck
+    assert_equal 18, hand.size
+    assert_equal 81, top_card
+  end
 end
