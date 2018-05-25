@@ -3,18 +3,17 @@
 require_relative 'card'
 class SetGame
 
-  #Author: Ariel
+ 	#Author: Ariel
+	#Create date: 5/21
+	#Edit: Mike 5/24
 	def get_deck
 		deck = []
-		colors=['red','purple','green']
-		shadings=['striped','solid','open']
-		symbols=['diamond','squiggle','oval']
-		numbers=['1','2','3']
-		for color_index in 0..2
-			for shading_index in 0..2
-				for symbol_index in 0..2
-					for number_index in 0..2
-						deck.push(Card.new(colors[color_index], shadings[shading_index], symbols[symbol_index], numbers[number_index]))
+		card_struct = Struct.new(:color,:shading,:symbol,:number)
+		for color in $Colors
+			for shading in $Shadings
+				for symbol in $Symbols
+					for number in $Numbers
+						deck.push(card_struct.new(color, shading, symbol, number))
 					end
 				end
 			end
@@ -105,6 +104,7 @@ end
 		# user input must be 0 or 3; done if 0 case
 		return true if user_input.length == 0
 		return false if user_input.length != 3
+		return false if user_input[0]==user_input[1] || user_input[1]==user_input[2] || user_input[0]==user_input[2]
 		# user input must only contain integers (between 0 and hand.length)
 		user_input.all? {|i| (i.is_a?(Integer) && i <= hand_length-1 && i >= 0)}
 	end
@@ -122,13 +122,9 @@ end
 
 	def check_attr?(attr,card1,card2,card3)
 		if(card1[attr]==card2[attr])
-			if(card2[attr]!=card3[attr])
-				return false
-			end
+			return false if(card2[attr]!=card3[attr])
 		else
-			if(card1[attr]==card3[attr] || card2[attr]==card3[attr])
-				return false
-			end
+			return false if(card1[attr]==card3[attr] || card2[attr]==card3[attr])
 		end
 		return true
 	end
@@ -156,12 +152,14 @@ end
 				when "number"
 					result = check_attr?(:number, card1, card2, card3)
 			end
-			if(result==false)
-				return false
-			end
+			
+			return false if(result==false)
 		end
 		return true
+<<<<<<< HEAD
+=======
 
+>>>>>>> e46a62170428c4fc36d87752f3d318c58d85b919
 	end
 
 	#Author: Ariel
@@ -206,5 +204,31 @@ end
 			top_card += 1
 		}
 		return hand, top_card
+	end
+
+	#Author: Mike
+	#Create Date: 5/23
+	#Edit: 5/24 by Mike, minor changes
+=begin
+	Requires: check_table.class = Array,
+				for combination in check_table, combination.class = Array, combination.length = 3,
+				∀x∈combination, x.class=Card
+			  score.class = Array
+				for element in score, element.class = Array, element.length = 2
+				for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
+	Returns: True if there is at least a set in check_table combinations and false otherwise
+	Description: Check if there exist a set in the check_table
+=end
+	def set_exist(check_table,score)
+
+		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
+		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
+
+		for combination in check_table
+			if check_set?(combination[0],combination[1],combination[2],order)
+				return combination
+			end
+		end
+		return []
 	end
 end
