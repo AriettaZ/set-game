@@ -152,14 +152,10 @@ end
 				when "number"
 					result = check_attr?(:number, card1, card2, card3)
 			end
-			
+
 			return false if(result==false)
 		end
 		return true
-<<<<<<< HEAD
-=======
-
->>>>>>> e46a62170428c4fc36d87752f3d318c58d85b919
 	end
 
 	#Author: Ariel
