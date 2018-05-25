@@ -72,9 +72,111 @@ class SetGame
 
 =end
 
+
+=begin
+	Author: Mike
+	Date: 5/25
+	Editor: N/A
+
+	Description: Return a valid array of categories and their scores.
+
+	Requires: hand_Stat filled up
+	Updates: N/A
+	Returns: [["color",color_score],["shading",shading_score],["symbol",symbol_score],["number",number_score]]
+		 where for all scores, 0<=scores<=220
+=end
+def get_score(hand_stat)
+	score=[['color',0],['shading',0],['symbol',0],['number',0]]
+	
+	score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
+	score[0][1] += $Colors.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum + (len*(len-1)*(len-2).to_f/6)
+	end
+	
+	score[1][1] = $Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	score[1][1] += $Shadings.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum+(len*(len-1)*(len-2).to_f/6)
+	end
+	
+	score[2][1] =  $Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	score[2][1] += $Symbols.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum+(len*(len-1)*(len-2).to_f/6)
+	end
+	
+	score[3][1] =  $Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	score[3][1] += $Numbers.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum+(len*(len-1)*(len-2).to_f/6)
+	end
+	score
+end
+
+=begin
+	Author: Mike
+	Date: 5/25
+	Editor:
+
+	Description: Return a check table consists of possible combinations of set from hand.
+	Requires: |hand_stat| = |hand|*3
+				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
+				for all card in hand_stat[:attribute], card has attribute
+				hand_stat = {
+								attribute1:[Card, Card, Card]
+								attribute2:[Card, Card, Card]
+								...
+								attribute3:[Card, Card, Card]
+							}
+				
+				score.class = Array
+					for element in score, element.class = Array, element.length = 2
+					for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
+	Updates: N/A
+	Returns: [[Card, Card, Card],[Card,Card,Card],...,[Card,Card,Card]]
+		 where each [Card,Card,Card] is a possible combination of set from hand.
+
+=end
+
+def get_check_table(hand_stat,score)
+	sortedScore = score.sort{|a,b| a[1]<=>b[1]}
+	category = sortedScore[0][0]
+	check_catg = []
+	case category
+		when "color"
+			category = $Colors 
+		when "shading"
+			category = $Shadings
+		when "symbol"
+			category = $Symbols
+		when "number"
+			category = $Numbers
+	end
+	
+	check_table = []
+	
+	category.each {
+		|attr|
+		check_table.push(*hand_stat[attr.intern].combination(3).to_a)
+	}
+	
+	attr_card_table = category.map do
+		|attr|
+		hand_stat[attr.intern]
+	end
+
+	check_table.push *(attr_card_table[0].product(attr_card_table[1],attr_card_table[2]))
+end
+
+
 =begin
 	Author: Channing
-	Date: 2/24
+	Date: 5/24
 	Editor:
 
 	Description: Returns a valid array representation of user's chosen

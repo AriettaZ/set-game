@@ -26,7 +26,7 @@ class Card
     return @color if attribute==:color
     return @shading if attribute==:shading
     return @symbol if attribute==:symbol
-    return @solid if attribute==:number
+    return @number if attribute==:number
   end
   
 end
