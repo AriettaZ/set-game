@@ -37,6 +37,7 @@ class SetGame
 	end
 
 	#Author: Gail
+	#Edit: Mike 5/24
 	def show_hand(hand)
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
@@ -156,10 +157,6 @@ end
 			return false if(result==false)
 		end
 		return true
-<<<<<<< HEAD
-=======
-
->>>>>>> e46a62170428c4fc36d87752f3d318c58d85b919
 	end
 
 	#Author: Ariel
