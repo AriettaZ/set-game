@@ -1,5 +1,6 @@
 #Author: Mike
 #Creation Date: 5/23
+#Edit: Mike 5/
 
 require_relative "../set_game"
 require "test/unit"
@@ -33,19 +34,18 @@ class TestCheckSet < Test::Unit::TestCase
 	$hand=[]
 	i=0
 	number_index=0
-	$card = Struct.new(:color,:shading,:symbol,:number)
 	for color in ["red","purple"]
 		for shading in ["striped","solid"]
 			for symbol in $Symbols
-				$hand[i]=$card.new(color, shading, symbol, "1")
+				$hand[i]=Card.new(color, shading, symbol, "1")
 				i += 1
 			end
 		end
 	end
-	$hand.push($card.new("green","open","oval","2"))
-	$hand.push($card.new("purpul","solid","squiggle","3"))
-	$hand.push($card.new("green","striped","diamond","1"))
-	$hand.push($card.new("green","striped","quiggle","2"))
+	$hand.push(Card.new("green","open","oval","2"))
+	$hand.push(Card.new("purpul","solid","squiggle","3"))
+	$hand.push(Card.new("green","striped","diamond","1"))
+	$hand.push(Card.new("green","striped","quiggle","2"))
 	
 	#	0: red, striped, diamond, 1
 	#	1: red, striped, squiggle, 1

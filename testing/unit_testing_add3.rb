@@ -1,7 +1,7 @@
 =begin
 	Author: Gail
 	Created: 5/23
-	Editor: N/A
+	Editor: Mike 5/25
 	Test plan for testing add3 method: (use deck.size = 12)
 	- Add 3 cards to an empty hand:
 		1. top_card = 0

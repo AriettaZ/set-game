@@ -20,7 +20,6 @@ class TestUpdate < Test::Unit::TestCase
   9. user_input is correct set, hand.length=21,top_card< 81
   10. user_input is correct set,hand.length=21,top_card= 81
 =end
-  Card = Struct.new(:color,:shading,:symbol,:number)
   CARD1 = Card.new('red','open','oval','1')
   CARD2 = Card.new('red','open','oval','2')
   CARD3 = Card.new('red','open','oval','3')
@@ -54,7 +53,7 @@ class TestUpdate < Test::Unit::TestCase
     deck= game.get_deck
     hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
     top_card = 12
-    hand, top_card = game.update hand,"none",top_card,deck
+    hand, top_card = game.update hand,[],top_card,deck
     assert_equal deck[12], hand[12]
     assert_equal deck[13], hand[13]
     assert_equal deck[14], hand[14]
@@ -66,7 +65,7 @@ class TestUpdate < Test::Unit::TestCase
     deck= game.get_deck
     hand =[CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18]
     top_card = 54
-    hand, top_card = game.update hand,"none",top_card,deck
+    hand, top_card = game.update hand,[],top_card,deck
     assert_equal deck[54], hand[18]
     assert_equal deck[55], hand[19]
     assert_equal deck[56], hand[20]
@@ -78,7 +77,7 @@ class TestUpdate < Test::Unit::TestCase
     deck= game.get_deck
     hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18,CARD19, CARD20, CARD21]
     top_card = 57
-    hand, top_card = game.update hand,"none",top_card,deck
+    hand, top_card = game.update hand,[],top_card,deck
     assert_equal CARD19, hand[18]
     assert_equal CARD20, hand[19]
     assert_equal CARD21, hand[20]
@@ -91,7 +90,7 @@ class TestUpdate < Test::Unit::TestCase
     hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18]
     top_card = 81
     assert_equal 18, hand.size
-    hand, top_card = game.update hand,"none",top_card,deck
+    hand, top_card = game.update hand,[],top_card,deck
     assert_equal CARD16, hand[15]
     assert_equal CARD17, hand[16]
     assert_equal CARD18, hand[17]
