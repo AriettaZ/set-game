@@ -208,4 +208,38 @@ class SetGame
 		end
 		return []
 	end
+
+	# game = SetGame.new
+	# deck = game.get_deck
+	# game.shuffle(deck)
+	# top_card = 0
+	# hand, top_card = game.get_hand(deck,top_card)
+	# game.show_hand(hand)
+	# puts top_card
+	#
+	# #test replace3
+	# puts ""
+	# puts "show hand after replace card 2, 5, 9:"
+	# user_input = [2, 5, 9]
+	# top_card = 81
+	# hand, top_card = game.replace3(deck, hand, user_input, top_card)
+	# game.show_hand(hand)
+	# puts top_card
+
+	# #test add3
+	# puts ""
+	# puts "show hand after add 3 cards:"
+	# hand, top_card = game.add3(deck, hand, top_card)
+	# game.show_hand(hand)
+	# puts top_card
+
+	
+
+	# hint=game.find_set(hand)
+	# while(hand.length>0)
+	# 	user_input = game.get_user_input
+	# 	valid_set = game.check_set?user_input
+	# 	top_card = update(hand,user_input,top_card)
+	# end
+	# print "Good Game"
 end
