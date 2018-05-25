@@ -4,7 +4,7 @@
 #Edit: 5/24 by Mike, Minor changes, add documentation
 
 =begin
-Requires: card1.class=card2.class=card3.class=Card, 
+Requires: card1.class=card2.class=card3.class=Card,
 			attr∈Set(:color,:shading,:symbol,:number)
 Returns: True if the provided attribute and cards follow set convention and false otherwise
 Description: Check whether the provided attribute and cards follows Set convention
@@ -28,13 +28,13 @@ end
 
 
 =begin
-Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4, 
+Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4,
 			∀x∈check_order, x∈Set("color","shading","symbol","number")
 Returns: True if the provided cards form a set, false otherwise
 Description: Check in order, whether the provided cards form a set
 =end
 
-def check_set?(card1, card2, card3, check_order)	
+def check_set?(card1, card2, card3, check_order)
 	for order in check_order
 		case order
 			when "color"
@@ -51,6 +51,5 @@ def check_set?(card1, card2, card3, check_order)
 		end
 	end
 	return true
-	
-end
 
+end

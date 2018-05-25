@@ -3,7 +3,7 @@
 #Edit: 5/24 Mike
 
 def print_deck (deck)
-	deck.length.times {|index| 
+	deck.length.times {|index|
 		puts deck[index].color
 		puts deck[index].shading
 		puts deck[index].symbol

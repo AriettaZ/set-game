@@ -5,7 +5,7 @@
 require_relative "check_set"
 
 =begin
-Requires: check_table.class = Array, 
+Requires: check_table.class = Array,
 			for combination in check_table, combination.class = Array, combination.length = 3,
 			∀x∈combination, x.class=Card
 		  score.class = Array
@@ -19,7 +19,7 @@ def set_exist(check_table,score)
 
 	sortedScore = score.sort{|a,b| a[1]<=>b[1]}
 	order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
-	
+
 	for combination in check_table
 		if check_set?(combination[0],combination[1],combination[2],order)
 			return combination

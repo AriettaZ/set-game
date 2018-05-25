@@ -42,7 +42,7 @@ class SetGame
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
-			puts "#{card+1}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
+			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
 		}
 	end
 
@@ -62,7 +62,7 @@ class SetGame
 
 	Requires: N/A
 	Updates: N/A
-	Returns: [] || [Integer, Integer, Integer] 
+	Returns: [] || [Integer, Integer, Integer]
 		 where for all Integer : 0 < Integer < total_cards
 
 =end
@@ -182,90 +182,29 @@ end
 		return hand, top_card
 	end
 
+	#Require: top_card and hand.size are multiples of 3
 	#Author: Gail
-	def replace3(deck,hand,user_input,top_card)
-		if top_card < deck.size
-			for card in 0..2
-				hand[user_input[card] - 1] = deck[top_card]
-				top_card += 1
-			end
-		else
+	def replace3(deck, hand, user_input, top_card)
 			delete_count = 0
-			user_input.sort!
-			for card in 0..2
-				hand.delete_at(user_input[card] - 1 - delete_count)
-				delete_count += 1
-			end
-		end
+			3.times{ |card|
+				if top_card < deck.size
+					hand[user_input[card]] = deck[top_card]
+					top_card += 1
+				else
+					user_input.sort!
+					hand.delete_at(user_input[card] - delete_count)
+					delete_count += 1
+				end
+			}
 		return hand, top_card
 	end
 
 	#Author: Gail
 	def add3(deck,hand,top_card)
-		for card in 0..2
+		3.times {
 			hand.push(deck[top_card])
 			top_card += 1
-		end
+		}
 		return hand, top_card
 	end
-
-	#Author: Mike
-	#Create Date: 5/23
-	#Edit: 5/24 by Mike, minor changes
-=begin
-	Requires: check_table.class = Array,
-				for combination in check_table, combination.class = Array, combination.length = 3,
-				∀x∈combination, x.class=Card
-			  score.class = Array
-				for element in score, element.class = Array, element.length = 2
-				for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
-	Returns: True if there is at least a set in check_table combinations and false otherwise
-	Description: Check if there exist a set in the check_table
-=end
-	def set_exist(check_table,score)
-
-		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
-		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
-
-		for combination in check_table
-			if check_set?(combination[0],combination[1],combination[2],order)
-				return combination
-			end
-		end
-		return []
-	end
-
-	# game = SetGame.new
-	# deck = game.get_deck
-	# game.shuffle(deck)
-	# top_card = 0
-	# hand, top_card = game.get_hand(deck,top_card)
-	# game.show_hand(hand)
-	# puts top_card
-	#
-	# #test replace3
-	# puts ""
-	# puts "show hand after replace card 2, 5, 9:"
-	# user_input = [2, 5, 9]
-	# top_card = 81
-	# hand, top_card = game.replace3(deck, hand, user_input, top_card)
-	# game.show_hand(hand)
-	# puts top_card
-
-	# #test add3
-	# puts ""
-	# puts "show hand after add 3 cards:"
-	# hand, top_card = game.add3(deck, hand, top_card)
-	# game.show_hand(hand)
-	# puts top_card
-
-
-
-	# hint=game.find_set(hand)
-	# while(hand.length>0)
-	# 	user_input = game.get_user_input
-	# 	valid_set = game.check_set?user_input
-	# 	top_card = update(hand,user_input,top_card)
-	# end
-	# print "Good Game"
 end
