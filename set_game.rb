@@ -156,6 +156,10 @@ end
 			return false if(result==false)
 		end
 		return true
+<<<<<<< HEAD
+=======
+
+>>>>>>> e46a62170428c4fc36d87752f3d318c58d85b919
 	end
 
 	#Author: Ariel
