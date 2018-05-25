@@ -11,17 +11,26 @@ class TestSetExist < Test::Unit::TestCase
 	$Shadings=['striped','solid','open']
 	$Symbols=['diamond','squiggle','oval']
 	$Numbers=['1','2','3']
+	
+	Test Plan:
+		1. hand_stat_table=
+			[
+				[[card1, card3, card4, card5],[],[card2, card6]],
+				[[card2],[card1,card3,card5],[card4,card6]],
+				[[card3,card4],[card1,card2],[card5,card6]]
+				[[card3,card4,card6],[card2,card5],[card1]]
+			]
+			score = [["color",4],["shading",7],["symbol",8],["number",7]]
+		
+		2. hand_stat_table = 
+			[
+				[[card1, card2],[card3,card4],[card5,card6,card7]],
+				[[card3,card5,card6,card7],[card1,card2],[card4]],
+				[[card5],[card1,card4,card6,card7],[card2,card3]]
+				[[card1,card5],[card3,card4,card6],[card2,card7]]
+			]
+			score = [["color",15],["shading",12],["symbol",44],["number",13]]
 =end
-	
-	def test_score_to_order_1
-		score1 = [["color",96],["shading",74],["symbol",89],["number",210]]
-		assert_equal(["symbol","color","number"],score_to_order(score1))
-	end
-	
-	def test_score_to_order_2
-		score1 = [["color",95],["shading",170],["symbol",36],["number",41]]
-		assert_equal(["number","color","shading"],score_to_order(score1))
-	end
 	
 	def test_set_exist_1
 		card = Struct.new(:color,:shading,:symbol,:number)

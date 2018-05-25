@@ -39,44 +39,102 @@ class SetGame
 
 	#Author: Gail
 	def show_hand(hand)
-		for card in 0..hand.size-1
-			puts "#{card+1}: #{hand[card].color}, #{hand[card].shading}, #{hand[card].symbol}, #{hand[card].number}"
-		end
+		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
+		puts "----------------------------------------"
+		hand.length.times{ |card|
+			puts "#{card+1}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
+		}
 	end
 
 	def find_set(hand)
 	end
 
-	#change
-	#contains valid_syntax?
+
 	def get_user_input
 	end
 
-	#change
-	def valid_syntax? (user_input)
-		false
+=begin 
+	Author: Channing Jacobs
+	Created: 5/24
+	Editor: Mike, Gail 5/24
+	Description: This method checks that user_input meets the requirement
+	of conforming to being a string representation of an array. The array 
+	of integers represents the cards that were picked from the user's hand. 
+	Thus they are indicies of the hand array. There should be 3 cards to 
+	form a set. [] indicates that the user believes there is no possible set 
+	and the hand may need to be updated. All other inputs are invalid.
+	Requires: user_input.class == Array, hand != nil, 0<=hand.length<=21
+	Updates: N/A
+	Returns: true if (user_input === 
+			[0..$hand.length, 0..$hand.length, 0..$hand.length] ||
+			user_input === [])
+		 false else
+	
+	TODO make returns clause correct
+	TODO MUST CHANGE THE HARDCODED 2 to $hand.lenght
+	TODO remove comment on the require of main method (or hand...class vars)
+=end
+	def valid_syntax?(user_input,hand_length)
+		# user input must be 0 or 3; done if 0 case
+		return true if user_input.length == 0
+		return false if user_input.length != 3
+		# user input must only contain integers (between 0 and hand.length)
+		user_input.all? {|i| (i.is_a?(Integer) && i <= hand_length-1 && i >= 0)}
 	end
 
-	#change
-	def check_set?(card1, card2, card3, check_order)
-		result=true
-		for i in 0...check_order.length
-			case check_order[i]
+	
+#Author: Mike
+#Create Date: 5/23
+#Edit: 5/24 by Mike, Minor changes, add documentation
+=begin
+	Requires: card1.class=card2.class=card3.class=Card, 
+				attr∈Set(:color,:shading,:symbol,:number)
+	Returns: True if the provided attribute and cards follow set convention and false otherwise
+	Description: Check whether the provided attribute and cards follows Set convention
+=end
+
+	def check_attr?(attr,card1,card2,card3)
+		if(card1[attr]==card2[attr])
+			if(card2[attr]!=card3[attr])
+				return false
+			end
+		else
+			if(card1[attr]==card3[attr] || card2[attr]==card3[attr])
+				return false
+			end
+		end
+		return true
+	end
+
+
+#Author: Mike
+#Create Date: 5/23
+#Edit: 5/24 by Mike, Minor changes, add documentation
+=begin
+	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4, 
+				∀x∈check_order, x∈Set("color","shading","symbol","number")
+	Returns: True if the provided cards form a set, false otherwise
+	Description: Check in order, whether the provided cards form a set
+=end
+
+	def check_set?(card1, card2, card3, check_order)	
+		for order in check_order
+			case order
 				when "color"
-					result = result && check_attr?(:color, card1, card2, card3)
+					result = check_attr?(:color, card1, card2, card3)
 				when "shading"
-					result = result && check_attr?(:shading, card1, card2, card3)
+					result = check_attr?(:shading, card1, card2, card3)
 				when "symbol"
-					result = result && check_attr?(:symbol, card1, card2, card3)
+					result = check_attr?(:symbol, card1, card2, card3)
 				when "number"
-					result = result && check_attr?(:number, card1, card2, card3)
+					result = check_attr?(:number, card1, card2, card3)
 			end
 			if(result==false)
 				return false
 			end
 		end
-		return result
-
+		return true
+		
 	end
 
 	#Author: Ariel
@@ -123,6 +181,32 @@ class SetGame
 			top_card += 1
 		end
 		return hand, top_card
+	end
+	
+	#Author: Mike
+	#Create Date: 5/23
+	#Edit: 5/24 by Mike, minor changes
+=begin
+	Requires: check_table.class = Array, 
+				for combination in check_table, combination.class = Array, combination.length = 3,
+				∀x∈combination, x.class=Card
+			  score.class = Array
+				for element in score, element.class = Array, element.length = 2
+				for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
+	Returns: True if there is at least a set in check_table combinations and false otherwise
+	Description: Check if there exist a set in the check_table
+=end
+	def set_exist(check_table,score)
+
+		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
+		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
+		
+		for combination in check_table
+			if check_set?(combination[0],combination[1],combination[2],order)
+				return combination
+			end
+		end
+		return []
 	end
 
 	# game = SetGame.new
