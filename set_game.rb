@@ -141,17 +141,18 @@ class SetGame
 	def update(hand,user_input,top_card,deck)
 		if hand.length<21 && user_input=='none' && top_card<81
 			puts '3 cards will be added'
-			add3(deck,hand,top_card)
-		elsif (hand.length == 21||top_card==81)&&user_input=='none'
+			hand, top_card = add3(deck,hand,top_card)
+		elsif (hand.length == 21 or top_card==81)&&user_input=='none'
 			puts 'At least one set'
 		else
 			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],hand)
 				puts 'Correct set! 3 cards will be replaced'
-				replace3(deck,hand,user_input,top_card)
+				hand, top_card = replace3(deck,hand,user_input,top_card)
 			else
 				puts 'Wrong set'
 			end
 		end
+		return hand, top_card
 	end
 
 	#Author: Gail

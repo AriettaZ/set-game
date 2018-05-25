@@ -12,12 +12,13 @@ class TestUpdate < Test::Unit::TestCase
 	1. user_input='none' and correct,hand.length<21,top_card< 81
 	2. user_input='none' and wrong,hand.length=21,top_card< 81
 	3. user_input='none' and wrong,hand.length=21,top_card= 81
-  4. user_input is wrong set,hand.length<21,top_card< 81
-	5. user_input is wrong set, hand.length=21,top_card< 81
-	6. user_input is wrong set,hand.length=21,top_card= 81
-  7. user_input is correct set,hand.length<21,top_card< 81
-  8. user_input is correct set, hand.length=21,top_card< 81
-  9. user_input is correct set,hand.length=21,top_card= 81
+  4. user_input='none' and wrong,hand.length<21,top_card= 81
+  5. user_input is wrong set,hand.length<21,top_card< 81
+	6. user_input is wrong set, hand.length=21,top_card< 81
+	7. user_input is wrong set,hand.length=21,top_card= 81
+  8. user_input is correct set,hand.length<21,top_card< 81
+  9. user_input is correct set, hand.length=21,top_card< 81
+  10. user_input is correct set,hand.length=21,top_card= 81
 =end
   CARD1 = Card.new('red','open','oval','1')
   CARD2 = Card.new('red','open','oval','2')
@@ -71,26 +72,27 @@ class TestUpdate < Test::Unit::TestCase
   def test_update_3
     game = SetGame.new
     deck= game.get_deck
-    hand = CARD_3CARDS
-    top_card = 3
+    hand = CARD_21CARDS
+    top_card = 56
     hand, top_card = game.update hand,"none",top_card,deck
-    assert_equal deck[3], hand[3]
-    assert_equal deck[4], hand[4]
-    assert_equal deck[5], hand[5]
-    assert_equal 6, hand.size
-    assert_equal 6, top_card
+    print hand[18]
+    assert_equal CARD19, hand[18]
+    assert_equal CARD20, hand[19]
+    assert_equal CARD21, hand[20]
+    assert_equal 21, hand.size
+    assert_equal 56, top_card
   end
   def test_update_4
     game = SetGame.new
     deck= game.get_deck
     hand = CARD_18CARDS
-    top_card = 55
+    top_card = 81
     hand, top_card = game.update hand,"none",top_card,deck
-    assert_equal deck[55], hand[18]
-    assert_equal deck[56], hand[19]
-    assert_equal deck[57], hand[20]
-    assert_equal 21, hand.size
-    assert_equal 58, top_card
+    assert_equal CARD16, hand[15]
+    assert_equal CARD17, hand[16]
+    assert_equal CARD18, hand[17]
+    assert_equal 18, hand.size
+    assert_equal 81, top_card
   end
 
 
