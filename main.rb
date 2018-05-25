@@ -18,8 +18,7 @@ game.show_hand(hand)
 #    hint=game.find_set(hand)
 
 #while(hand.length>0)
-#	 user_input = game.get_user_input
-#	 valid_set = game.check_set?user_input
+user_set = game.get_user_cards(deck.length)
 #	 top_card = update(hand,user_input,top_card)
 #end
 #	 print "Good Game"

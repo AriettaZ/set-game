@@ -47,6 +47,7 @@ class SetGame
 	end
 
 	def find_set(hand)
+	
 	end
 
 =begin
@@ -69,13 +70,13 @@ class SetGame
 
 def get_user_cards hand_size
 	user_array = [-1]
-	until valid_syntax?(user_array hand_size)
-		puts "Choose 3 cards from your hand using their # separated by ',' ."
+	until valid_syntax?(user_array, hand_size)
+		puts "\nChoose 3 cards from your hand using their # separated by ','."
 		puts "Or type 'none' if you believe no set exists."
-		user_array = gets.chomp.split(",").sort
-		user_array = [] if user_array.to_s == "none"
+		user_array = gets.chomp.split(",")
+		user_array = [] if user_array.to_s == "[\"none\"]"
 	end
-	user_array
+	user_array.map{|str| str.to_i}.sort
 end
 
 
@@ -106,7 +107,7 @@ end
 		return true if user_input.length == 0
 		return false if user_input.length != 3
 		# user input must only contain integers (between 0 and hand.length)
-		user_input.all? {|i| (i.is_a?(Integer) && i <= hand_length-1 && i >= 0)}
+		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
 
 
