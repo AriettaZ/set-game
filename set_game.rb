@@ -46,12 +46,38 @@ class SetGame
 		}
 	end
 
-	def find_set(hand)
-	
+=begin
+	Author: Channing
+	Date: 5/25
+	Editor: N/A
+	Description: Finds 1 or all valid sets in hand.
+=end
+	def find_set(hand, mode = 'hint')
+		# Creating an array of arrays "check_table" to organize cards by subset values
+		hand_stat  = organize(hand)
+		
+		# Create a hash to represent the number of cards in each section of the table
+		#table_stats = stats(card_table)
+		
+		# Score the subarrays to find the one that contains the least possible sets
+		#scores = score(table_stats) # set of sets returned
+		
+		# Use scores and card_table to find one or all valid sets
+		#set_exist(card_table, scores)
 	end
 
 =begin
-	Author: Channing Jacobs
+	Author: Channing
+	Date: 5/25
+	Editor:
+	Description: Organizes a Hand of Cards into an array or arrays. The outter array
+	is referred to as a card_table. The inner arrays are for each category a card can
+	possess ("color", "shape", "
+
+=end
+
+=begin
+	Author: Channing
 	Date: 2/24
 	Editor:
 
@@ -72,7 +98,7 @@ def get_user_cards hand_size
 	user_array = [-1]
 	until valid_syntax?(user_array, hand_size)
 		puts "\nChoose 3 cards from your hand using their # separated by ','."
-		puts "Or type 'none' if you believe no set exists."
+		puts "Or type 'none' or ',,,' if you believe no set exists."
 		user_array = gets.chomp.split(",")
 		user_array = [] if user_array.to_s == "[\"none\"]"
 	end
@@ -84,6 +110,7 @@ end
 	Author: Channing Jacobs
 	Created: 5/24
 	Editor: Mike, Gail 5/24
+		Channing 5/25
 	Description: This method checks that user_input meets the requirement
 	of conforming to being a string representation of an array. The array
 	of integers represents the cards that were picked from the user's hand.
@@ -103,12 +130,11 @@ end
 	TODO missing check that integers must be unique
 =end
 	def valid_syntax?(user_input,hand_length)
-		# user input must be 0 or 3; done if 0 case
+		# user_input must be size 0 or 3; done if 0 case
 		return true if user_input.length == 0
 		return false if user_input.length != 3
-		return false if user_input[0]==user_input[1] || user_input[1]==user_input[2] || user_input[0]==user_input[2]
-		# user input must only contain integers (between 0 and hand.length)
-		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
+		# user_input must contain only integers between 1 and hand_length - 1, and the integers can't be repeated
+		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) == 1)})
 	end
 
 
