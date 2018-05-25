@@ -39,43 +39,128 @@ class SetGame
 
 	#Author: Gail
 	def show_hand(hand)
-		hand.length.times {|card|
-			puts "#{card}: #{hand[card].color}, #{hand[card].shading}, #{hand[card].symbol}, #{hand[card].number}"
+		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
+		puts "----------------------------------------"
+		hand.length.times{ |card|
+			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
 		}
 	end
 
 	def find_set(hand)
 	end
 
-	#change
-	#contains valid_syntax?
-	def get_user_input
+=begin
+	Author: Channing Jacobs
+	Date: 2/24
+	Editor:
+
+	Description: Returns a valid array representation of user's chosen
+	cards. The user must choose 3 valid cards by writing them as a comma
+	separated list "int,int,int" or enter "none". The function returns an
+	array such as [int, int, int] or [] (an empty array) if the user enters
+	"none".
+
+	Requires: N/A
+	Updates: N/A
+	Returns: [] || [Integer, Integer, Integer]
+		 where for all Integer : 0 < Integer < total_cards
+
+=end
+
+def get_user_cards hand_size
+	user_array = [-1]
+	until valid_syntax?(user_array hand_size)
+		puts "Choose 3 cards from your hand using their # separated by ',' ."
+		puts "Or type 'none' if you believe no set exists."
+		user_array = gets.chomp.split(",").sort
+		user_array = [] if user_array.to_s == "none"
+	end
+	user_array
+end
+
+
+=begin
+	Author: Channing Jacobs
+	Created: 5/24
+	Editor: Mike, Gail 5/24
+	Description: This method checks that user_input meets the requirement
+	of conforming to being a string representation of an array. The array
+	of integers represents the cards that were picked from the user's hand.
+	Thus they are indicies of the hand array. There should be 3 cards to
+	form a set. [] indicates that the user believes there is no possible set
+	and the hand may need to be updated. All other inputs are invalid.
+	Requires: user_input.class == Array, hand != nil, 0<=hand.length<=21
+	Updates: N/A
+	Returns: true if (user_input ===
+			[0..$hand.length, 0..$hand.length, 0..$hand.length] ||
+			user_input === [])
+		 false else
+
+	TODO make returns clause correct
+	TODO MUST CHANGE THE HARDCODED 2 to $hand.lenght
+	TODO remove comment on the require of main method (or hand...class vars)
+	TODO missing check that integers must be unique
+=end
+	def valid_syntax?(user_input,hand_length)
+		# user input must be 0 or 3; done if 0 case
+		return true if user_input.length == 0
+		return false if user_input.length != 3
+		# user input must only contain integers (between 0 and hand.length)
+		user_input.all? {|i| (i.is_a?(Integer) && i <= hand_length-1 && i >= 0)}
 	end
 
-	#change
-	def valid_syntax? (user_input)
-		false
+
+#Author: Mike
+#Create Date: 5/23
+#Edit: 5/24 by Mike, Minor changes, add documentation
+=begin
+	Requires: card1.class=card2.class=card3.class=Card,
+				attr∈Set(:color,:shading,:symbol,:number)
+	Returns: True if the provided attribute and cards follow set convention and false otherwise
+	Description: Check whether the provided attribute and cards follows Set convention
+=end
+
+	def check_attr?(attr,card1,card2,card3)
+		if(card1[attr]==card2[attr])
+			if(card2[attr]!=card3[attr])
+				return false
+			end
+		else
+			if(card1[attr]==card3[attr] || card2[attr]==card3[attr])
+				return false
+			end
+		end
+		return true
 	end
 
-	#change
+
+#Author: Mike
+#Create Date: 5/23
+#Edit: 5/24 by Mike, Minor changes, add documentation
+=begin
+	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4,
+				∀x∈check_order, x∈Set("color","shading","symbol","number")
+	Returns: True if the provided cards form a set, false otherwise
+	Description: Check in order, whether the provided cards form a set
+=end
+
 	def check_set?(card1, card2, card3, check_order)
-		result=true
-		for i in 0...check_order.length
-			case check_order[i]
+		for order in check_order
+			case order
 				when "color"
-					result = result && check_attr?(:color, card1, card2, card3)
+					result = check_attr?(:color, card1, card2, card3)
 				when "shading"
-					result = result && check_attr?(:shading, card1, card2, card3)
+					result = check_attr?(:shading, card1, card2, card3)
 				when "symbol"
-					result = result && check_attr?(:symbol, card1, card2, card3)
+					result = check_attr?(:symbol, card1, card2, card3)
 				when "number"
-					result = result && check_attr?(:number, card1, card2, card3)
+					result = check_attr?(:number, card1, card2, card3)
 			end
 			if(result==false)
 				return false
 			end
 		end
-		return result
+		return true
 
 	end
 
@@ -87,9 +172,7 @@ class SetGame
 		elsif (hand.length == 21||top_card==81)&&user_input=='none'
 			puts 'At least one set'
 		else
-			# convert string to array
-			user_input=eval(user_input)
-			if check_set?(user_input[0], user_input[1],user_input[2],hand)
+			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],hand)
 				puts 'Correct set! 3 cards will be replaced'
 				replace3(deck,hand,user_input,top_card)
 			else

@@ -1,37 +1,25 @@
-require_relative 'card'
-require_relative 'get_deck'
-require_relative 'print_deck'
-require_relative 'get_hand'
-require_relative 'show_hand'
-require_relative 'replace3'
-require_relative 'add3'
+#Author: Mike
 
-$deck=[]
-$Colors=['red','purple','green']
-$Shadings=['striped','solid','open']
-$Symbols=['diamond','squiggle','oval']
-$Numbers=['1','2','3']
-# generate 81 cards
-get_deck
-$deck = $deck.shuffle
-print_deck
+require_relative "set_game"
 
-puts "show original hand"
-$hand = []
-get_hand
-show_hand
-puts "top card index = #{$top_card}"
-puts ""
 
-puts "replace 3 cards:"
-user_input = [2, 5, 9]
-replace3(user_input)
-show_hand
-puts "top card index = #{$top_card}"
-puts ""
+require_relative "print_deck"
 
-puts "add 3 cards:"
-add3
-show_hand
-puts "top card index = #{$top_card}"
-puts ""
+
+game = SetGame.new
+#generate 81 cards and shuffled
+deck = game.get_deck
+game.shuffle(deck)
+#top_card is the next card to be selected in deck
+top_card = 0
+hand, top_card = game.get_hand(deck,top_card)
+game.show_hand(hand)
+
+#    hint=game.find_set(hand)
+
+#while(hand.length>0)
+#	 user_input = game.get_user_input
+#	 valid_set = game.check_set?user_input
+#	 top_card = update(hand,user_input,top_card)
+#end
+#	 print "Good Game"

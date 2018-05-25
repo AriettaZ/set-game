@@ -34,10 +34,10 @@ class TestCheckSet < Test::Unit::TestCase
 	i=0
 	number_index=0
 	$card = Struct.new(:color,:shading,:symbol,:number)
-	for color_index in 0..1
-		for shading_index in 0..1
-			for symbol_index in 0..2
-				$hand[i]=$card.new($Colors[color_index], $Shadings[shading_index], $Symbols[symbol_index], $Numbers[number_index])
+	for color in ["red","purple"]
+		for shading in ["striped","solid"]
+			for symbol in $Symbols
+				$hand[i]=$card.new(color, shading, symbol, "1")
 				i += 1
 			end
 		end
@@ -45,6 +45,7 @@ class TestCheckSet < Test::Unit::TestCase
 	$hand.push($card.new("green","open","oval","2"))
 	$hand.push($card.new("purpul","solid","squiggle","3"))
 	$hand.push($card.new("green","striped","diamond","1"))
+	$hand.push($card.new("green","striped","quiggle","2"))
 	
 	#	0: red, striped, diamond, 1
 	#	1: red, striped, squiggle, 1
@@ -61,6 +62,7 @@ class TestCheckSet < Test::Unit::TestCase
 	#	12: green, open, oval, 2
 	#	13: purpul, solid, squiggle, 3
 	#	14: green, striped, diamond, 1
+	#	15: green, striped, squiggle, 2
 
 	#Check 3-3-1-3 case
 	def test_check_set_1
