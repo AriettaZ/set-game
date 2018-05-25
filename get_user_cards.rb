@@ -11,18 +11,19 @@ array such as [int, int, int] or [] (an empty array) if the user enters
 
 Requires: N/A
 Updates: N/A
-Returns: [] || [Integer, Integer, Integer] where for all Integer
-	 				   0 < Integer < total_cards
+Returns: [] || [Integer, Integer, Integer] where for all Integer : 0 < Integer < total_cards
 
 =end
 
-require_relative "check_syntax"
+require_relative "valid_syntax?"
 
 def get_user_cards total_cards
 	user_array = [-1]
-	until check_syntax? user_array
-		print "Choose 3 cards from your hand using their # separated by ',' :"
+	until valid_syntax? user_array
+		puts "Choose 3 cards from your hand using their # separated by ',' ."
+		puts "Or type 'none' if you believe no set exists."
 		user_array = gets.chomp.split(",").sort
-		check_syntax? user_array
-
+		user_array = [] if user_array.to_s == "none"
+	end
+	user_array
 end
