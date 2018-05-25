@@ -1,7 +1,7 @@
 #Author: Mike
 #Creation Date: 5/23
 
-require_relative "../set_exist"
+require_relative "../set_game"
 require "test/unit"
 
 class TestSetExist < Test::Unit::TestCase
@@ -54,7 +54,7 @@ class TestSetExist < Test::Unit::TestCase
 		]
 =end
 	
-		assert_equal([card1,card3,card5],set_exist(check_table,score))
+		assert_equal([card1,card3,card5],SetGame.new.set_exist(check_table,score))
 	end
 	
 	def test_set_exist_2
@@ -81,7 +81,7 @@ class TestSetExist < Test::Unit::TestCase
 		]
 =end
 	
-		assert_equal([card2,card4,card5],set_exist(check_table,score))
+		assert_equal([card2,card4,card5],SetGame.new.set_exist(check_table,score))
 	end
 		
 end

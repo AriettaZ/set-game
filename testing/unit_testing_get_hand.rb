@@ -3,18 +3,22 @@
 
 #require file set_game.rb
 #class name: SetGame
-require_relative "../set_game"
-require "test/unit"
-
-class TestGetHand < Test::Unit::TestCase
 
 =begin
-	Test plan for testing get_hand method:
+	Author: Gail
+	Created: 5/23
+	Editor: N/A
+	Test plan for testing get_hand method: (use deck.size = 15)
 	1. top_card = 0, use ordered deck
 	2. top_card = 3, use ordered deck
 	3. top_card = 0, use unordered deck
 	4. top_card = 3, use unordered deck
 =end
+
+require_relative "../set_game"
+require "test/unit"
+
+class TestGetHand < Test::Unit::TestCase
 
 	CARD1 = Card.new('red','open','oval','1')
 	CARD2 = Card.new('red','open','oval','2')

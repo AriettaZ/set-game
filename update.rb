@@ -2,10 +2,10 @@ require_relative "check_set"
 require_relative "replace3"
 require_relative "add3"
 def update(hand,user_input,top_card,deck)
-  if hand.length<21 && user_input=='none' && top_card<81
+  if hand.length<21 && user_input=='none' && top_card<80
     puts '3 cards will be added'
     add3(deck,hand,top_card)
-  elsif (hand.length == 21||top_card==81)&&user_input=='none'
+  elsif (hand.length == 21||top_card==80)&&user_input=='none'
     puts 'At least one set'
   else
     # convert string to array

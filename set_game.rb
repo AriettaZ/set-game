@@ -3,18 +3,17 @@
 require_relative 'card'
 class SetGame
 
-  #Author: Ariel
+ 	#Author: Ariel
+	#Create date: 5/21
+	#Edit: Mike 5/24
 	def get_deck
 		deck = []
-		colors=['red','purple','green']
-		shadings=['striped','solid','open']
-		symbols=['diamond','squiggle','oval']
-		numbers=['1','2','3']
-		for color_index in 0..2
-			for shading_index in 0..2
-				for symbol_index in 0..2
-					for number_index in 0..2
-						deck.push(Card.new(colors[color_index], shadings[shading_index], symbols[symbol_index], numbers[number_index]))
+		card_struct = Struct.new(:color,:shading,:symbol,:number)
+		for color in $Colors
+			for shading in $Shadings
+				for symbol in $Symbols
+					for number in $Numbers
+						deck.push(card_struct.new(color, shading, symbol, number))
 					end
 				end
 			end
@@ -42,7 +41,7 @@ class SetGame
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
-			puts "#{card+1}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
+			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
 		}
 	end
 
@@ -63,7 +62,7 @@ class SetGame
 
 	Requires: N/A
 	Updates: N/A
-	Returns: [] || [Integer, Integer, Integer] 
+	Returns: [] || [Integer, Integer, Integer]
 		 where for all Integer : 0 < Integer < total_cards
 
 =end
@@ -106,6 +105,7 @@ end
 		# user input must be 0 or 3; done if 0 case
 		return true if user_input.length == 0
 		return false if user_input.length != 3
+		return false if user_input[0]==user_input[1] || user_input[1]==user_input[2] || user_input[0]==user_input[2]
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
@@ -123,13 +123,9 @@ end
 
 	def check_attr?(attr,card1,card2,card3)
 		if(card1[attr]==card2[attr])
-			if(card2[attr]!=card3[attr])
-				return false
-			end
+			return false if(card2[attr]!=card3[attr])
 		else
-			if(card1[attr]==card3[attr] || card2[attr]==card3[attr])
-				return false
-			end
+			return false if(card1[attr]==card3[attr] || card2[attr]==card3[attr])
 		end
 		return true
 	end
@@ -157,55 +153,53 @@ end
 				when "number"
 					result = check_attr?(:number, card1, card2, card3)
 			end
-			if(result==false)
-				return false
-			end
+
+			return false if(result==false)
 		end
 		return true
-
 	end
 
 	#Author: Ariel
 	def update(hand,user_input,top_card,deck)
 		if hand.length<21 && user_input=='none' && top_card<81
 			puts '3 cards will be added'
-			add3(deck,hand,top_card)
-		elsif (hand.length == 21||top_card==81)&&user_input=='none'
+			hand, top_card = add3(deck,hand,top_card)
+		elsif (hand.length == 21 or top_card==81)&&user_input=='none'
 			puts 'At least one set'
 		else
-			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],hand)
-				puts 'Correct set! 3 cards will be replaced'
-				replace3(deck,hand,user_input,top_card)
+			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
+				puts 'Correct set!'
+				hand, top_card = replace3(deck,hand,user_input,top_card)
 			else
 				puts 'Wrong set'
-			end
-		end
-	end
-
-	#Author: Gail
-	def replace3(deck,hand,user_input,top_card)
-		if top_card < deck.size
-			for card in 0..2
-				hand[user_input[card] - 1] = deck[top_card]
-				top_card += 1
-			end
-		else
-			delete_count = 0
-			user_input.sort!
-			for card in 0..2
-				hand.delete_at(user_input[card] - 1 - delete_count)
-				delete_count += 1
 			end
 		end
 		return hand, top_card
 	end
 
+	#Require: top_card and hand.size are multiples of 3
+	#Author: Gail
+	def replace3(deck, hand, user_input, top_card)
+			delete_count = 0
+			3.times{ |card|
+				if top_card < deck.size
+					hand[user_input[card]] = deck[top_card]
+					top_card += 1
+				else
+					user_input.sort!
+					hand.delete_at(user_input[card] - delete_count)
+					delete_count += 1
+				end
+			}
+		return hand, top_card
+	end
+
 	#Author: Gail
 	def add3(deck,hand,top_card)
-		for card in 0..2
+		3.times {
 			hand.push(deck[top_card])
 			top_card += 1
-		end
+		}
 		return hand, top_card
 	end
 
@@ -234,38 +228,4 @@ end
 		end
 		return []
 	end
-
-	# game = SetGame.new
-	# deck = game.get_deck
-	# game.shuffle(deck)
-	# top_card = 0
-	# hand, top_card = game.get_hand(deck,top_card)
-	# game.show_hand(hand)
-	# puts top_card
-	#
-	# #test replace3
-	# puts ""
-	# puts "show hand after replace card 2, 5, 9:"
-	# user_input = [2, 5, 9]
-	# top_card = 81
-	# hand, top_card = game.replace3(deck, hand, user_input, top_card)
-	# game.show_hand(hand)
-	# puts top_card
-
-	# #test add3
-	# puts ""
-	# puts "show hand after add 3 cards:"
-	# hand, top_card = game.add3(deck, hand, top_card)
-	# game.show_hand(hand)
-	# puts top_card
-
-
-
-	# hint=game.find_set(hand)
-	# while(hand.length>0)
-	# 	user_input = game.get_user_input
-	# 	valid_set = game.check_set?user_input
-	# 	top_card = update(hand,user_input,top_card)
-	# end
-	# print "Good Game"
 end
