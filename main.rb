@@ -11,6 +11,7 @@ deck = game.get_deck
 top_card = 0
 hand, top_card = game.get_hand(deck,top_card)
 
+Card = Struct.new(:color,:shading,:symbol,:number)
 CARD1 = Card.new('red','striped','diamond','1')
 CARD2 = Card.new('red','striped','diamond','2')
 CARD3 = Card.new('red','striped','diamond','3')
