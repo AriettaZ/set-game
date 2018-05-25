@@ -162,10 +162,10 @@ end
 
 	#Author: Ariel
 	def update(hand,user_input,top_card,deck)
-		if hand.length<21 && user_input=='none' && top_card<81
+		if hand.length<21 && user_input==[] && top_card<81
 			puts '3 cards will be added'
 			hand, top_card = add3(deck,hand,top_card)
-		elsif (hand.length == 21 or top_card==81)&&user_input=='none'
+		elsif (hand.length == 21 or top_card==81)&&user_input==[]
 			puts 'At least one set'
 		else
 			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])

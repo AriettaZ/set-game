@@ -28,9 +28,9 @@ hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CA
 
 #    hint=game.find_set(hand)
 
-while(hand.length>0)
-	game.show_hand(hand)
-	user_input = [0,1,2] #game.get_user_input
+while hand.length > 0
+	game.show_hand hand 
+	user_input = game.get_user_cards hand.length
 	hand, top_card = game.update(hand,user_input,top_card,deck)
 end
 	print "All Clear! Good Game!"
