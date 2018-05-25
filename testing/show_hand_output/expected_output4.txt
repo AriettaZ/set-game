@@ -1,0 +1,12 @@
+1: red, open, oval, 1
+2: red, open, oval, 2
+3: red, solid, oval, 3
+4: purple, open, oval, 1
+5: purple, open, oval, 3
+6: green, open, oval, 3
+7: red, open, oval, 3
+8: green, solid, oval, 1
+9: green, open, oval, 1
+10: green, solid, oval, 3
+11: red, solid, oval, 2
+12: green, open, oval, 2
