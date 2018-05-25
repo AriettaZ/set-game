@@ -53,23 +53,23 @@ class SetGame
 	def get_user_input
 	end
 
-=begin 
+=begin
 	Author: Channing Jacobs
 	Created: 5/24
 	Editor: Mike, Gail 5/24
 	Description: This method checks that user_input meets the requirement
-	of conforming to being a string representation of an array. The array 
-	of integers represents the cards that were picked from the user's hand. 
-	Thus they are indicies of the hand array. There should be 3 cards to 
-	form a set. [] indicates that the user believes there is no possible set 
+	of conforming to being a string representation of an array. The array
+	of integers represents the cards that were picked from the user's hand.
+	Thus they are indicies of the hand array. There should be 3 cards to
+	form a set. [] indicates that the user believes there is no possible set
 	and the hand may need to be updated. All other inputs are invalid.
 	Requires: user_input.class == Array, hand != nil, 0<=hand.length<=21
 	Updates: N/A
-	Returns: true if (user_input === 
+	Returns: true if (user_input ===
 			[0..$hand.length, 0..$hand.length, 0..$hand.length] ||
 			user_input === [])
 		 false else
-	
+
 	TODO make returns clause correct
 	TODO MUST CHANGE THE HARDCODED 2 to $hand.lenght
 	TODO remove comment on the require of main method (or hand...class vars)
@@ -82,12 +82,12 @@ class SetGame
 		user_input.all? {|i| (i.is_a?(Integer) && i <= hand_length-1 && i >= 0)}
 	end
 
-	
+
 #Author: Mike
 #Create Date: 5/23
 #Edit: 5/24 by Mike, Minor changes, add documentation
 =begin
-	Requires: card1.class=card2.class=card3.class=Card, 
+	Requires: card1.class=card2.class=card3.class=Card,
 				attr∈Set(:color,:shading,:symbol,:number)
 	Returns: True if the provided attribute and cards follow set convention and false otherwise
 	Description: Check whether the provided attribute and cards follows Set convention
@@ -111,13 +111,13 @@ class SetGame
 #Create Date: 5/23
 #Edit: 5/24 by Mike, Minor changes, add documentation
 =begin
-	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4, 
+	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4,
 				∀x∈check_order, x∈Set("color","shading","symbol","number")
 	Returns: True if the provided cards form a set, false otherwise
 	Description: Check in order, whether the provided cards form a set
 =end
 
-	def check_set?(card1, card2, card3, check_order)	
+	def check_set?(card1, card2, card3, check_order)
 		for order in check_order
 			case order
 				when "color"
@@ -134,7 +134,7 @@ class SetGame
 			end
 		end
 		return true
-		
+
 	end
 
 	#Author: Ariel
@@ -145,9 +145,7 @@ class SetGame
 		elsif (hand.length == 21||top_card==81)&&user_input=='none'
 			puts 'At least one set'
 		else
-			# convert string to array
-			user_input=eval(user_input)
-			if check_set?(user_input[0], user_input[1],user_input[2],hand)
+			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],hand)
 				puts 'Correct set! 3 cards will be replaced'
 				replace3(deck,hand,user_input,top_card)
 			else
@@ -182,12 +180,12 @@ class SetGame
 		end
 		return hand, top_card
 	end
-	
+
 	#Author: Mike
 	#Create Date: 5/23
 	#Edit: 5/24 by Mike, minor changes
 =begin
-	Requires: check_table.class = Array, 
+	Requires: check_table.class = Array,
 				for combination in check_table, combination.class = Array, combination.length = 3,
 				∀x∈combination, x.class=Card
 			  score.class = Array
@@ -200,7 +198,7 @@ class SetGame
 
 		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
 		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
-		
+
 		for combination in check_table
 			if check_set?(combination[0],combination[1],combination[2],order)
 				return combination
@@ -233,7 +231,7 @@ class SetGame
 	# game.show_hand(hand)
 	# puts top_card
 
-	
+
 
 	# hint=game.find_set(hand)
 	# while(hand.length>0)
