@@ -66,11 +66,30 @@ class SetGame
 	Author: Channing
 	Date: 5/25
 	Editor:
-	Description: Organizes a Hand of Cards into an array or arrays. The outter array
-	is referred to as a card_table. The inner arrays are for each category a card can
-	possess ("color", "shape", "
+	Description: Create a hash to hold statistics (counts) of the number of each card
+	attribute found within the hand.
+	Require: hand.class == Array; for each element in hand, element.class == Card
+	Updates: N/A
+	Returns: hash with keys representing card attributes: {$Colors + $Shadings + $Symbols + $Numbers}
+		 and values corresponding to number of cards with this attribute in hand.
+		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
 
 =end
+	def organize hand
+		# create hash
+		hand_stat = Hash.new {|k,v| k[v] = []}
+		# create keys based on card attr, set to default [] value
+		card_attrs = $Colors + $Shadings + $Symbols + $Numbers
+		card_attrs.each {|attr| hand_stat[attr.intern]}
+		# add cards to hash
+		for card in hand
+			[:color, :shading, :symbol, :number].each {|catg| 
+				hand_stat[card[catg].intern] << card
+			}
+		end
+		hand_stat
+	end
+
 
 
 =begin
