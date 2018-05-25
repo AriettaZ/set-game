@@ -6,18 +6,14 @@ class SetGame
  	#Author: Ariel
 	#Create date: 5/21
 	#Edit: Mike 5/24
+	#Edit: Mike 5/25
 	def get_deck
 		deck = []
-		card_struct = Struct.new(:color,:shading,:symbol,:number)
-		for color in $Colors
-			for shading in $Shadings
-				for symbol in $Symbols
-					for number in $Numbers
-						deck.push(card_struct.new(color, shading, symbol, number))
-					end
-				end
-			end
-	  	end
+		$Colors.each{ |color| 
+			$Shadings.each {|shading| 
+				$Symbols.each{|symbol| 
+					$Numbers.each{|number| 
+					deck.push(Card.new(color, shading, symbol, number)) }}}}
 		deck
 	end
 
