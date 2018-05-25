@@ -39,9 +39,9 @@ class SetGame
 
 	#Author: Gail
 	def show_hand(hand)
-		for card in 0..hand.size-1
-			puts "#{card+1}: #{hand[card].color}, #{hand[card].shading}, #{hand[card].symbol}, #{hand[card].number}"
-		end
+		hand.length.times {|card|
+			puts "#{card}: #{hand[card].color}, #{hand[card].shading}, #{hand[card].symbol}, #{hand[card].number}"
+		}
 	end
 
 	def find_set(hand)
@@ -98,111 +98,29 @@ class SetGame
 		end
 	end
 
+	#Require: top_card and hand.size are multiples of 3
 	#Author: Gail
-	def replace3(deck,hand,user_input,top_card)
-		if top_card < deck.size
-			for card in 0..2
-				hand[user_input[card] - 1] = deck[top_card]
-				top_card += 1
-			end
-		else
+	def replace3(deck, hand, user_input, top_card)
 			delete_count = 0
-			user_input.sort!
-			for card in 0..2
-				hand.delete_at(user_input[card] - 1 - delete_count)
-				delete_count += 1
-			end
-		end
+			3.times{ |card|
+				if top_card < deck.size
+					hand[user_input[card]] = deck[top_card]
+					top_card += 1
+				else
+					user_input.sort!
+					hand.delete_at(user_input[card] - delete_count)
+					delete_count += 1
+				end
+			}
 		return hand, top_card
 	end
 
 	#Author: Gail
 	def add3(deck,hand,top_card)
-		for card in 0..2
+		3.times {
 			hand.push(deck[top_card])
 			top_card += 1
-		end
+		}
 		return hand, top_card
 	end
-
-	# game = SetGame.new
-	# deck = game.get_deck
-	# game.shuffle(deck)
-	# top_card = 0
-	# hand, top_card = game.get_hand(deck,top_card)
-	# game.show_hand(hand)
-	# puts top_card
-	#
-	# #test replace3
-	# puts ""
-	# puts "show hand after replace card 2, 5, 9:"
-	# user_input = [2, 5, 9]
-	# top_card = 81
-	# hand, top_card = game.replace3(deck, hand, user_input, top_card)
-	# game.show_hand(hand)
-	# puts top_card
-
-	# #test add3
-	# puts ""
-	# puts "show hand after add 3 cards:"
-	# hand, top_card = game.add3(deck, hand, top_card)
-	# game.show_hand(hand)
-	# puts top_card
-
-	# test update, user no set, hand add 3
-	puts ""
-	puts "show hand after user_input='none',hand.length<21,top_card< 81:"
-	hand, top_card = game.update(hand,"none",top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-	# test update, user wrong set, don't change hand
-	puts ""
-	puts "show hand after user_input='[2, 5, 9]',hand.length<21,top_card< 81:"
-	game.update(hand,'[2,5,9]',top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-	# test update, user correct set, replace 3 cards
-	puts ""
-	puts "show hand after user_input='[19, 20, 21]'(correct set),hand.length<21,top_card< 81:"
-	card1=Card.new('red', 'solid', 'oval', '3')
-	card2=Card.new('red', 'solid', 'oval', '2')
-	card3=Card.new('red', 'solid', 'oval', '1')
-	hand.push(card1)
-	hand.push(card2)
-	hand.push(card3)
-	top_card=top_card+3
-	game.update(hand,'[19, 20, 21]',top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-	# test update,user no set and has 21 on hand, don't change hand
-	puts ""
-	puts "show hand after user_input='none',hand.length=21,top_card< 81:"
-	game.update(hand,'none',top_card,deck)
-	game.show_hand(hand)
-	print "top_card is ",top_card
-	puts ""
-	print "hand.length is ",hand.length
-	puts ""
-
-
-
-	# hint=game.find_set(hand)
-	# while(hand.length>0)
-	# 	user_input = game.get_user_input
-	# 	valid_set = game.check_set?user_input
-	# 	top_card = update(hand,user_input,top_card)
-	# end
-	# print "Good Game"
 end
