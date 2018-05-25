@@ -49,9 +49,35 @@ class SetGame
 	def find_set(hand)
 	end
 
+=begin
+	Author: Channing Jacobs
+	Date: 2/24
+	Editor:
 
-	def get_user_input
+	Description: Returns a valid array representation of user's chosen
+	cards. The user must choose 3 valid cards by writing them as a comma
+	separated list "int,int,int" or enter "none". The function returns an
+	array such as [int, int, int] or [] (an empty array) if the user enters
+	"none".
+
+	Requires: N/A
+	Updates: N/A
+	Returns: [] || [Integer, Integer, Integer] 
+		 where for all Integer : 0 < Integer < total_cards
+
+=end
+
+def get_user_cards hand_size
+	user_array = [-1]
+	until valid_syntax?(user_array hand_size)
+		puts "Choose 3 cards from your hand using their # separated by ',' ."
+		puts "Or type 'none' if you believe no set exists."
+		user_array = gets.chomp.split(",").sort
+		user_array = [] if user_array.to_s == "none"
 	end
+	user_array
+end
+
 
 =begin 
 	Author: Channing Jacobs
@@ -73,6 +99,7 @@ class SetGame
 	TODO make returns clause correct
 	TODO MUST CHANGE THE HARDCODED 2 to $hand.lenght
 	TODO remove comment on the require of main method (or hand...class vars)
+	TODO missing check that integers must be unique
 =end
 	def valid_syntax?(user_input,hand_length)
 		# user input must be 0 or 3; done if 0 case
