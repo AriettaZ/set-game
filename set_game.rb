@@ -354,13 +354,21 @@ end
 =end
 
 def get_user_cards hand_size
+	hint_wants = 0
 	user_array = [-1]
 	until valid_syntax?(user_array, hand_size)
-		puts "\nChoose 3 cards from your hand using their # separated by ','."
-		puts "Or type 'none' if you believe no set exists."
+		puts "\nOptions: Enter 3 cards [#,#,#], 'none', 'hint', or 'save'."
 		user_array = gets.chomp.split(",")
-		user_array = [-1] if user_array == [] #user hit enter
-		user_array = [] if user_array.to_s == "[\"none\"]"
+		print user_array
+		case user_array
+		# user hits enter or ,,,
+		when []
+			user_array = [-1]
+		when ["none"]
+			user_array = []
+		when ["hint"] || ["save"]
+			return user_array
+		end
 	end
 	user_array.map{|str| str.to_i}.sort
 end
