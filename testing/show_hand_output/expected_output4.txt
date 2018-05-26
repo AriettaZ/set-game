@@ -1,0 +1,14 @@
+  #  Color   Shading   Symbol    Number
+----------------------------------------
+  0: red     open      oval        1
+  1: red     open      oval        2
+  2: red     solid     oval        3
+  3: purple  open      oval        1
+  4: purple  open      oval        3
+  5: green   open      oval        3
+  6: red     open      oval        3
+  7: green   solid     oval        1
+  8: green   open      oval        1
+  9: green   solid     oval        3
+ 10: red     solid     oval        2
+ 11: green   open      oval        2
