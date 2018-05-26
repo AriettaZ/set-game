@@ -361,6 +361,7 @@ def get_user_cards hand_size
 		puts "\nChoose 3 cards from your hand using their # separated by ','."
 		puts "Or type 'none' if you believe no set exists."
 		user_array = gets.chomp.split(",")
+		user_array = [-1] if user_array == [] #user hit enter
 		user_array = [] if user_array.to_s == "[\"none\"]"
 	end
 	user_array.map{|str| str.to_i}.sort
@@ -390,10 +391,9 @@ end
 	TODO missing check that integers must be unique
 =end
 	def valid_syntax?(user_input,hand_length)
-		# user input must be 0 or 3; done if 0 case
+		# user input must have length 0 or 3
 		return true if user_input.length == 0
 		return false if user_input.length != 3
-		return false if user_input[0]==user_input[1] || user_input[1]==user_input[2] || user_input[0]==user_input[2]
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
@@ -451,6 +451,7 @@ end
 	#Create Date: 5/22
 	#Edit: 5/24 by Ariel, add test cases
 	#Edit: 5/26 by Ariel, Minor changes, add documentation
+	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
 	# TODO update test cases according to changes
 	# TODO update find_set(hand).empty? part
 =begin
@@ -470,7 +471,7 @@ end
 				puts 'Congrats! No set on hand and no card in deck. Game is cleared'
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
-				puts 'You entered no set but at least one set exsit.'
+				puts 'You entered no set but at least one set exist.'
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
 				puts 'Congrats! You entered a correct set!'
