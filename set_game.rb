@@ -43,23 +43,22 @@ class SetGame
 	end
 
 =begin
-	Author: Channing
+	Author: Channing, Mike
 	Date: 5/25
 	Editor: N/A
 	Description: Finds 1 or all valid sets in hand.
 =end
 	def find_set(hand, mode = 'hint')
-		# Creating an array of arrays "check_table" to organize cards by subset values
-		hand_stat  = organize(hand)
-		
 		# Create a hash to represent the number of cards in each section of the table
-		#table_stats = stats(card_table)
-		
+		hand_stat  = organize(hand)
+				
 		# Score the subarrays to find the one that contains the least possible sets
-		#scores = score(table_stats) # set of sets returned
+		score = get_score(hand_stat) # set of sets returned
+		
+		check_table = get_check_table(hand_stat, score)
 		
 		# Use scores and card_table to find one or all valid sets
-		#set_exist(card_table, scores)
+		set_exist(check_table, score)
 	end
 
 =begin
