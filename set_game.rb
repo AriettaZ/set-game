@@ -46,6 +46,46 @@ class SetGame
 		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 4
 	end
 
+=begin
+	Author: Ariel
+	Created: 5/26
+	Edit: N/A
+	Description: This method redirects user to different tracks
+	Requires: choice.class == integer
+	Updates: N/A
+	Returns: N/A
+=end
+	def menu_redirect_choice(choice)
+		case choice
+		when 1
+		  puts "===========New Game==========="
+		  new_game
+		when 2
+		  puts "======Entering Tutorial======"
+		  get_tutorial
+		when 3
+		  puts "=========Load Game========="
+		when 4
+		  puts "============Quit============"
+		else
+		  "You gave me #{choice} -- I have no idea what to do with that."
+		end
+		menu_get_choice
+	end
+
+	def new_game
+	  #generate 81 cards and shuffled
+	  deck = get_deck
+	  shuffle(deck)
+	  #top_card is the next card to be selected in deck
+	  hand, top_card = get_hand(deck)
+	  while hand.length > 0
+	  	show_hand hand
+	  	user_input = get_user_cards hand.length
+	  	hand, top_card = update(hand,user_input,top_card,deck)
+	  end
+	  print "All Clear! Good Game!"
+	end
  	#Author: Ariel
 	#Create date: 5/21
 	#Edit: Mike 5/24
@@ -117,12 +157,12 @@ class SetGame
 	def find_set(hand, mode = 'hint')
 		# Create a hash to represent the number of cards in each section of the table
 		hand_stat  = organize(hand)
-				
+
 		# Score the subarrays to find the one that contains the least possible sets
 		score = get_score(hand_stat) # set of sets returned
-		
+
 		check_table = get_check_table(hand_stat, score)
-		
+
 		# Use scores and card_table to find one or all valid sets
 		set_exist(check_table, score)
 	end
@@ -477,5 +517,27 @@ end
 			end
 		end
 		return []
+	end
+
+	def get_tutorial()
+		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
+		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)",
+		"","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
+		"============================="
+
+
+		card1 = Card.new('red','striped','diamond','1')
+		card2 = Card.new('red','striped','diamond','2')
+		card3 = Card.new('red','striped','diamond','3')
+		card4 = Card.new('red','striped','squiggle','1')
+		card5 = Card.new('red','striped','squiggle','2')
+		card6 = Card.new('red','striped','squiggle','3')
+		card7 = Card.new('red','striped','oval','1')
+		card8 = Card.new('red','striped','oval','2')
+		card9 = Card.new('red','striped','oval','3')
+		card10 = Card.new('red','solid','diamond','1')
+		card11 = Card.new('red','solid','diamond','2')
+		card12 = Card.new('red','solid','diamond','3')
+		tutorial_hand = [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 	end
 end
