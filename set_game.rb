@@ -1,7 +1,14 @@
 #Author: Mike, Channing
 #Create Date: 5/22
+
 require_relative 'card'
 class SetGame
+
+def initialize
+	@startTime = Time.now
+end
+attr_reader :startTime
+
 =begin
 	Author: Gail Chen
 	Date: 5/25
@@ -101,6 +108,14 @@ class SetGame
 		deck
 	end
 
+=begin
+		Author: Mike
+		Date created: 5/22
+		Description: Shuffle the deck
+		Requires: deck != nil
+		Updates: deck
+		Returns: Shuffled deck
+=end
 	def shuffle(deck)
 		deck.shuffle!
 	end
@@ -294,6 +309,8 @@ def get_check_table(hand_stat,score)
 		|attr|
 		hand_stat[attr.intern]
 	end
+	
+	check_table.push *(attr_card_table[0].product(attr_card_table[1],attr_card_table[2]))
 end
 
 =begin
@@ -508,7 +525,6 @@ end
 	Description: Check if there exist a set in the check_table
 =end
 	def set_exist(check_table,score)
-
 		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
 		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
 
