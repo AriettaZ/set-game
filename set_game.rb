@@ -562,9 +562,8 @@ end
 	def get_tutorial()
 		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
 		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)",
-		"","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
-		"","You're given 12 cards in the first round","","=============================","Let's learn how to find sets from !",""
-
+		"Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
+		"","You'll be given 12 cards in the first round","Let's start from here!",""
 
 		card1 = Card.new('red','striped','diamond','1')
 		card2 = Card.new('red','striped','diamond','2')
@@ -579,5 +578,9 @@ end
 		card11 = Card.new('red','solid','diamond','2')
 		card12 = Card.new('red','solid','diamond','3')
 		tutorial_hand = [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
+		show_hand(tutorial_hand)
+
+		puts "You have card number before each card. Enter the card numbers separated by ',' to show your set","If you think no set available, simply push Enter key"
+		"Definition of sets: "
 	end
 end
