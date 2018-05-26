@@ -91,6 +91,7 @@ attr_reader :startTime
 		  get_tutorial
 		when 3
 		  puts "=========Load Game========="
+			load_game
 		when 4
 			puts "=========Delete Saved Game========="
 			delete_saved_game
@@ -100,20 +101,93 @@ attr_reader :startTime
 		end
 	end
 
+
+	#Author: Mike
+	#Create Date: 5/22
+	#Edit: Ariel 5/26
+	#Edit: Mike 5/26
 	def new_game
-	  #generate 81 cards and shuffled
-	  deck = get_deck
-	  shuffle(deck)
-	  #top_card is the next card to be selected in deck
-	  hand, top_card = get_hand(deck)
-		until top_card == 81 && find_set(hand).empty?
+		#generate 81 cards and shuffled
+		deck = get_deck
+		shuffle(deck)
+		#top_card is the next card to be selected in deck
+		hand, top_card = get_hand deck
+		saved_time = 0
+		num_of_hint = 0
+		num_of_correct = 0
+
+		continue_game top_card, deck, hand, num_of_hint,num_of_correct
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def continue_game top_card, deck, hand, num_of_hint,num_of_correct
+		until top_card==81 && find_set(hand).empty?
 			show_hand hand
 	  	user_input = get_user_cards hand.length
 	  	hand, top_card = update(hand,user_input,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
-		puts ""
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def save_game(time,num_of_hint,num_of_correct,top_card,deck,hand)
+		file_name = get_save_information
+		File.write file_name,Marshal.dump({time: time,num_of_hint: num_of_hint,num_of_correct: num_of_correct,top_card: top_card,deck: deck,hand: hand})
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def get_save_information
+		puts "Please enter file name"
+		file_name = "stored_game/"+gets.chomp+".setgame"
+		while File.exist? file_name
+			puts "File name exist, please enter a new name."
+			file_name = "stored_game/"+gets.chomp+".setgame"
+		end
+		file_name
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def load_game
+		file_name = get_stored_games
+		load = Marshal.load File.read(file_name)
+		  #Load the game
+		  	saved_time = load[:time]
+			num_of_hint = load[:num_of_hint]
+			num_of_correct = load[:num_of_correct]
+			top_card = load[:top_card]
+			deck = load[:deck]
+			hand = load[:hand]
+
+			continue_game top_card, deck, hand, num_of_hint,num_of_correct
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def get_stored_games
+		Dir.foreach("stored_game/") do
+			|file_name|
+			puts File.basename(file_name,'.setgame')+"  "+File.new("stored_game/"+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
+		end
+		puts
+		puts "Please enter file name"
+		file_name = "stored_game/"+gets.chomp+".setgame"
+		unless File.exist? file_name
+			puts "File name not exist, please enter another name."
+			Dir.foreach("stored_game/") do
+				|file_name|
+				puts file_name+"  "+File.new(file_name).ctime.strftime("%F %T")
+			end
+		end
+		file_name
 	end
 
 	def auto_game
@@ -126,8 +200,8 @@ attr_reader :startTime
 			show_hand hand
 			hint = []
 			find_set(hand).each do |card| hint.push(hand.index(card)) end
-			user_input = hint
-	  	hand, top_card = update(hand,user_input,top_card,deck)
+			puts hint.to_s
+	  	hand, top_card = update(hand,hint,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
@@ -202,6 +276,10 @@ attr_reader :startTime
 		hand.length.times{ |card|
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
+
+		# hint = []
+		# find_set(hand).each do |card| hint.push(hand.index(card)) end
+		# puts hint.to_s
 	end
 
 =begin
