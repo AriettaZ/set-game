@@ -2,6 +2,49 @@
 #Create Date: 5/22
 require_relative 'card'
 class SetGame
+=begin
+	Author: Gail Chen
+	Date: 5/25
+	Edit: N/A
+	Description:
+		Prints menu to the screen and get user's choice.
+		The menu includes New Game, Tutorial, Load Game.
+		The user must choose a valid option by typing the number of that option.
+		The method returns an integer of corresponding user's choice.
+	Requires: N/A
+	Updates: N/A
+	Returns: Integer where 1 <= Integer <= 4
+=end
+	def menu_get_choice
+		user_choice = ""
+		puts "Menu:"
+		puts "[1] New Game"
+		puts "[2] Tutorial"
+		puts "[3] Load Game"
+		puts "[4] Quit"
+		until valid_choice? user_choice
+			puts "Choose an option from menu by typing the number of that option:"
+			user_choice = gets.chomp
+		end
+		user_choice.to_i
+	end
+
+=begin
+	Author: Gail Chen
+	Created: 5/25
+	Edit: N/A
+	Description: This method checks that user enters an integer between 1 and 4.
+	Requires: user_input.class == String
+	Updates: N/A
+	Returns: true if user_input is a string of an integer in range [1, 4]
+		 false else
+=end
+	def valid_choice?(user_input)
+		# user_input must be size 1
+		return false if user_input.length != 1
+		# user_input must be an integer between 1 and 4
+		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 4
+	end
 
  	#Author: Ariel
 	#Create date: 5/21
