@@ -17,12 +17,12 @@ class SetGame
 =end
 	def menu_get_choice
 		user_choice = ""
-		puts "Menu:"
-		puts "[1] New Game"
-		puts "[2] Tutorial"
-		puts "[3] Load Game"
-		puts "[4] Quit"
 		until valid_choice? user_choice
+			puts "Menu:"
+			puts "[1] New Game"
+			puts "[2] Tutorial"
+			puts "[3] Load Game"
+			puts "[4] Quit"
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
 		end
@@ -254,6 +254,8 @@ def get_check_table(hand_stat,score)
 		|attr|
 		hand_stat[attr.intern]
 	end
+
+	check_table.push *(attr_card_table[0].product(attr_card_table[1],attr_card_table[2]))
 end
 
 =begin
