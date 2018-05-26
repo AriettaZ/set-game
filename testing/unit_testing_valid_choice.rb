@@ -6,10 +6,10 @@
 	- Return true
 		1. user_input = "1"
 		2. user_input = "3"
-		3. user_input = "4"
+		3. user_input = "5"
 	- Return false
 		1. user_input = "0"
-		2. user_input = "5"
+		2. user_input = "6"
 		3. user_input = "a"
 		4. user_input = "s"
 		5. user_input = "10"
@@ -38,10 +38,10 @@ class TestGetHand < Test::Unit::TestCase
 		assert_equal true, game.valid_choice?(user_input)
 	end
 
-	# True Case 3. user_input = "4"
+	# True Case 3. user_input = "5"
 	def test_valid_choice_true_3
 		game = SetGame.new
-		user_input = "4"
+		user_input = "5"
 		assert_equal true, game.valid_choice?(user_input)
 	end
 
@@ -52,10 +52,10 @@ class TestGetHand < Test::Unit::TestCase
 		assert_equal false, game.valid_choice?(user_input)
 	end
 
-	# False Case 2. user_input = "5"
+	# False Case 2. user_input = "6"
 	def test_valid_choice_false_2
 		game = SetGame.new
-		user_input = "5"
+		user_input = "6"
 		assert_equal false, game.valid_choice?(user_input)
 	end
 

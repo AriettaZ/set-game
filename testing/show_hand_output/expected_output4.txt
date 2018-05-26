@@ -1,3 +1,4 @@
+
   #  Color   Shading   Symbol    Number
 ----------------------------------------
   0: red     open      oval        1
