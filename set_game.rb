@@ -139,6 +139,11 @@ attr_reader :startTime
 	
 	#Author: Mike
 	#Creation Date: 5/26
+	def delete_game
+		file_name = get_stored_games
+		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
+		File.delete(file_name) if gets.chomp.downcase[0]=="y"
+	end
 	
 
 	#Author: Mike
@@ -196,6 +201,9 @@ attr_reader :startTime
 		file_name
 	end
 
+	#Author: Mike
+	#Create Date: 5/26
+	#Edit: Ariel 5/26
 	def auto_game
 	  #generate 81 cards and shuffled
 	  deck = get_deck
