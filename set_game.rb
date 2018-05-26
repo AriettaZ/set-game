@@ -211,6 +211,7 @@ def get_check_table(hand_stat,score)
 		|attr|
 		hand_stat[attr.intern]
 	end
+end
 
 =begin
 	Author: Channing Jacobs
