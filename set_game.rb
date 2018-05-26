@@ -6,14 +6,18 @@ class SetGame
  	#Author: Ariel
 	#Create date: 5/21
 	#Edit: Mike 5/24
-	#Edit: Mike 5/25
 	def get_deck
 		deck = []
-		$Colors.each{ |color| 
-			$Shadings.each {|shading| 
-				$Symbols.each{|symbol| 
-					$Numbers.each{|number| 
-					deck.push(Card.new(color, shading, symbol, number)) }}}}
+		card_struct = Struct.new(:color,:shading,:symbol,:number)
+		for color in $Colors
+			for shading in $Shadings
+				for symbol in $Symbols
+					for number in $Numbers
+						deck.push(card_struct.new(color, shading, symbol, number))
+					end
+				end
+			end
+	  	end
 		deck
 	end
 
@@ -42,160 +46,13 @@ class SetGame
 		}
 	end
 
-=begin
-	Author: Channing
-	Date: 5/25
-	Editor: N/A
-	Description: Finds 1 or all valid sets in hand.
-=end
-	def find_set(hand, mode = 'hint')
-		# Creating an array of arrays "check_table" to organize cards by subset values
-		hand_stat  = organize(hand)
-		
-		# Create a hash to represent the number of cards in each section of the table
-		#table_stats = stats(card_table)
-		
-		# Score the subarrays to find the one that contains the least possible sets
-		#scores = score(table_stats) # set of sets returned
-		
-		# Use scores and card_table to find one or all valid sets
-		#set_exist(card_table, scores)
+	def find_set(hand)
+
 	end
 
 =begin
-	Author: Channing
-	Date: 5/25
-	Editor:
-	Description: Create a hash to hold statistics (counts) of the number of each card
-	attribute found within the hand.
-	Require: hand.class == Array; for each element in hand, element.class == Card
-	Updates: N/A
-	Returns: hash with keys representing card attributes: {$Colors + $Shadings + $Symbols + $Numbers}
-		 and values corresponding to number of cards with this attribute in hand.
-		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
-
-=end
-	def organize hand
-		# create hash
-		hand_stat = Hash.new {|k,v| k[v] = []}
-		# create keys based on card attr, set to default [] value
-		card_attrs = $Colors + $Shadings + $Symbols + $Numbers
-		card_attrs.each {|attr| hand_stat[attr.intern]}
-		# add cards to hash
-		for card in hand
-			[:color, :shading, :symbol, :number].each {|catg| 
-				hand_stat[card[catg].intern] << card
-			}
-		end
-		hand_stat
-	end
-
-
-
-=begin
-	Author: Mike
-	Date: 5/25
-	Editor: N/A
-
-	Description: Return a valid array of categories and their scores.
-
-	Requires: hand_Stat filled up
-	Updates: N/A
-	Returns: [["color",color_score],["shading",shading_score],["symbol",symbol_score],["number",number_score]]
-		 where for all scores, 0<=scores<=220
-=end
-def get_score(hand_stat)
-	score=[['color',0],['shading',0],['symbol',0],['number',0]]
-	
-	score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
-	score[0][1] += $Colors.reduce 0 do
-		|sum, feature|
-		len = hand_stat[feature.intern].length
-		sum + (len*(len-1)*(len-2).to_f/6)
-	end
-	
-	score[1][1] = $Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-	score[1][1] += $Shadings.reduce 0 do
-		|sum, feature|
-		len = hand_stat[feature.intern].length
-		sum+(len*(len-1)*(len-2).to_f/6)
-	end
-	
-	score[2][1] =  $Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-	score[2][1] += $Symbols.reduce 0 do
-		|sum, feature|
-		len = hand_stat[feature.intern].length
-		sum+(len*(len-1)*(len-2).to_f/6)
-	end
-	
-	score[3][1] =  $Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-	score[3][1] += $Numbers.reduce 0 do
-		|sum, feature|
-		len = hand_stat[feature.intern].length
-		sum+(len*(len-1)*(len-2).to_f/6)
-	end
-	score
-end
-
-=begin
-	Author: Mike
-	Date: 5/25
-	Editor:
-
-	Description: Return a check table consists of possible combinations of set from hand.
-	Requires: |hand_stat| = |hand|*3
-				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
-				for all card in hand_stat[:attribute], card has attribute
-				hand_stat = {
-								attribute1:[Card, Card, Card]
-								attribute2:[Card, Card, Card]
-								...
-								attribute3:[Card, Card, Card]
-							}
-				
-				score.class = Array
-					for element in score, element.class = Array, element.length = 2
-					for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
-	Updates: N/A
-	Returns: [[Card, Card, Card],[Card,Card,Card],...,[Card,Card,Card]]
-		 where each [Card,Card,Card] is a possible combination of set from hand.
-
-=end
-
-def get_check_table(hand_stat,score)
-	sortedScore = score.sort{|a,b| a[1]<=>b[1]}
-	category = sortedScore[0][0]
-	check_catg = []
-	case category
-		when "color"
-			category = $Colors 
-		when "shading"
-			category = $Shadings
-		when "symbol"
-			category = $Symbols
-		when "number"
-			category = $Numbers
-	end
-	
-	check_table = []
-	
-	category.each {
-		|attr|
-		check_table.push(*hand_stat[attr.intern].combination(3).to_a)
-	}
-	
-	attr_card_table = category.map do
-		|attr|
-		hand_stat[attr.intern]
-	end
-
-	check_table.push *(attr_card_table[0].product(attr_card_table[1],attr_card_table[2]))
-end
-
-
-=begin
-	Author: Channing
-	Date: 5/24
+	Author: Channing Jacobs
+	Date: 2/24
 	Editor:
 
 	Description: Returns a valid array representation of user's chosen
@@ -215,7 +72,7 @@ def get_user_cards hand_size
 	user_array = [-1]
 	until valid_syntax?(user_array, hand_size)
 		puts "\nChoose 3 cards from your hand using their # separated by ','."
-		puts "Or type 'none' or ',,,' if you believe no set exists."
+		puts "Or type 'none' if you believe no set exists."
 		user_array = gets.chomp.split(",")
 		user_array = [] if user_array.to_s == "[\"none\"]"
 	end
@@ -227,7 +84,6 @@ end
 	Author: Channing Jacobs
 	Created: 5/24
 	Editor: Mike, Gail 5/24
-		Channing 5/25
 	Description: This method checks that user_input meets the requirement
 	of conforming to being a string representation of an array. The array
 	of integers represents the cards that were picked from the user's hand.
@@ -247,11 +103,12 @@ end
 	TODO missing check that integers must be unique
 =end
 	def valid_syntax?(user_input,hand_length)
-		# user_input must be size 0 or 3; done if 0 case
+		# user input must be 0 or 3; done if 0 case
 		return true if user_input.length == 0
 		return false if user_input.length != 3
-		# user_input must contain only integers between 1 and hand_length - 1, and the integers can't be repeated
-		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) == 1)})
+		return false if user_input[0]==user_input[1] || user_input[1]==user_input[2] || user_input[0]==user_input[2]
+		# user input must only contain integers (between 0 and hand.length)
+		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
 
 
@@ -304,19 +161,36 @@ end
 	end
 
 	#Author: Ariel
+	#Create Date: 5/22
+	#Edit: 5/24 by Ariel, add test cases
+	#Edit: 5/26 by Ariel, Minor changes, add documentation
+	# TODO update test cases according to changes
+	# TODO update find_set(hand).empty? part
+=begin
+	Requires: hand,user_input,top_card,deck
+	Returns:  hand, top_card
+	Description: after user give the valid input, update will
+	give feedback on users choice and change the hand, deck hand
+	top_card according to user's input
+=end
 	def update(hand,user_input,top_card,deck)
-		if hand.length<21 && user_input==[] && top_card<81
-			puts '3 cards will be added'
+	  # when user_input==[] && hand.length<21 && top_card<81
+		if user_input==[] && hand.length<21 && top_card<81
+			puts 'You entered no set. 3 cards will be added'
 			hand, top_card = add3(deck,hand,top_card)
-		elsif (hand.length == 21 or top_card==81)&&user_input==[]
-			puts 'At least one set'
+		# when user_input==[] && top_card==81 && no sets on hand
+		elsif user_input==[] && top_card==81 && find_set(hand).empty?
+			puts 'Congrats! No set on hand and no card in deck. Game is cleared'
+		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
+		elsif user_input==[]
+			puts 'You entered no set but at least one set exsit.'
+		# when user_input!=[] && user_input is a correct set
+		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
+			puts 'Congrats! You entered a correct set!'
+			hand, top_card = replace3(deck,hand,user_input,top_card)
+		# when user_input!=[] && user_input is not a correct set
 		else
-			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
-				puts 'Correct set!'
-				hand, top_card = replace3(deck,hand,user_input,top_card)
-			else
-				puts 'Wrong set'
-			end
+			puts 'Sorry. Wrong set'
 		end
 		return hand, top_card
 	end
