@@ -97,6 +97,7 @@ attr_reader :startTime
 		end
 	end
 
+
 	#Author: Mike
 	#Create Date: 5/22
 	#Edit: Ariel 5/26
@@ -189,9 +190,6 @@ attr_reader :startTime
 			end
 		end
 		file_name
-=======
-		puts ""
->>>>>>> 681d4f79134ba00a0a95f8e4a753c0ed09691af5
 	end
 
 	def auto_game
