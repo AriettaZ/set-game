@@ -1,29 +1,52 @@
 #Author: Mike, Channing
 #Create Date: 5/22
+
 require_relative 'card'
 class SetGame
+
+def initialize
+	@startTime = Time.now
+end
+attr_reader :startTime
+
+=begin
+	Author: Gail Chen
+	Date: 5/26
+	Edit: N/A
+	Description:
+		Prints menu to the screen. The menu shows choices of New Game, Tutorial,
+		Load Game, Auto-Playing Game and Quit.
+	Requires: N/A
+	Updates: N/A
+	Returns: Prints menu to screen.
+=end
+	def show_menu
+		puts "\nMenu:"
+		puts "[1] New Game"
+		puts "[2] Tutorial"
+		puts "[3] Load Game"
+		puts "[4] Auto-Playing Mode"
+		puts "[5] Quit"
+		puts "Choose an option from menu by typing the number of that option:"
+	end
+
 =begin
 	Author: Gail Chen
 	Date: 5/25
-	Edit: N/A
+	Edit: 5/26 Gail added Auto-Playing Mode and called show_menu
 	Description:
-		Prints menu to the screen and get user's choice.
-		The menu includes New Game, Tutorial, Load Game.
+		Prints menu to the screen and get valid user's choice.
 		The user must choose a valid option by typing the number of that option.
 		The method returns an integer of corresponding user's choice.
 	Requires: N/A
 	Updates: N/A
-	Returns: Integer where 1 <= Integer <= 4
+	Returns: Integer where 1 <= Integer <= 5
 =end
 	def menu_get_choice
-		user_choice = ""
+		show_menu
+		user_choice = gets.chomp
 		until valid_choice? user_choice
-			puts "Menu:"
-			puts "[1] New Game"
-			puts "[2] Tutorial"
-			puts "[3] Load Game"
-			puts "[4] Quit"
-			puts "Choose an option from menu by typing the number of that option:"
+			show_menu
 			user_choice = gets.chomp
 		end
 		user_choice.to_i
@@ -32,18 +55,78 @@ class SetGame
 =begin
 	Author: Gail Chen
 	Created: 5/25
-	Edit: N/A
-	Description: This method checks that user enters an integer between 1 and 4.
+	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
+	Description: This method checks that user enters an integer between 1 and 5.
 	Requires: user_input.class == String
 	Updates: N/A
-	Returns: true if user_input is a string of an integer in range [1, 4]
+	Returns: true if user_input is a string of an integer in range [1, 5]
 		 false else
 =end
 	def valid_choice?(user_input)
-		# user_input must be size 1
-		return false if user_input.length != 1
-		# user_input must be an integer between 1 and 4
-		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 4
+		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 5
+			return true
+		else
+			puts "You chose " + user_input +" -- I have no idea what to do with that."
+			return false
+		end
+	end
+
+=begin
+	Author: Ariel
+	Created: 5/26
+	Edit: N/A
+	Description: This method redirects user to different tracks
+	Requires: choice.class == integer
+	Updates: N/A
+	Returns: N/A
+=end
+	def menu_redirect_choice(choice)
+		case choice
+		when 1
+		  puts "===========New Game==========="
+		  new_game
+		when 2
+		  puts "======Entering Tutorial======"
+		  get_tutorial
+		when 3
+		  puts "=========Load Game========="
+		when 4
+			puts "=========Auto-playing Mode========="
+			auto_game
+		end
+	end
+
+	def new_game
+	  #generate 81 cards and shuffled
+	  deck = get_deck
+	  shuffle(deck)
+	  #top_card is the next card to be selected in deck
+	  hand, top_card = get_hand(deck)
+		until top_card == 81 && find_set(hand).empty?
+			show_hand hand
+	  	user_input = get_user_cards hand.length
+	  	hand, top_card = update(hand,user_input,top_card,deck)
+		end
+	  puts "All Clear! Good Game!"
+		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
+		puts ""
+	end
+
+	def auto_game
+	  #generate 81 cards and shuffled
+	  deck = get_deck
+	  shuffle(deck)
+	  #top_card is the next card to be selected in deck
+	  hand, top_card = get_hand(deck)
+		until top_card== 81 && find_set(hand).empty?
+			show_hand hand
+			hint = []
+			find_set(hand).each do |card| hint.push(hand.index(card)) end
+			user_input = hint
+	  	hand, top_card = update(hand,user_input,top_card,deck)
+		end
+	  puts "All Clear! Good Game!"
+		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
 
  	#Author: Ariel
@@ -60,6 +143,14 @@ class SetGame
 		deck
 	end
 
+=begin
+		Author: Mike
+		Date created: 5/22
+		Description: Shuffle the deck
+		Requires: deck != nil
+		Updates: deck
+		Returns: Shuffled deck
+=end
 	def shuffle(deck)
 		deck.shuffle!
 	end
@@ -101,6 +192,7 @@ class SetGame
 		Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand(hand)
+		puts ""
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
@@ -117,12 +209,12 @@ class SetGame
 	def find_set(hand, mode = 'hint')
 		# Create a hash to represent the number of cards in each section of the table
 		hand_stat  = organize(hand)
-				
+
 		# Score the subarrays to find the one that contains the least possible sets
 		score = get_score(hand_stat) # set of sets returned
-		
+
 		check_table = get_check_table(hand_stat, score)
-		
+
 		# Use scores and card_table to find one or all valid sets
 		set_exist(check_table, score)
 	end
@@ -281,6 +373,7 @@ def get_user_cards hand_size
 		puts "\nChoose 3 cards from your hand using their # separated by ','."
 		puts "Or type 'none' if you believe no set exists."
 		user_array = gets.chomp.split(",")
+		user_array = [-1] if user_array == [] #user hit enter
 		user_array = [] if user_array.to_s == "[\"none\"]"
 	end
 	user_array.map{|str| str.to_i}.sort
@@ -310,10 +403,9 @@ end
 	TODO missing check that integers must be unique
 =end
 	def valid_syntax?(user_input,hand_length)
-		# user input must be 0 or 3; done if 0 case
+		# user input must have length 0 or 3
 		return true if user_input.length == 0
 		return false if user_input.length != 3
-		return false if user_input[0]==user_input[1] || user_input[1]==user_input[2] || user_input[0]==user_input[2]
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= hand_length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
@@ -371,6 +463,7 @@ end
 	#Create Date: 5/22
 	#Edit: 5/24 by Ariel, add test cases
 	#Edit: 5/26 by Ariel, Minor changes, add documentation
+	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
 	# TODO update test cases according to changes
 	# TODO update find_set(hand).empty? part
 =begin
@@ -382,22 +475,22 @@ end
 =end
 	def update(hand,user_input,top_card,deck)
 	  # when user_input==[] && hand.length<21 && top_card<81
-		if user_input==[] && hand.length<21 && top_card<81
-			puts 'You entered no set. 3 cards will be added'
+		if user_input.empty? && hand.length<21 && top_card<81
+			puts "You entered no set. 3 cards will be added."
 			hand, top_card = add3(deck,hand,top_card)
 		# when user_input==[] && top_card==81 && no sets on hand
-		elsif user_input==[] && top_card==81 && find_set(hand).empty?
-			puts 'Congrats! No set on hand and no card in deck. Game is cleared'
+		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
+				puts "Congrats! No set on hand and no card in deck. Game is cleared."
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
-		elsif user_input==[]
-			puts 'You entered no set but at least one set exsit.'
+		elsif user_input.empty?
+				puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
-			puts 'Congrats! You entered a correct set!'
-			hand, top_card = replace3(deck,hand,user_input,top_card)
+				puts "Congrats! You entered a correct set!"
+				hand, top_card = replace3(deck,hand,user_input,top_card)
 		# when user_input!=[] && user_input is not a correct set
 		else
-			puts 'Sorry. Wrong set'
+				puts "Sorry. Wrong set."
 		end
 		return hand, top_card
 	end
@@ -469,7 +562,6 @@ end
 	Description: Check if there exist a set in the check_table
 =end
 	def set_exist(check_table,score)
-
 		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
 		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
 
@@ -479,5 +571,54 @@ end
 			end
 		end
 		return []
+	end
+
+	def get_tutorial()
+		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
+		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
+		"Please press Enter to continue Tutorial",""
+		if gets =="\n"
+			puts "=============================","A set consists of three cards satisfying all of these conditions:", "They all have the same number or have three different numbers.",
+			"They all have the same symbol or have three different symbols.","They all have the same shading or have three different shadings.",
+			"And they all have the same color or have three different colors."
+			cardA = Card.new('red','striped','diamond','1')
+			cardB = Card.new('red','striped','diamond','2')
+			cardC = Card.new('red','striped','diamond','3')
+			cardD = Card.new('green','solid','diamond','2')
+			cardE = Card.new('green','solid','squiggle','2')
+			cardF = Card.new('purple','open','diamond','3')
+			puts "","This is an example of a 6 cards: "
+			show_hand [cardA, cardB, cardC,cardD,cardE,cardF]
+			puts "","card #0, #1 and #2 are a set: "
+			show_hand [cardA, cardB, cardC]
+			puts "To choose this set, enter their card numbers separated by ',': 0,1,2"
+
+			puts "","card #0, #3 and #4 are another set: "
+			show_hand [cardA, cardD, cardF]
+			puts "To choose this set, enter their card numbers separated by ',': 0,3,5","Please press Enter to continue Tutorial",""
+			if gets =="\n"
+				puts "=============================","You're given 12 cards in the first round as below",""
+
+				card1 = Card.new('red','striped','diamond','1')
+				card2 = Card.new('red','striped','diamond','2')
+				card3 = Card.new('red','striped','diamond','3')
+				card4 = Card.new('red','striped','squiggle','1')
+				card5 = Card.new('red','striped','squiggle','2')
+				card6 = Card.new('red','striped','squiggle','3')
+				card7 = Card.new('red','striped','oval','1')
+				card8 = Card.new('red','striped','oval','2')
+				card9 = Card.new('red','striped','oval','3')
+				card10 = Card.new('red','solid','diamond','1')
+				card11 = Card.new('red','solid','diamond','2')
+				card12 = Card.new('red','solid','diamond','3')
+				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
+
+				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same","If no set exist, simply push Enter key and 3 new cards will be added",
+				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to enter user menu",""
+				if gets=="\n"
+					menu_get_choice
+				end
+			end
+		end
 	end
 end
