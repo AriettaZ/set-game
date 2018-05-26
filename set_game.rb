@@ -25,22 +25,23 @@ attr_reader :startTime
 		puts "[1] New Game"
 		puts "[2] Tutorial"
 		puts "[3] Load Game"
-		puts "[4] Auto-Playing Mode"
-		puts "[5] Quit"
+		puts "[4] Delete Saved Game"
+		puts "[5] Auto-Playing Mode"
+		puts "[6] Quit"
 		puts "Choose an option from menu by typing the number of that option:"
 	end
 
 =begin
 	Author: Gail Chen
 	Date: 5/25
-	Edit: 5/26 Gail added Auto-Playing Mode and called show_menu
+	Edit: 5/26 Gail used show_menu
 	Description:
 		Prints menu to the screen and get valid user's choice.
 		The user must choose a valid option by typing the number of that option.
 		The method returns an integer of corresponding user's choice.
 	Requires: N/A
 	Updates: N/A
-	Returns: Integer where 1 <= Integer <= 5
+	Returns: Integer where 1 <= Integer <= 6
 =end
 	def menu_get_choice
 		show_menu
@@ -56,14 +57,14 @@ attr_reader :startTime
 	Author: Gail Chen
 	Created: 5/25
 	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
-	Description: This method checks that user enters an integer between 1 and 5.
+	Description: This method checks that user enters an integer between 1 and 6.
 	Requires: user_input.class == String
 	Updates: N/A
-	Returns: true if user_input is a string of an integer in range [1, 5]
+	Returns: true if user_input is a string of an integer in range [1, 6]
 		 false else
 =end
 	def valid_choice?(user_input)
-		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 5
+		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 6
 			return true
 		else
 			puts "You chose " + user_input +" -- I have no idea what to do with that."
@@ -89,107 +90,30 @@ attr_reader :startTime
 		  puts "======Entering Tutorial======"
 		  get_tutorial
 		when 3
-			puts "=========Load Game========="
-			load_game
+		  puts "=========Load Game========="
 		when 4
+			puts "=========Delete Saved Game========="
+			delete_saved_game
+		when 5
 			puts "=========Auto-playing Mode========="
 			auto_game
 		end
 	end
 
-
-	#Author: Mike
-	#Create Date: 5/22
-	#Edit: Ariel 5/26
-	#Edit: Mike 5/26
-	def new_game 
-		#generate 81 cards and shuffled
-		deck = get_deck
-		shuffle(deck)
-		#top_card is the next card to be selected in deck
-		hand, top_card = get_hand deck
-		saved_time = 0
-		num_of_hint = 0
-		num_of_correct = 0
-		
-		continue_game top_card, hand, num_of_hint,num_of_correct
-	end
-
-	#Author: Mike
-	#Creation Date: 5/26
-	def continue_game top_card, hand, num_of_hint,num_of_correct
-		until top_card==81 && find_set(hand).empty?
+	def new_game
+	  #generate 81 cards and shuffled
+	  deck = get_deck
+	  shuffle(deck)
+	  #top_card is the next card to be selected in deck
+	  hand, top_card = get_hand(deck)
+		until top_card == 81 && find_set(hand).empty?
 			show_hand hand
-			
-#			hint = []
-#			find_set(hand).each do |card| hint.push(hand.index(card)) end
-#			puts hint.to_s
-#			puts "Want to save game?"
-#			if gets.chomp==="yes"
-#				save_game(Time.new - startTime,0,0,top_card,deck,hand)
-#				break
-#			end
-			
-	  		user_input = get_user_cards hand.length
-	  		hand, top_card = update(hand,user_input,top_card,deck)
+	  	user_input = get_user_cards hand.length
+	  	hand, top_card = update(hand,user_input,top_card,deck)
 		end
-		puts "All Clear! Good Game!"
+	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
-	end
-
-	#Author: Mike
-	#Creation Date: 5/26
-	def save_game(time,num_of_hint,num_of_correct,top_card,deck,hand)
-		file_name = get_save_information
-		File.write file_name,Marshal.dump({time: time,num_of_hint: num_of_hint,num_of_correct: num_of_correct,top_card: top_card,deck: deck,hand: hand})
-	end
-
-	#Author: Mike
-	#Creation Date: 5/26
-	def get_save_information
-		puts "Please enter file name"
-		file_name = "stored_game/"+gets.chomp+".setgame"
-		while File.exist? file_name
-			puts "File name exist, please enter a new name."
-			file_name = "stored_game/"+gets.chomp+".setgame"
-		end
-		file_name
-	end
-	
-	#Author: Mike
-	#Creation Date: 5/26
-	def load_game
-		file_name = get_stored_games
-		load = Marshal.load File.read(file_name)
-		  #Load the game
-		  	saved_time = load[:time]
-			num_of_hint = load[:num_of_hint]
-			num_of_correct = load[:num_of_correct]
-			top_card = load[:top_card]
-			deck = load[:deck]
-			hand = load[:hand]
-			
-			continue_game top_card, hand, num_of_hint,num_of_correct
-	end
-	
-	#Author: Mike
-	#Creation Date: 5/26
-	def get_stored_games
-		Dir.foreach("stored_game/") do
-			|file_name|
-			puts File.basename(file_name,'.setgame')+"  "+File.new("stored_game/"+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
-		end
-		puts
-		puts "Please enter file name"
-		file_name = "stored_game/"+gets.chomp+".setgame"
-		unless File.exist? file_name
-			puts "File name not exist, please enter another name."
-			Dir.foreach("stored_game/") do
-				|file_name|
-				puts file_name+"  "+File.new(file_name).ctime.strftime("%F %T")
-			end
-		end
-		file_name
+		puts ""
 	end
 
 	def auto_game
@@ -203,7 +127,7 @@ attr_reader :startTime
 			hint = []
 			find_set(hand).each do |card| hint.push(hand.index(card)) end
 			user_input = hint
-	  		hand, top_card = update(hand,user_input,top_card,deck)
+	  	hand, top_card = update(hand,user_input,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"

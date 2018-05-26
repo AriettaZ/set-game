@@ -6,7 +6,7 @@ require_relative "set_game"
 
 game = SetGame.new
 choice = game.menu_get_choice
-until choice == 5
+until choice == 6
   game.menu_redirect_choice(choice)
   choice = game.menu_get_choice
 end
