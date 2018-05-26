@@ -34,7 +34,7 @@ attr_reader :startTime
 =begin
 	Author: Gail Chen
 	Date: 5/25
-	Edit: 5/26 Gail used show_menu
+	Edit: 5/26 Gail added Auto-Playing Mode and called show_menu
 	Description:
 		Prints menu to the screen and get valid user's choice.
 		The user must choose a valid option by typing the number of that option.
@@ -90,11 +90,11 @@ attr_reader :startTime
 		  puts "======Entering Tutorial======"
 		  get_tutorial
 		when 3
-		  puts "=========Load Game========="
+			puts "=========Load Game========="
 			load_game
 		when 4
 			puts "=========Delete Saved Game========="
-			delete_saved_game
+			delete_save_game
 		when 5
 			puts "=========Auto-playing Mode========="
 			auto_game
@@ -137,12 +137,17 @@ attr_reader :startTime
 	  		user_input = get_user_cards hand.length
 	  		hand, top_card = update(hand,user_input,top_card,deck)
 		end
-	  puts "All Clear! Good Game!"
+		puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
 
 	#Author: Mike
 	#Creation Date: 5/26
+	def delete_game
+		file_name = get_stored_games
+		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
+		File.delete(file_name) if gets.chomp.downcase[0]=="y"
+	end
 
 
 	#Author: Mike
@@ -201,6 +206,9 @@ attr_reader :startTime
 		file_name
 	end
 
+	#Author: Mike
+	#Create Date: 5/26
+	#Edit: Ariel 5/26
 	def auto_game
 	  #generate 81 cards and shuffled
 	  deck = get_deck
@@ -211,8 +219,7 @@ attr_reader :startTime
 			show_hand hand
 			hint = []
 			find_set(hand).each do |card| hint.push(hand.index(card)) end
-			puts hint.to_s
-	  	hand, top_card = update(hand,hint,top_card,deck)
+	  		hand, top_card = update(hand,hint,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
@@ -288,9 +295,9 @@ attr_reader :startTime
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 
-		# hint = []
-		# find_set(hand).each do |card| hint.push(hand.index(card)) end
-		# puts hint.to_s
+		hint = []
+		find_set(hand).each do |card| hint.push(hand.index(card)) end
+		puts hint.to_s
 	end
 
 =begin
@@ -572,17 +579,17 @@ end
 			hand, top_card = add3(deck,hand,top_card)
 		# when user_input==[] && top_card==81 && no sets on hand
 		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
-			puts "Congrats! No set on hand and no card in deck. Game is cleared."
+				puts "Congrats! No set on hand and no card in deck. Game is cleared."
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
-			puts "You entered no set but at least one set exist."
+				puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
-			puts "Congrats! You entered a correct set!"
-			hand, top_card = replace3(deck,hand,user_input,top_card)
+				puts "Congrats! You entered a correct set!"
+				hand, top_card = replace3(deck,hand,user_input,top_card)
 		# when user_input!=[] && user_input is not a correct set
 		else
-			puts "Sorry. Wrong set."
+				puts "Sorry. Wrong set."
 		end
 		return hand, top_card
 	end
