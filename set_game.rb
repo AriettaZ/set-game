@@ -25,8 +25,9 @@ attr_reader :startTime
 		puts "[1] New Game"
 		puts "[2] Tutorial"
 		puts "[3] Load Game"
-		puts "[4] Auto-Playing Mode"
-		puts "[5] Quit"
+		puts "[4] Delete Saved Game"
+		puts "[5] Auto-Playing Mode"
+		puts "[6] Quit"
 		puts "Choose an option from menu by typing the number of that option:"
 	end
 
@@ -40,7 +41,7 @@ attr_reader :startTime
 		The method returns an integer of corresponding user's choice.
 	Requires: N/A
 	Updates: N/A
-	Returns: Integer where 1 <= Integer <= 5
+	Returns: Integer where 1 <= Integer <= 6
 =end
 	def menu_get_choice
 		show_menu
@@ -56,14 +57,14 @@ attr_reader :startTime
 	Author: Gail Chen
 	Created: 5/25
 	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
-	Description: This method checks that user enters an integer between 1 and 5.
+	Description: This method checks that user enters an integer between 1 and 6.
 	Requires: user_input.class == String
 	Updates: N/A
-	Returns: true if user_input is a string of an integer in range [1, 5]
+	Returns: true if user_input is a string of an integer in range [1, 6]
 		 false else
 =end
 	def valid_choice?(user_input)
-		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 5
+		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 6
 			return true
 		else
 			puts "You chose " + user_input +" -- I have no idea what to do with that."
@@ -92,6 +93,9 @@ attr_reader :startTime
 			puts "=========Load Game========="
 			load_game
 		when 4
+			puts "=========Delete Saved Game========="
+			delete_save_game
+		when 5
 			puts "=========Auto-playing Mode========="
 			auto_game
 		end
@@ -111,7 +115,7 @@ attr_reader :startTime
 		saved_time = 0
 		num_of_hint = 0
 		num_of_correct = 0
-		
+
 		continue_game top_card, deck, hand, num_of_hint,num_of_correct
 	end
 
@@ -136,7 +140,7 @@ attr_reader :startTime
 		puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
-	
+
 	#Author: Mike
 	#Creation Date: 5/26
 	def delete_game
@@ -144,7 +148,7 @@ attr_reader :startTime
 		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
 		File.delete(file_name) if gets.chomp.downcase[0]=="y"
 	end
-	
+
 
 	#Author: Mike
 	#Creation Date: 5/26
@@ -177,7 +181,7 @@ attr_reader :startTime
 			top_card = load[:top_card]
 			deck = load[:deck]
 			hand = load[:hand]
-			
+
 			continue_game top_card, deck, hand, num_of_hint,num_of_correct
 
 	end
@@ -290,7 +294,7 @@ attr_reader :startTime
 		hand.length.times{ |card|
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
-		
+
 		hint = []
 		find_set(hand).each do |card| hint.push(hand.index(card)) end
 		puts hint.to_s
@@ -583,17 +587,17 @@ end
 			hand, top_card = add3(deck,hand,top_card)
 		# when user_input==[] && top_card==81 && no sets on hand
 		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
-			puts "Congrats! No set on hand and no card in deck. Game is cleared."
+				puts "Congrats! No set on hand and no card in deck. Game is cleared."
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
-			puts "You entered no set but at least one set exist."
+				puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
-			puts "Congrats! You entered a correct set!"
-			hand, top_card = replace3(deck,hand,user_input,top_card)
+				puts "Congrats! You entered a correct set!"
+				hand, top_card = replace3(deck,hand,user_input,top_card)
 		# when user_input!=[] && user_input is not a correct set
 		else
-			puts "Sorry. Wrong set."
+				puts "Sorry. Wrong set."
 		end
 		return hand, top_card
 	end

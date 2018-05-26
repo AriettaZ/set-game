@@ -29,4 +29,4 @@ Also list if people worked together (pair programmed) on a particular section.
   * Mike: start save and load game
   * Gail:
   * Ariel:
-  * Chinning: 
+  * Chinning:
