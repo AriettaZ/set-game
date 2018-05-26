@@ -6,9 +6,10 @@ class SetGame
 
 def initialize
 	@startTime = Time.now
+	@correct_sets_times=0
 end
 attr_reader :startTime
-
+attr_accessor :wrong_sets_times
 =begin
 	Author: Gail Chen
 	Date: 5/25
@@ -28,7 +29,8 @@ attr_reader :startTime
 		puts "[1] New Game"
 		puts "[2] Tutorial"
 		puts "[3] Load Game"
-		puts "[4] Quit"
+		puts "[4] Auto-playing Mode"
+		puts "[5] Quit"
 		until valid_choice? user_choice
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
@@ -51,7 +53,7 @@ attr_reader :startTime
 		# user_input must be size 1
 		return false if user_input.length != 1
 		# user_input must be an integer between 1 and 4
-		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 4
+		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 5
 	end
 
 =begin
@@ -74,6 +76,9 @@ attr_reader :startTime
 		when 3
 		  puts "=========Load Game========="
 		when 4
+			puts "=========Auto-playing Mode========="
+			auto_game
+		when 5
 		  puts "============Quit============"
 		else
 		  "You gave me #{choice} -- I have no idea what to do with that."
@@ -87,12 +92,31 @@ attr_reader :startTime
 	  shuffle(deck)
 	  #top_card is the next card to be selected in deck
 	  hand, top_card = get_hand(deck)
-	  while hand.length > 0
-	  	show_hand hand
+		until top_card==81 && find_set(hand).empty?
+			show_hand hand
 	  	user_input = get_user_cards hand.length
 	  	hand, top_card = update(hand,user_input,top_card,deck)
-	  end
-	  print "All Clear! Good Game!"
+		end
+	  puts "All Clear! Good Game!"
+		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
+
+	end
+
+	def auto_game
+	  #generate 81 cards and shuffled
+	  deck = get_deck
+	  shuffle(deck)
+	  #top_card is the next card to be selected in deck
+	  hand, top_card = get_hand(deck)
+		until top_card==81 && find_set(hand).empty?
+			show_hand hand
+			hint = []
+			find_set(hand).each do |card| hint.push(hand.index(card)) end
+			user_input = hint
+	  	hand, top_card = update(hand,user_input,top_card,deck)
+		end
+	  puts "All Clear! Good Game!"
+		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
  	#Author: Ariel
 	#Create date: 5/21
@@ -309,7 +333,7 @@ def get_check_table(hand_stat,score)
 		|attr|
 		hand_stat[attr.intern]
 	end
-	
+
 	check_table.push *(attr_card_table[0].product(attr_card_table[1],attr_card_table[2]))
 end
 
