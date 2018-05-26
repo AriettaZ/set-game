@@ -124,8 +124,18 @@ attr_reader :startTime
 	def continue_game top_card, deck, hand, num_of_hint,num_of_correct
 		until top_card==81 && find_set(hand).empty?
 			show_hand hand
-	  	user_input = get_user_cards hand.length
-	  	hand, top_card = update(hand,user_input,top_card,deck)
+
+#			hint = []
+#			find_set(hand).each do |card| hint.push(hand.index(card)) end
+#			puts hint.to_s
+#			puts "Want to save game?"
+#			if gets.chomp==="yes"
+#				save_game(Time.new - startTime,0,0,top_card,deck,hand)
+#				break
+#			end
+
+	  		user_input = get_user_cards hand.length
+	  		hand, top_card = update(hand,user_input,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
@@ -168,6 +178,7 @@ attr_reader :startTime
 			hand = load[:hand]
 
 			continue_game top_card, deck, hand, num_of_hint,num_of_correct
+
 	end
 
 	#Author: Mike
@@ -547,7 +558,6 @@ end
 	#Edit: 5/26 by Ariel, Minor changes, add documentation
 	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
 	# TODO update test cases according to changes
-	# TODO update find_set(hand).empty? part
 =begin
 	Requires: hand,user_input,top_card,deck
 	Returns:  hand, top_card
@@ -562,17 +572,17 @@ end
 			hand, top_card = add3(deck,hand,top_card)
 		# when user_input==[] && top_card==81 && no sets on hand
 		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
-				puts "Congrats! No set on hand and no card in deck. Game is cleared."
+			puts "Congrats! No set on hand and no card in deck. Game is cleared."
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
-				puts "You entered no set but at least one set exist."
+			puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
-				puts "Congrats! You entered a correct set!"
-				hand, top_card = replace3(deck,hand,user_input,top_card)
+			puts "Congrats! You entered a correct set!"
+			hand, top_card = replace3(deck,hand,user_input,top_card)
 		# when user_input!=[] && user_input is not a correct set
 		else
-				puts "Sorry. Wrong set."
+			puts "Sorry. Wrong set."
 		end
 		return hand, top_card
 	end
@@ -655,10 +665,18 @@ end
 		return []
 	end
 
+	#Author: Ariel
+	#Create Date: 5/26
+	#Edit:
+=begin
+	Requires: N/A
+	Returns:  N/A
+	Description: Give user tutorial about how to play set game
+=end
 	def get_tutorial()
 		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
 		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
-		"Please press Enter to continue Tutorial",""
+		"Please press Enter to continue Tutorial or other keys to quit",""
 		if gets =="\n"
 			puts "=============================","A set consists of three cards satisfying all of these conditions:", "They all have the same number or have three different numbers.",
 			"They all have the same symbol or have three different symbols.","They all have the same shading or have three different shadings.",
@@ -677,7 +695,7 @@ end
 
 			puts "","card #0, #3 and #4 are another set: "
 			show_hand [cardA, cardD, cardF]
-			puts "To choose this set, enter their card numbers separated by ',': 0,3,5","Please press Enter to continue Tutorial",""
+			puts "To choose this set, enter their card numbers separated by ',': 0,3,5","Please press Enter to continue Tutorial to other keys to quit",""
 			if gets =="\n"
 				puts "=============================","You're given 12 cards in the first round as below",""
 
@@ -696,9 +714,8 @@ end
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
 				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same","If no set exist, simply push Enter key and 3 new cards will be added",
-				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to enter user menu",""
+				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to quit Tutorial",""
 				if gets=="\n"
-					menu_get_choice
 				end
 			end
 		end

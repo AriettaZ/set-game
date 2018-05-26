@@ -21,3 +21,12 @@ Also list if people worked together (pair programmed) on a particular section.
   * Gail: show_hand, get_hand, add_3 and replace_3 test cases
   * Channing: group meeting notes; start and finish check_user_input function
   * Mike and Channing: start find_set function
+* May 25th:
+  * Mike and Channing: edit and finish find_set function
+  * Gail: start menu_get_choice and valid_choice?(user_input) function
+  * Ariel: menu_redirect_choice and get_tutorial
+* May 26th:
+  * Mike: start save and load game
+  * Gail:
+  * Ariel:
+  * Chinning:
