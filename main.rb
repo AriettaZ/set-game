@@ -7,13 +7,15 @@ require_relative "print_deck"
 
 
 game = SetGame.new
+choice = game.menu_get_choice
+puts choice.class
+puts "choice #{choice}"
 #generate 81 cards and shuffled
-deck = game.get_deck
-game.shuffle(deck)
-#top_card is the next card to be selected in deck
-top_card = 0
-hand, top_card = game.get_hand(deck,top_card)
-game.show_hand(hand)
+# deck = game.get_deck
+# game.shuffle(deck)
+# #top_card is the next card to be selected in deck
+# hand, top_card = game.get_hand(deck)
+# game.show_hand(hand)
 
 #    hint=game.find_set(hand)
 

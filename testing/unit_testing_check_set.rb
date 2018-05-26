@@ -8,12 +8,12 @@ class TestCheckSet < Test::Unit::TestCase
 
 =begin
 	Notation:
-		a-b-c-d 
+		a-b-c-d
 		where a is the number of cards with same color
 		where b is the number of cards with same shading
 		where a is the number of cards with same symbol
 		where a is the number of cards with same number
-	
+
 	Test Plan:
 		order = ["color","shading","symbol","number"]
 			1. 3-3-1-3 True
@@ -29,7 +29,7 @@ class TestCheckSet < Test::Unit::TestCase
 			9. 3-2-1-3 True
 			10. 4. 2-3-2-3 False
 =end
-	
+
 	$hand=[]
 	i=0
 	number_index=0
@@ -46,7 +46,7 @@ class TestCheckSet < Test::Unit::TestCase
 	$hand.push($card.new("purpul","solid","squiggle","3"))
 	$hand.push($card.new("green","striped","diamond","1"))
 	$hand.push($card.new("green","striped","quiggle","2"))
-	
+
 	#	0: red, striped, diamond, 1
 	#	1: red, striped, squiggle, 1
 	#	2: red, striped, oval, 1
@@ -72,7 +72,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	2: red, striped, oval, 1
 		assert_true(check_set?($hand[0],$hand[1],$hand[2],order))
 	end
-	
+
 	#Check 1-3-3-3
 	def test_check_set_2
 		order = ["color","shading","symbol","number"]
@@ -81,7 +81,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	14: green, striped, diamond, 1
 		assert_true(check_set?($hand[0],$hand[6],$hand[14],order))
 	end
-	
+
 	#Check 3-2-1-3 case
 	def test_check_set_3
 		order = ["color","shading","symbol","number"]
@@ -90,7 +90,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	3: red, solid, diamond, 1
 		assert_false(check_set?($hand[1],$hand[2],$hand[3],order))
 	end
-	
+
 	#Check 2-3-2-3 case
 	def test_check_set_4
 		order = ["color","shading","symbol","number"]
@@ -99,7 +99,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	8: purple, striped, oval, 1
 		assert_false(check_set?($hand[1],$hand[7],$hand[8],order))
 	end
-	
+
 	#Check 1-1-1-1 case
 	def test_check_set_5
 		order = ["color","shading","symbol","number"]
@@ -108,7 +108,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	13: purpul, solid, squiggle, 3
 		assert_true(check_set?($hand[0],$hand[12],$hand[13],order))
 	end
-	
+
 	#Check 2-2-2-2 case
 	def test_check_set_6
 		order = ["color","shading","symbol","number"]
@@ -117,7 +117,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	13: purpul, solid, squiggle, 3
 		assert_false(check_set?($hand[0],$hand[6],$hand[13],order))
 	end
-	
+
 	#Check 3-3-1-3 case
 	def test_check_set_7
 		order = ["shading","number","color","symbol"]
@@ -126,7 +126,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	2: red, striped, oval, 1
 		assert_true(check_set?($hand[0],$hand[1],$hand[2],order))
 	end
-	
+
 	#Check 1-1-1-1 case
 	def test_check_set_8
 		order = ["shading","number","color","symbol"]
@@ -135,7 +135,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	13: purpul, solid, squiggle, 3
 		assert_true(check_set?($hand[0],$hand[12],$hand[13],order))
 	end
-	
+
 	#Check 3-2-1-3 case
 	def test_check_set_9
 		order = ["color"]
@@ -144,7 +144,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	3: red, solid, diamond, 1
 		assert_true(check_set?($hand[1],$hand[2],$hand[3],order))
 	end
-	
+
 	#Check 2-3-2-3 case
 	def test_check_set_10
 		order = ["color"]
@@ -153,5 +153,5 @@ class TestCheckSet < Test::Unit::TestCase
 		#	8: purple, striped, oval, 1
 		assert_false(check_set?($hand[1],$hand[7],$hand[8],order))
 	end
-	
+
 end

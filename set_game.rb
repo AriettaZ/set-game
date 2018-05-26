@@ -3,6 +3,51 @@
 require_relative 'card'
 class SetGame
 
+=begin
+	Author: Gail Chen
+	Date: 5/25
+	Edit: N/A
+	Description:
+		Prints menu to the screen and get user's choice.
+		The menu includes New Game, Tutorial, Load Game.
+		The user must choose a valid option by typing the number of that option.
+		The method returns an integer of corresponding user's choice.
+	Requires: N/A
+	Updates: N/A
+	Returns: Integer where 1 <= Integer <= 4
+
+=end
+	def menu_get_choice
+		user_choice = ""
+		puts "Menu:"
+		puts "[1] New Game"
+		puts "[2] Tutorial"
+		puts "[3] Load Game"
+		puts "[4] Quit"
+		until valid_choice? user_choice
+			puts "Choose an option from menu by typing the number of that option:"
+			user_choice = gets.chomp
+		end
+		user_choice.to_i
+	end
+
+=begin
+	Author: Gail Chen
+	Created: 5/25
+	Edit: N/A
+	Description: This method checks that user enters an integer between 1 and 4.
+	Requires: user_input.class == String
+	Updates: N/A
+	Returns: true if user_input is a string of an integer in range [1, 4]
+		 false else
+=end
+	def valid_choice?(user_input)
+		# user_input must be size 1
+		return false if user_input.length != 1
+		# user_input must be an integer between 1 and 4
+		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 4
+	end
+
   #Author: Ariel
 	def get_deck
 		deck = []
@@ -26,23 +71,47 @@ class SetGame
 		deck.shuffle!
 	end
 
-	#Author: Gail
-	def get_hand(deck, top_card)
+=begin
+	Author: Gail Chen
+	Date created: 5/22
+	Edit: 5/25 Gail Chen optimized the method
+	Description:
+		This method creates a hand with 12 top cards from deck.
+		It returns the created hand and the index of the next top card in deck.
+	Requires:
+		deck != nil, deck.length >= 12
+	Updates:
+		New array variable named hand with 12 top cards from deck.
+		New integer variable named top_card indicates the index of next top card in deck.
+	Returns:
+		hand, top_card
+=end
+	def get_hand(deck)
 		hand = []
-		start = top_card
-		for top_card in start..start+11
+		top_card = 0
+		12.times {
 			hand.push(deck[top_card])
-		end
-		top_card += 1
+			top_card += 1
+		}
 		return hand, top_card
 	end
 
-	#Author: Gail
+=begin
+		Author: Gail Chen
+		Created: 5/22
+		Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
+		Description:
+			This method pretty prints #, color, shading, symbol and number of cards
+			in hand to the screen for user.
+		Requires: hand != nil
+		Updates: N/A
+		Returns: Pretty prints details of cards in hand to the screen.
+=end
 	def show_hand(hand)
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
-			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
+			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 	end
 
@@ -166,10 +235,10 @@ end
 
 	#Author: Ariel
 	def update(hand,user_input,top_card,deck)
-		if hand.length<21 && user_input=='none' && top_card<81
+		if hand.length<21 && user_input=='none' && top_card<deck.length
 			puts '3 cards will be added'
 			add3(deck,hand,top_card)
-		elsif (hand.length == 21||top_card==81)&&user_input=='none'
+		elsif (hand.length == 21||top_card==81)&&user_input=='none' #hand.length<21 and top_card == 81
 			puts 'At least one set'
 		else
 			if check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],hand)
@@ -181,24 +250,51 @@ end
 		end
 	end
 
-	#Require: top_card and hand.size are multiples of 3
-	#Author: Gail
+=begin
+	Author: Gail Chen
+	Date created: 5/22
+	Edit:
+		5/24 Gail Chen optimized the method by replacing the for loop with user_input.each {}
+		5/25 Gail Chen modified the method to pass failed tests
+	Description:
+		This method replaces 3 cards in hand chosen by user with top 3 cards in deck
+		if there are exactly 12 cards in hand and there are cards in deck that
+		haven't been placed in hand before. This method removes 3 cards chosen by
+		user from hand if there are less than or more than 12 cards in hand,
+		or all cards in deck have been placed in hand before.
+	Requires:
+		top_card and hand.size are multiples of 3,
+		0 < hand.size <= 21, hand.size <= top_card <= deck.size,
+		If hand.size < 12, then top_card must equals to deck.size.
+	Updates:
+		If hand.size == 12 and top_card < deck.size, replace 3 cards in hand as
+		indicated by user_input, top_card += 3; otherwise, remove 3 cards from hand
+		as indicated by user_input, hand.size -= 3.
+	Returns: hand, top_card
+=end
 	def replace3(deck, hand, user_input, top_card)
 			delete_count = 0
-			3.times{ |card|
-				if top_card < deck.size
-					hand[user_input[card]] = deck[top_card]
+			user_input.each { |card|
+				if hand.size == 12 && top_card < deck.size
+					hand[card] = deck[top_card]
 					top_card += 1
 				else
-					user_input.sort!
-					hand.delete_at(user_input[card] - delete_count)
+					hand.delete_at(card - delete_count)
 					delete_count += 1
 				end
 			}
 		return hand, top_card
 	end
 
-	#Author: Gail
+=begin
+	Author: Gail Chen
+	Date created: 5/22
+	Edit: 5/24 Gail Chen changed the for loop to 3.times
+	Description: This method adds next 3 top cards from deck to the end of hand.
+	Requires: deck != nil, top_card < deck.length, top_card >= hand.length
+	Updates: hand.size += 3, top_card += 3, push 3 top cards from deck to hand
+	Returns: hand, top_card
+=end
 	def add3(deck,hand,top_card)
 		3.times {
 			hand.push(deck[top_card])
