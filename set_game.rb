@@ -6,10 +6,8 @@ class SetGame
 
 def initialize
 	@startTime = Time.now
-	@correct_sets_times=0
 end
 attr_reader :startTime
-attr_accessor :wrong_sets_times
 =begin
 	Author: Gail Chen
 	Date: 5/25
