@@ -72,7 +72,8 @@ attr_reader :startTime
 		  puts "======Entering Tutorial======"
 		  get_tutorial
 		when 3
-		  puts "=========Load Game========="
+			puts "=========Load Game========="
+			load_game
 		when 4
 			puts "=========Auto-playing Mode========="
 			auto_game
@@ -84,20 +85,98 @@ attr_reader :startTime
 		menu_get_choice
 	end
 
-	def new_game
-	  #generate 81 cards and shuffled
-	  deck = get_deck
-	  shuffle(deck)
-	  #top_card is the next card to be selected in deck
-	  hand, top_card = get_hand(deck)
+	#Author: Mike
+	#Create Date: 5/22
+	#Edit: Ariel 5/26
+	#Edit: Mike 5/26
+	def new_game 
+		#generate 81 cards and shuffled
+		deck = get_deck
+		shuffle(deck)
+		#top_card is the next card to be selected in deck
+		hand, top_card = get_hand deck
+		saved_time = 0
+		num_of_hint = 0
+		num_of_correct = 0
+		
+		continue_game top_card, hand, num_of_hint,num_of_correct
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def continue_game top_card, hand, num_of_hint,num_of_correct
 		until top_card==81 && find_set(hand).empty?
 			show_hand hand
-	  	user_input = get_user_cards hand.length
-	  	hand, top_card = update(hand,user_input,top_card,deck)
+			
+#			hint = []
+#			find_set(hand).each do |card| hint.push(hand.index(card)) end
+#			puts hint.to_s
+#			puts "Want to save game?"
+#			if gets.chomp==="yes"
+#				save_game(Time.new - startTime,0,0,top_card,deck,hand)
+#				break
+#			end
+			
+	  		user_input = get_user_cards hand.length
+	  		hand, top_card = update(hand,user_input,top_card,deck)
 		end
-	  puts "All Clear! Good Game!"
+		puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
+	end
 
+	#Author: Mike
+	#Creation Date: 5/26
+	def save_game(time,num_of_hint,num_of_correct,top_card,deck,hand)
+		file_name = get_save_information
+		File.write file_name,Marshal.dump({time: time,num_of_hint: num_of_hint,num_of_correct: num_of_correct,top_card: top_card,deck: deck,hand: hand})
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def get_save_information
+		puts "Please enter file name"
+		file_name = "stored_game/"+gets.chomp+".setgame"
+		while File.exist? file_name
+			puts "File name exist, please enter a new name."
+			file_name = "stored_game/"+gets.chomp+".setgame"
+		end
+		file_name
+	end
+	
+	#Author: Mike
+	#Creation Date: 5/26
+	def load_game
+		file_name = get_stored_games
+		load = Marshal.load File.read(file_name)
+		  #Load the game
+		  	saved_time = load[:time]
+			num_of_hint = load[:num_of_hint]
+			num_of_correct = load[:num_of_correct]
+			top_card = load[:top_card]
+			deck = load[:deck]
+			hand = load[:hand]
+			
+			continue_game top_card, hand, num_of_hint,num_of_correct
+	end
+	
+	#Author: Mike
+	#Creation Date: 5/26
+	def get_stored_games
+		Dir.foreach("stored_game/") do
+			|file_name|
+			puts File.basename(file_name,'.setgame')+"  "+File.new("stored_game/"+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
+		end
+		puts
+		puts "Please enter file name"
+		file_name = "stored_game/"+gets.chomp+".setgame"
+		unless File.exist? file_name
+			puts "File name not exist, please enter another name."
+			Dir.foreach("stored_game/") do
+				|file_name|
+				puts file_name+"  "+File.new(file_name).ctime.strftime("%F %T")
+			end
+		end
+		file_name
 	end
 
 	def auto_game
@@ -111,7 +190,7 @@ attr_reader :startTime
 			hint = []
 			find_set(hand).each do |card| hint.push(hand.index(card)) end
 			user_input = hint
-	  	hand, top_card = update(hand,user_input,top_card,deck)
+	  		hand, top_card = update(hand,user_input,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
