@@ -145,8 +145,8 @@ class TestUpdate < Test::Unit::TestCase
     top_card = 54
     assert_equal true, game.check_set?(hand[CORRECT_SET[0]], hand[CORRECT_SET[1]],hand[CORRECT_SET[2]],["color","shading","symbol","number"])
     hand, top_card = game.update hand,CORRECT_SET,top_card,deck
-    assert_equal 21, hand.size
-    assert_equal 57, top_card
+    assert_equal 18, hand.size
+    assert_equal 54, top_card
   end
   def test_update_10
     game = SetGame.new
