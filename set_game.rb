@@ -6,18 +6,14 @@ class SetGame
  	#Author: Ariel
 	#Create date: 5/21
 	#Edit: Mike 5/24
+	#Edit: Mike 5/25
 	def get_deck
 		deck = []
-		card_struct = Struct.new(:color,:shading,:symbol,:number)
-		for color in $Colors
-			for shading in $Shadings
-				for symbol in $Symbols
-					for number in $Numbers
-						deck.push(card_struct.new(color, shading, symbol, number))
-					end
-				end
-			end
-	  	end
+		$Colors.each{ |color|
+			$Shadings.each {|shading|
+				$Symbols.each{|symbol|
+					$Numbers.each{|number|
+					deck.push(Card.new(color, shading, symbol, number)) }}}}
 		deck
 	end
 
@@ -25,29 +21,195 @@ class SetGame
 		deck.shuffle!
 	end
 
-	#Author: Gail
-	def get_hand(deck, top_card)
+=begin
+	Author: Gail Chen
+	Date created: 5/22
+	Edit: 5/25 Gail Chen optimized the method
+	Description:
+		This method creates a hand with 12 top cards from deck.
+		It returns the created hand and the index of the next top card in deck.
+	Requires:
+		deck != nil, deck.length >= 12
+	Updates:
+		New array variable named hand with 12 top cards from deck.
+		New integer variable named top_card indicates the index of next top card in deck.
+	Returns:
+		hand, top_card
+=end
+	def get_hand(deck)
 		hand = []
-		start = top_card
-		for top_card in start..start+11
+		top_card = 0
+		12.times {
 			hand.push(deck[top_card])
-		end
-		top_card += 1
+			top_card += 1
+		}
 		return hand, top_card
 	end
 
-	#Author: Gail
-	#Edit: Mike 5/24
+=begin
+		Author: Gail Chen
+		Created: 5/22
+		Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
+		Description:
+			This method pretty prints #, color, shading, symbol and number of cards
+			in hand to the screen for user.
+		Requires: hand != nil
+		Updates: N/A
+		Returns: Pretty prints details of cards in hand to the screen.
+=end
 	def show_hand(hand)
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
-			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".center(5)
+			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 	end
 
-	def find_set(hand)
+=begin
+	Author: Channing
+	Date: 5/25
+	Editor: N/A
+	Description: Finds 1 or all valid sets in hand.
+=end
+	def find_set(hand, mode = 'hint')
+		# Creating an array of arrays "check_table" to organize cards by subset values
+		hand_stat  = organize(hand)
 
+		# Create a hash to represent the number of cards in each section of the table
+		#table_stats = stats(card_table)
+
+		# Score the subarrays to find the one that contains the least possible sets
+		#scores = score(table_stats) # set of sets returned
+
+		# Use scores and card_table to find one or all valid sets
+		#set_exist(card_table, scores)
+	end
+
+=begin
+	Author: Channing
+	Date: 5/25
+	Editor:
+	Description: Create a hash to hold statistics (counts) of the number of each card
+	attribute found within the hand.
+	Require: hand.class == Array; for each element in hand, element.class == Card
+	Updates: N/A
+	Returns: hash with keys representing card attributes: {$Colors + $Shadings + $Symbols + $Numbers}
+		 and values corresponding to number of cards with this attribute in hand.
+		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
+
+=end
+	def organize hand
+		# create hash
+		hand_stat = Hash.new {|k,v| k[v] = []}
+		# create keys based on card attr, set to default [] value
+		card_attrs = $Colors + $Shadings + $Symbols + $Numbers
+		card_attrs.each {|attr| hand_stat[attr.intern]}
+		# add cards to hash
+		for card in hand
+			[:color, :shading, :symbol, :number].each {|catg|
+				hand_stat[card[catg].intern] << card
+			}
+		end
+		hand_stat
+	end
+
+
+
+=begin
+	Author: Mike
+	Date: 5/25
+	Editor: N/A
+
+	Description: Return a valid array of categories and their scores.
+
+	Requires: hand_Stat filled up
+	Updates: N/A
+	Returns: [["color",color_score],["shading",shading_score],["symbol",symbol_score],["number",number_score]]
+		 where for all scores, 0<=scores<=220
+=end
+def get_score(hand_stat)
+	score=[['color',0],['shading',0],['symbol',0],['number',0]]
+
+	score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
+	score[0][1] += $Colors.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum + (len*(len-1)*(len-2).to_f/6)
+	end
+
+	score[1][1] = $Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	score[1][1] += $Shadings.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum+(len*(len-1)*(len-2).to_f/6)
+	end
+
+	score[2][1] =  $Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	score[2][1] += $Symbols.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum+(len*(len-1)*(len-2).to_f/6)
+	end
+
+	score[3][1] =  $Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	score[3][1] += $Numbers.reduce 0 do
+		|sum, feature|
+		len = hand_stat[feature.intern].length
+		sum+(len*(len-1)*(len-2).to_f/6)
+	end
+	score
+end
+
+=begin
+	Author: Mike
+	Date: 5/25
+	Editor:
+
+	Description: Return a check table consists of possible combinations of set from hand.
+	Requires: |hand_stat| = |hand|*3
+				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
+				for all card in hand_stat[:attribute], card has attribute
+				hand_stat = {
+								attribute1:[Card, Card, Card]
+								attribute2:[Card, Card, Card]
+								...
+								attribute3:[Card, Card, Card]
+							}
+
+				score.class = Array
+					for element in score, element.class = Array, element.length = 2
+					for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
+	Updates: N/A
+	Returns: [[Card, Card, Card],[Card,Card,Card],...,[Card,Card,Card]]
+		 where each [Card,Card,Card] is a possible combination of set from hand.
+
+=end
+
+def get_check_table(hand_stat,score)
+	sortedScore = score.sort{|a,b| a[1]<=>b[1]}
+	category = sortedScore[0][0]
+	check_catg = []
+	case category
+		when "color"
+			category = $Colors
+		when "shading"
+			category = $Shadings
+		when "symbol"
+			category = $Symbols
+		when "number"
+			category = $Numbers
+	end
+
+	check_table = []
+
+	category.each {
+		|attr|
+		check_table.push(*hand_stat[attr.intern].combination(3).to_a)
+	}
+
+	attr_card_table = category.map do
+		|attr|
+		hand_stat[attr.intern]
 	end
 
 =begin
@@ -195,24 +357,51 @@ end
 		return hand, top_card
 	end
 
-	#Require: top_card and hand.size are multiples of 3
-	#Author: Gail
+=begin
+	Author: Gail Chen
+	Date created: 5/22
+	Edit:
+		5/24 Gail Chen optimized the method by replacing the for loop with user_input.each {}
+		5/25 Gail Chen modified the method to pass failed tests
+	Description:
+		This method replaces 3 cards in hand chosen by user with top 3 cards in deck
+		if there are exactly 12 cards in hand and there are cards in deck that
+		haven't been placed in hand before. This method removes 3 cards chosen by
+		user from hand if there are less than or more than 12 cards in hand,
+		or all cards in deck have been placed in hand before.
+	Requires:
+		top_card and hand.size are multiples of 3,
+		0 < hand.size <= 21, hand.size <= top_card <= deck.size,
+		If hand.size < 12, then top_card must equals to deck.size.
+	Updates:
+		If hand.size == 12 and top_card < deck.size, replace 3 cards in hand as
+		indicated by user_input, top_card += 3; otherwise, remove 3 cards from hand
+		as indicated by user_input, hand.size -= 3.
+	Returns: hand, top_card
+=end
 	def replace3(deck, hand, user_input, top_card)
 			delete_count = 0
-			3.times{ |card|
-				if top_card < deck.size
-					hand[user_input[card]] = deck[top_card]
+			user_input.each { |card|
+				if hand.size == 12 && top_card < deck.size
+					hand[card] = deck[top_card]
 					top_card += 1
 				else
-					user_input.sort!
-					hand.delete_at(user_input[card] - delete_count)
+					hand.delete_at(card - delete_count)
 					delete_count += 1
 				end
 			}
 		return hand, top_card
 	end
 
-	#Author: Gail
+=begin
+	Author: Gail Chen
+	Date created: 5/22
+	Edit: 5/24 Gail Chen changed the for loop to 3.times
+	Description: This method adds next 3 top cards from deck to the end of hand.
+	Requires: deck != nil, top_card < deck.length, top_card >= hand.length
+	Updates: hand.size += 3, top_card += 3, push 3 top cards from deck to hand
+	Returns: hand, top_card
+=end
 	def add3(deck,hand,top_card)
 		3.times {
 			hand.push(deck[top_card])

@@ -20,7 +20,7 @@ class Card
   attr_reader :shading
   attr_reader :symbol
   attr_reader :number
-  
+
   def [] (attribute)
     attribute = attribute.downcase.intern if attribute.is_a?(String)
     return @color if attribute==:color
@@ -28,5 +28,5 @@ class Card
     return @symbol if attribute==:symbol
     return @number if attribute==:number
   end
-  
+
 end
