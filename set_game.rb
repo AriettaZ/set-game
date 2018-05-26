@@ -111,13 +111,13 @@ attr_reader :startTime
 		saved_time = 0
 		num_of_hint = 0
 		num_of_correct = 0
-
-		continue_game top_card, hand, num_of_hint,num_of_correct
+		
+		continue_game top_card, deck, hand, num_of_hint,num_of_correct
 	end
 
 	#Author: Mike
 	#Creation Date: 5/26
-	def continue_game top_card, hand, num_of_hint,num_of_correct
+	def continue_game top_card, deck, hand, num_of_hint,num_of_correct
 		until top_card==81 && find_set(hand).empty?
 			show_hand hand
 
@@ -136,6 +136,10 @@ attr_reader :startTime
 		puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
+	
+	#Author: Mike
+	#Creation Date: 5/26
+	
 
 	#Author: Mike
 	#Creation Date: 5/26
@@ -168,8 +172,9 @@ attr_reader :startTime
 			top_card = load[:top_card]
 			deck = load[:deck]
 			hand = load[:hand]
+			
+			continue_game top_card, deck, hand, num_of_hint,num_of_correct
 
-			continue_game top_card, hand, num_of_hint,num_of_correct
 	end
 
 	#Author: Mike
@@ -202,8 +207,7 @@ attr_reader :startTime
 			show_hand hand
 			hint = []
 			find_set(hand).each do |card| hint.push(hand.index(card)) end
-			user_input = hint
-	  		hand, top_card = update(hand,user_input,top_card,deck)
+	  		hand, top_card = update(hand,hint,top_card,deck)
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
@@ -278,6 +282,10 @@ attr_reader :startTime
 		hand.length.times{ |card|
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
+		
+		hint = []
+		find_set(hand).each do |card| hint.push(hand.index(card)) end
+		puts hint.to_s
 	end
 
 =begin
