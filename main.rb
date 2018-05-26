@@ -4,12 +4,14 @@
 require_relative "set_game"
 
 game = SetGame.new
+choice = game.menu_get_choice
+puts "choice #{choice}"
 #generate 81 cards and shuffled
 deck = game.get_deck
-#game.shuffle(deck)
+game.shuffle(deck)
 #top_card is the next card to be selected in deck
-top_card = 0
-hand, top_card = game.get_hand(deck,top_card)
+hand, top_card = game.get_hand(deck)
+game.show_hand(hand)
 
 CARD1 = Card.new('red','striped','diamond','1')
 CARD2 = Card.new('red','striped','diamond','2')
@@ -28,7 +30,7 @@ hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CA
     hint=game.find_set(hand)
 
 while hand.length > 0
-	game.show_hand hand 
+	game.show_hand hand
 	user_input = game.get_user_cards hand.length
 	hand, top_card = game.update(hand,user_input,top_card,deck)
 end

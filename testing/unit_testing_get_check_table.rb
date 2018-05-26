@@ -12,7 +12,7 @@ class TestGetCheckTable < Test::Unit::TestCase
 		card4 = Card.new("red","open","diamond","1")
 		card5 = Card.new("red","solid","oval","2")
 		card6 = Card.new("green","open","oval","1")
-		
+
 		hand_stat = {
 			red: [card1,card3,card4,card5],
 			purple: [],
@@ -27,10 +27,10 @@ class TestGetCheckTable < Test::Unit::TestCase
 			'2': [card2,card5],
 			'3': [card1]
 		}
-		
+
 		score = [["color",4.0],["shading",7.0],["symbol",8.0],["number",7.0]]
-		
+
 		assert_equal([[card1, card3, card4],[card1, card3, card5], [card1, card4, card5], [card3, card4, card5]],SetGame.new.get_check_table(hand_stat, score))
-		
+
 	end
 end
