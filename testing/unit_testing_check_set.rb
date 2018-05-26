@@ -1,7 +1,8 @@
 #Author: Mike
 #Creation Date: 5/23
+#Edit: Mike 5/
 
-require_relative "../check_set"
+require_relative "../set_game"
 require "test/unit"
 
 class TestCheckSet < Test::Unit::TestCase
@@ -33,20 +34,27 @@ class TestCheckSet < Test::Unit::TestCase
 	$hand=[]
 	i=0
 	number_index=0
-	$card = Struct.new(:color,:shading,:symbol,:number)
 	for color in ["red","purple"]
 		for shading in ["striped","solid"]
 			for symbol in $Symbols
-				$hand[i]=$card.new(color, shading, symbol, "1")
+				$hand[i]=Card.new(color, shading, symbol, "1")
 				i += 1
 			end
 		end
 	end
+<<<<<<< HEAD
 	$hand.push($card.new("green","open","oval","2"))
 	$hand.push($card.new("purpul","solid","squiggle","3"))
 	$hand.push($card.new("green","striped","diamond","1"))
 	$hand.push($card.new("green","striped","quiggle","2"))
 
+=======
+	$hand.push(Card.new("green","open","oval","2"))
+	$hand.push(Card.new("purpul","solid","squiggle","3"))
+	$hand.push(Card.new("green","striped","diamond","1"))
+	$hand.push(Card.new("green","striped","quiggle","2"))
+	
+>>>>>>> cb7bd44a56aa8a72c79f030a646779db23dfb12b
 	#	0: red, striped, diamond, 1
 	#	1: red, striped, squiggle, 1
 	#	2: red, striped, oval, 1
@@ -70,7 +78,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	0: red, striped, diamond, 1
 		#	1: red, striped, squiggle, 1
 		#	2: red, striped, oval, 1
-		assert_true(check_set?($hand[0],$hand[1],$hand[2],order))
+		assert_true(SetGame.new.check_set?($hand[0],$hand[1],$hand[2],order))
 	end
 
 	#Check 1-3-3-3
@@ -79,7 +87,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	0: red, striped, diamond, 1
 		#	6: purple, striped, diamond, 1
 		#	14: green, striped, diamond, 1
-		assert_true(check_set?($hand[0],$hand[6],$hand[14],order))
+		assert_true(SetGame.new.check_set?($hand[0],$hand[6],$hand[14],order))
 	end
 
 	#Check 3-2-1-3 case
@@ -88,7 +96,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	1: red, striped, squiggle, 1
 		#	2: red, striped, oval, 1
 		#	3: red, solid, diamond, 1
-		assert_false(check_set?($hand[1],$hand[2],$hand[3],order))
+		assert_false(SetGame.new.check_set?($hand[1],$hand[2],$hand[3],order))
 	end
 
 	#Check 2-3-2-3 case
@@ -97,7 +105,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	1: red, striped, squiggle, 1
 		#	7: purple, striped, squiggle, 1
 		#	8: purple, striped, oval, 1
-		assert_false(check_set?($hand[1],$hand[7],$hand[8],order))
+		assert_false(SetGame.new.check_set?($hand[1],$hand[7],$hand[8],order))
 	end
 
 	#Check 1-1-1-1 case
@@ -106,7 +114,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	0: red, striped, diamond, 1
 		#	12: green, open, oval, 2
 		#	13: purpul, solid, squiggle, 3
-		assert_true(check_set?($hand[0],$hand[12],$hand[13],order))
+		assert_true(SetGame.new.check_set?($hand[0],$hand[12],$hand[13],order))
 	end
 
 	#Check 2-2-2-2 case
@@ -115,7 +123,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	0: red, striped, diamond, 1
 		#	6: purple, striped, diamond, 1
 		#	13: purpul, solid, squiggle, 3
-		assert_false(check_set?($hand[0],$hand[6],$hand[13],order))
+		assert_false(SetGame.new.check_set?($hand[0],$hand[6],$hand[13],order))
 	end
 
 	#Check 3-3-1-3 case
@@ -124,7 +132,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	0: red, striped, diamond, 1
 		#	1: red, striped, squiggle, 1
 		#	2: red, striped, oval, 1
-		assert_true(check_set?($hand[0],$hand[1],$hand[2],order))
+		assert_true(SetGame.new.check_set?($hand[0],$hand[1],$hand[2],order))
 	end
 
 	#Check 1-1-1-1 case
@@ -133,7 +141,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	0: red, striped, diamond, 1
 		#	12: green, open, oval, 2
 		#	13: purpul, solid, squiggle, 3
-		assert_true(check_set?($hand[0],$hand[12],$hand[13],order))
+		assert_true(SetGame.new.check_set?($hand[0],$hand[12],$hand[13],order))
 	end
 
 	#Check 3-2-1-3 case
@@ -142,7 +150,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	1: red, striped, squiggle, 1
 		#	2: red, striped, oval, 1
 		#	3: red, solid, diamond, 1
-		assert_true(check_set?($hand[1],$hand[2],$hand[3],order))
+		assert_true(SetGame.new.check_set?($hand[1],$hand[2],$hand[3],order))
 	end
 
 	#Check 2-3-2-3 case
@@ -151,7 +159,7 @@ class TestCheckSet < Test::Unit::TestCase
 		#	1: red, striped, squiggle, 1
 		#	7: purple, striped, squiggle, 1
 		#	8: purple, striped, oval, 1
-		assert_false(check_set?($hand[1],$hand[7],$hand[8],order))
+		assert_false(SetGame.new.check_set?($hand[1],$hand[7],$hand[8],order))
 	end
 
 end

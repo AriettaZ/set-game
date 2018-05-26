@@ -1,8 +1,15 @@
 =begin
+<<<<<<< HEAD
 	Author: Gail Chen
 	Date created: 5/23
 	Edit: 5/24 Gail Chen added more test cases
 	Test plan for testing add3 method: (use deck.size = 21)
+=======
+	Author: Gail
+	Created: 5/23
+	Editor: Mike 5/25
+	Test plan for testing add3 method: (use deck.size = 12)
+>>>>>>> cb7bd44a56aa8a72c79f030a646779db23dfb12b
 	- Add 3 cards to an empty hand:
 		1. top_card = 0, use ordered deck
 		2. top_card = 0, use unordered deck

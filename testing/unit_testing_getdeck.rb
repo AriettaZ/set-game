@@ -1,5 +1,6 @@
 #Author: Ariel
 #Creation Date: 5/24
+#Edit: Mike 5/25
 
 #require file set_game.rb
 #class name: SetGame
@@ -48,7 +49,7 @@ class TestUpdate < Test::Unit::TestCase
   CARD_18CARDS= [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12, CARD13, CARD14, CARD15, CARD16, CARD17, CARD18]
   CARD_12CARDS= [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
 
-  def test_update_1
+  def test_getdeck_1
     game = SetGame.new
     deck= game.get_deck
     hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
