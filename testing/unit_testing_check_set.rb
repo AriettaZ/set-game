@@ -42,19 +42,12 @@ class TestCheckSet < Test::Unit::TestCase
 			end
 		end
 	end
-<<<<<<< HEAD
-	$hand.push($card.new("green","open","oval","2"))
-	$hand.push($card.new("purpul","solid","squiggle","3"))
-	$hand.push($card.new("green","striped","diamond","1"))
-	$hand.push($card.new("green","striped","quiggle","2"))
 
-=======
 	$hand.push(Card.new("green","open","oval","2"))
 	$hand.push(Card.new("purpul","solid","squiggle","3"))
 	$hand.push(Card.new("green","striped","diamond","1"))
 	$hand.push(Card.new("green","striped","quiggle","2"))
-	
->>>>>>> cb7bd44a56aa8a72c79f030a646779db23dfb12b
+
 	#	0: red, striped, diamond, 1
 	#	1: red, striped, squiggle, 1
 	#	2: red, striped, oval, 1
