@@ -380,22 +380,22 @@ end
 =end
 	def update(hand,user_input,top_card,deck)
 	  # when user_input==[] && hand.length<21 && top_card<81
-		if user_input==[] && hand.length<21 && top_card<81
+		if user_input.empty? && hand.length<21 && top_card<81
 			puts 'You entered no set. 3 cards will be added'
 			hand, top_card = add3(deck,hand,top_card)
 		# when user_input==[] && top_card==81 && no sets on hand
-		elsif user_input==[] && top_card==81 && find_set(hand).empty?
-			puts 'Congrats! No set on hand and no card in deck. Game is cleared'
+		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
+				puts 'Congrats! No set on hand and no card in deck. Game is cleared'
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
-		elsif user_input==[]
-			puts 'You entered no set but at least one set exsit.'
+		elsif user_input.empty?
+				puts 'You entered no set but at least one set exsit.'
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
-			puts 'Congrats! You entered a correct set!'
-			hand, top_card = replace3(deck,hand,user_input,top_card)
+				puts 'Congrats! You entered a correct set!'
+				hand, top_card = replace3(deck,hand,user_input,top_card)
 		# when user_input!=[] && user_input is not a correct set
 		else
-			puts 'Sorry. Wrong set'
+				puts 'Sorry. Wrong set'
 		end
 		return hand, top_card
 	end
