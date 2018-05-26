@@ -11,7 +11,7 @@ deck = game.get_deck
 game.shuffle(deck)
 #top_card is the next card to be selected in deck
 hand, top_card = game.get_hand(deck)
-game.show_hand(hand)
+#game.show_hand(hand)
 
 CARD1 = Card.new('red','striped','diamond','1')
 CARD2 = Card.new('red','striped','diamond','2')

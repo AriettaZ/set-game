@@ -369,6 +369,7 @@ end
 	#Create Date: 5/22
 	#Edit: 5/24 by Ariel, add test cases
 	#Edit: 5/26 by Ariel, Minor changes, add documentation
+	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
 	# TODO update test cases according to changes
 	# TODO update find_set(hand).empty? part
 =begin
@@ -388,7 +389,7 @@ end
 				puts 'Congrats! No set on hand and no card in deck. Game is cleared'
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
-				puts 'You entered no set but at least one set exsit.'
+				puts 'You entered no set but at least one set exist.'
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
 				puts 'Congrats! You entered a correct set!'
