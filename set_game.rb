@@ -89,13 +89,19 @@ attr_reader :startTime
 		  puts "======Entering Tutorial======"
 		  get_tutorial
 		when 3
+<<<<<<< HEAD
 		  puts "=========Load Game========="
+=======
+			puts "=========Load Game========="
+			load_game
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 		when 4
 			puts "=========Auto-playing Mode========="
 			auto_game
 		end
 	end
 
+<<<<<<< HEAD
 	def new_game
 	  #generate 81 cards and shuffled
 	  deck = get_deck
@@ -112,6 +118,116 @@ attr_reader :startTime
 		puts ""
 	end
 
+=======
+
+	#Author: Mike
+	#Create Date: 5/22
+	#Edit: Ariel 5/26
+	#Edit: Mike 5/26
+	def new_game
+		#generate 81 cards and shuffled
+		deck = get_deck
+		shuffle(deck)
+		#top_card is the next card to be selected in deck
+		hand, top_card = get_hand deck
+		saved_time = 0
+		num_of_hint = 0
+		num_of_correct = 0
+		
+		continue_game top_card, deck, hand, num_of_hint,num_of_correct
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def continue_game top_card, deck, hand, num_of_hint,num_of_correct
+		until top_card==81 && find_set(hand).empty?
+			show_hand hand
+
+#			hint = []
+#			find_set(hand).each do |card| hint.push(hand.index(card)) end
+#			puts hint.to_s
+#			puts "Want to save game?"
+#			if gets.chomp==="yes"
+#				save_game(Time.new - startTime,0,0,top_card,deck,hand)
+#				break
+#			end
+
+	  		user_input = get_user_cards hand.length
+	  		hand, top_card = update(hand,user_input,top_card,deck)
+		end
+		puts "All Clear! Good Game!"
+		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
+	end
+	
+	#Author: Mike
+	#Creation Date: 5/26
+	def delete_game
+		file_name = get_stored_games
+		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
+		File.delete(file_name) if gets.chomp.downcase[0]=="y"
+	end
+	
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def save_game(time,num_of_hint,num_of_correct,top_card,deck,hand)
+		file_name = get_save_information
+		File.write file_name,Marshal.dump({time: time,num_of_hint: num_of_hint,num_of_correct: num_of_correct,top_card: top_card,deck: deck,hand: hand})
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def get_save_information
+		puts "Please enter file name"
+		file_name = "stored_game/"+gets.chomp+".setgame"
+		while File.exist? file_name
+			puts "File name exist, please enter a new name."
+			file_name = "stored_game/"+gets.chomp+".setgame"
+		end
+		file_name
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def load_game
+		file_name = get_stored_games
+		load = Marshal.load File.read(file_name)
+		  #Load the game
+		  	saved_time = load[:time]
+			num_of_hint = load[:num_of_hint]
+			num_of_correct = load[:num_of_correct]
+			top_card = load[:top_card]
+			deck = load[:deck]
+			hand = load[:hand]
+			
+			continue_game top_card, deck, hand, num_of_hint,num_of_correct
+
+	end
+
+	#Author: Mike
+	#Creation Date: 5/26
+	def get_stored_games
+		Dir.foreach("stored_game/") do
+			|file_name|
+			puts File.basename(file_name,'.setgame')+"  "+File.new("stored_game/"+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
+		end
+		puts
+		puts "Please enter file name"
+		file_name = "stored_game/"+gets.chomp+".setgame"
+		unless File.exist? file_name
+			puts "File name not exist, please enter another name."
+			Dir.foreach("stored_game/") do
+				|file_name|
+				puts file_name+"  "+File.new(file_name).ctime.strftime("%F %T")
+			end
+		end
+		file_name
+	end
+
+	#Author: Mike
+	#Create Date: 5/26
+	#Edit: Ariel 5/26
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 	def auto_game
 	  #generate 81 cards and shuffled
 	  deck = get_deck
@@ -122,8 +238,12 @@ attr_reader :startTime
 			show_hand hand
 			hint = []
 			find_set(hand).each do |card| hint.push(hand.index(card)) end
+<<<<<<< HEAD
 			user_input = hint
 	  	hand, top_card = update(hand,user_input,top_card,deck)
+=======
+	  		hand, top_card = update(hand,hint,top_card,deck)
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 		end
 	  puts "All Clear! Good Game!"
 		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
@@ -198,6 +318,10 @@ attr_reader :startTime
 		hand.length.times{ |card|
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
+		
+		hint = []
+		find_set(hand).each do |card| hint.push(hand.index(card)) end
+		puts hint.to_s
 	end
 
 =begin
@@ -465,7 +589,6 @@ end
 	#Edit: 5/26 by Ariel, Minor changes, add documentation
 	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
 	# TODO update test cases according to changes
-	# TODO update find_set(hand).empty? part
 =begin
 	Requires: hand,user_input,top_card,deck
 	Returns:  hand, top_card
@@ -480,6 +603,7 @@ end
 			hand, top_card = add3(deck,hand,top_card)
 		# when user_input==[] && top_card==81 && no sets on hand
 		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
+<<<<<<< HEAD
 				puts "Congrats! No set on hand and no card in deck. Game is cleared."
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
@@ -491,6 +615,19 @@ end
 		# when user_input!=[] && user_input is not a correct set
 		else
 				puts "Sorry. Wrong set."
+=======
+			puts "Congrats! No set on hand and no card in deck. Game is cleared."
+		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
+		elsif user_input.empty?
+			puts "You entered no set but at least one set exist."
+		# when user_input!=[] && user_input is a correct set
+		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
+			puts "Congrats! You entered a correct set!"
+			hand, top_card = replace3(deck,hand,user_input,top_card)
+		# when user_input!=[] && user_input is not a correct set
+		else
+			puts "Sorry. Wrong set."
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 		end
 		return hand, top_card
 	end
@@ -573,10 +710,25 @@ end
 		return []
 	end
 
+<<<<<<< HEAD
 	def get_tutorial()
 		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
 		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
 		"Please press Enter to continue Tutorial",""
+=======
+	#Author: Ariel
+	#Create Date: 5/26
+	#Edit:
+=begin
+	Requires: N/A
+	Returns:  N/A
+	Description: Give user tutorial about how to play set game
+=end
+	def get_tutorial()
+		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
+		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
+		"Please press Enter to continue Tutorial or other keys to quit",""
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 		if gets =="\n"
 			puts "=============================","A set consists of three cards satisfying all of these conditions:", "They all have the same number or have three different numbers.",
 			"They all have the same symbol or have three different symbols.","They all have the same shading or have three different shadings.",
@@ -595,7 +747,11 @@ end
 
 			puts "","card #0, #3 and #4 are another set: "
 			show_hand [cardA, cardD, cardF]
+<<<<<<< HEAD
 			puts "To choose this set, enter their card numbers separated by ',': 0,3,5","Please press Enter to continue Tutorial",""
+=======
+			puts "To choose this set, enter their card numbers separated by ',': 0,3,5","Please press Enter to continue Tutorial to other keys to quit",""
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 			if gets =="\n"
 				puts "=============================","You're given 12 cards in the first round as below",""
 
@@ -614,9 +770,14 @@ end
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
 				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same","If no set exist, simply push Enter key and 3 new cards will be added",
+<<<<<<< HEAD
 				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to enter user menu",""
 				if gets=="\n"
 					menu_get_choice
+=======
+				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to quit Tutorial",""
+				if gets=="\n"
+>>>>>>> 814d272c0af3272722b9587fc2b1ae088de4f13a
 				end
 			end
 		end
