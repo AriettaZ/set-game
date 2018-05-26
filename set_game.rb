@@ -26,6 +26,7 @@ class SetGame
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
 		end
+		menu_redirect_choice(user_choice.to_i)
 		user_choice.to_i
 	end
 
@@ -523,7 +524,7 @@ end
 		puts "Welcome to Sets tutorial!","You have a deck of 81 cards varying in four features:","Number (one, two, or three)",
 		"Symbol (diamond, squiggle, oval)","Shading (solid, striped, or open)","and Color (red, green, or purple)",
 		"","Each possible combination of features (e.g., a card with three striped green diamonds) appears precisely once in the deck.",
-		"============================="
+		"","You're given 12 cards in the first round","","=============================","Let's learn how to find sets from !",""
 
 
 		card1 = Card.new('red','striped','diamond','1')
