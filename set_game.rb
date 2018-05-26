@@ -2,6 +2,49 @@
 #Create Date: 5/22
 require_relative 'card'
 class SetGame
+=begin
+	Author: Gail Chen
+	Date: 5/25
+	Edit: N/A
+	Description:
+		Prints menu to the screen and get user's choice.
+		The menu includes New Game, Tutorial, Load Game.
+		The user must choose a valid option by typing the number of that option.
+		The method returns an integer of corresponding user's choice.
+	Requires: N/A
+	Updates: N/A
+	Returns: Integer where 1 <= Integer <= 4
+=end
+	def menu_get_choice
+		user_choice = ""
+		puts "Menu:"
+		puts "[1] New Game"
+		puts "[2] Tutorial"
+		puts "[3] Load Game"
+		puts "[4] Quit"
+		until valid_choice? user_choice
+			puts "Choose an option from menu by typing the number of that option:"
+			user_choice = gets.chomp
+		end
+		user_choice.to_i
+	end
+
+=begin
+	Author: Gail Chen
+	Created: 5/25
+	Edit: N/A
+	Description: This method checks that user enters an integer between 1 and 4.
+	Requires: user_input.class == String
+	Updates: N/A
+	Returns: true if user_input is a string of an integer in range [1, 4]
+		 false else
+=end
+	def valid_choice?(user_input)
+		# user_input must be size 1
+		return false if user_input.length != 1
+		# user_input must be an integer between 1 and 4
+		return user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 4
+	end
 
  	#Author: Ariel
 	#Create date: 5/21
@@ -66,23 +109,22 @@ class SetGame
 	end
 
 =begin
-	Author: Channing
+	Author: Channing, Mike
 	Date: 5/25
 	Editor: N/A
 	Description: Finds 1 or all valid sets in hand.
 =end
 	def find_set(hand, mode = 'hint')
-		# Creating an array of arrays "check_table" to organize cards by subset values
-		hand_stat  = organize(hand)
-
 		# Create a hash to represent the number of cards in each section of the table
-		#table_stats = stats(card_table)
-
+		hand_stat  = organize(hand)
+				
 		# Score the subarrays to find the one that contains the least possible sets
-		#scores = score(table_stats) # set of sets returned
-
+		score = get_score(hand_stat) # set of sets returned
+		
+		check_table = get_check_table(hand_stat, score)
+		
 		# Use scores and card_table to find one or all valid sets
-		#set_exist(card_table, scores)
+		set_exist(check_table, score)
 	end
 
 =begin
