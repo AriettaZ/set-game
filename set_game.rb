@@ -131,7 +131,7 @@ attr_accessor :total_hint
 			load_game
 		when 4
 			puts "=========Delete Saved Game========="
-			delete_save_game
+			delete_game
 		when 5
 			puts "=========Auto-playing Mode========="
 			auto_game
