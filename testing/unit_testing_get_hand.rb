@@ -1,7 +1,7 @@
 =begin
 	Author: Gail Chen
 	Created: 5/23
-	Edit: 5/25 Gail Chen modified test cases corresponding to changes in get_hand method
+	Edit: 5/25, 5/27 Gail Chen modified test cases corresponding to changes in get_hand method
 	Test plan for testing get_hand method:
 	1. deck.size = 12, use ordered deck
 	2. deck.size = 12, use unordered deck
@@ -40,89 +40,93 @@ class TestGetHand < Test::Unit::TestCase
 	# Case 1: deck.size = 12, use ordered deck
 	def test_get_hand_ordered_deck12
 		game = SetGame.new
-		hand = []
-		top_card = 0
-		hand, top_card = game.get_hand DECK_ORDERED_12
-		assert_equal 12, hand.size
-		assert_equal 12, top_card
-		assert_equal CARD1, hand[0]
-		assert_equal CARD2, hand[1]
-		assert_equal CARD3, hand[2]
-		assert_equal CARD4, hand[3]
-		assert_equal CARD5, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD7, hand[6]
-		assert_equal CARD8, hand[7]
-		assert_equal CARD9, hand[8]
-		assert_equal CARD10, hand[9]
-		assert_equal CARD11, hand[10]
-		assert_equal CARD12, hand[11]
+		game.deck = DECK_ORDERED_12
+		game.hand = []
+		game.top_card = 0
+		game.get_hand
+		assert_equal 12, game.hand.size
+		assert_equal 12, game.top_card
+		assert_equal CARD1, game.hand[0]
+		assert_equal CARD2, game.hand[1]
+		assert_equal CARD3, game.hand[2]
+		assert_equal CARD4, game.hand[3]
+		assert_equal CARD5, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD7, game.hand[6]
+		assert_equal CARD8, game.hand[7]
+		assert_equal CARD9, game.hand[8]
+		assert_equal CARD10, game.hand[9]
+		assert_equal CARD11, game.hand[10]
+		assert_equal CARD12, game.hand[11]
 	end
 
 	# Case 2: deck.size = 12, use ordered deck
 	def test_get_hand_unordered_deck12
 		game = SetGame.new
-		hand = []
-		top_card = 0
-		hand, top_card = game.get_hand DECK_UNORDERED_12
-		assert_equal 12, hand.size
-		assert_equal 12, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD13, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD15, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD12, hand[8]
-		assert_equal CARD10, hand[9]
-		assert_equal CARD7, hand[10]
-		assert_equal CARD11, hand[11]
+		game.deck = DECK_UNORDERED_12
+		game.hand = []
+		game.top_card = 0
+		game.get_hand
+		assert_equal 12, game.hand.size
+		assert_equal 12, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD13, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD15, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD12, game.hand[8]
+		assert_equal CARD10, game.hand[9]
+		assert_equal CARD7, game.hand[10]
+		assert_equal CARD11, game.hand[11]
 	end
 
 	# Case 3: deck.size = 18, use ordered deck
 	def test_get_hand_ordered_deck18
 		game = SetGame.new
-		hand = []
-		top_card = 0
-		hand, top_card = game.get_hand DECK_ORDERED_18
-		assert_equal 12, hand.size
-		assert_equal 12, top_card
-		assert_equal CARD1, hand[0]
-		assert_equal CARD2, hand[1]
-		assert_equal CARD3, hand[2]
-		assert_equal CARD4, hand[3]
-		assert_equal CARD5, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD7, hand[6]
-		assert_equal CARD8, hand[7]
-		assert_equal CARD9, hand[8]
-		assert_equal CARD10, hand[9]
-		assert_equal CARD11, hand[10]
-		assert_equal CARD12, hand[11]
+		game.deck = DECK_ORDERED_18
+		game.hand = []
+		game.top_card = 0
+		game.get_hand
+		assert_equal 12, game.hand.size
+		assert_equal 12, game.top_card
+		assert_equal CARD1, game.hand[0]
+		assert_equal CARD2, game.hand[1]
+		assert_equal CARD3, game.hand[2]
+		assert_equal CARD4, game.hand[3]
+		assert_equal CARD5, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD7, game.hand[6]
+		assert_equal CARD8, game.hand[7]
+		assert_equal CARD9, game.hand[8]
+		assert_equal CARD10, game.hand[9]
+		assert_equal CARD11, game.hand[10]
+		assert_equal CARD12, game.hand[11]
 	end
 
 	# Case 4: deck.size = 18, use ordered deck
 	def test_get_hand_unordered_deck18
 		game = SetGame.new
-		hand = []
-		top_card = 0
-		hand, top_card = game.get_hand DECK_UNORDERED_18
-		assert_equal 12, hand.size
-		assert_equal 12, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD13, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD15, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD12, hand[8]
-		assert_equal CARD10, hand[9]
-		assert_equal CARD7, hand[10]
-		assert_equal CARD11, hand[11]
+		game.deck = DECK_UNORDERED_18
+		game.hand = []
+		game.top_card = 0
+		game.get_hand
+		assert_equal 12, game.hand.size
+		assert_equal 12, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD13, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD15, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD12, game.hand[8]
+		assert_equal CARD10, game.hand[9]
+		assert_equal CARD7, game.hand[10]
+		assert_equal CARD11, game.hand[11]
 	end
 
 end

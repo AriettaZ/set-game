@@ -1,6 +1,7 @@
 #Author: Mike
 #Date: 5/24
 #Edit: Gail, Mike 5/26 V1.0
+#Edit: Gail 5/26 V2.0
 
 require_relative "set_game"
 

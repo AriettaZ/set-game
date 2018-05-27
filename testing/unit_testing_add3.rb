@@ -1,15 +1,8 @@
 =begin
-<<<<<<< HEAD
 	Author: Gail Chen
 	Date created: 5/23
-	Edit: 5/24 Gail Chen added more test cases
+	Edit: 5/24, 5/27 Gail Chen added more test cases
 	Test plan for testing add3 method: (use deck.size = 21)
-=======
-	Author: Gail
-	Created: 5/23
-	Editor: Mike 5/25
-	Test plan for testing add3 method: (use deck.size = 12)
->>>>>>> cb7bd44a56aa8a72c79f030a646779db23dfb12b
 	- Add 3 cards to an empty hand:
 		1. top_card = 0, use ordered deck
 		2. top_card = 0, use unordered deck
@@ -57,193 +50,203 @@ class TestAdd3 < Test::Unit::TestCase
 
 	def test_add3_to_empty_hand_1
 		game = SetGame.new
-		hand = []
-		top_card = 0
-		hand, top_card = game.add3 DECK_ORDERED, hand, top_card
-		assert_equal 3, hand.size
-		assert_equal 3, top_card
-		assert_equal CARD1, hand[0]
-		assert_equal CARD2, hand[1]
-		assert_equal CARD3, hand[2]
+		game.deck = DECK_ORDERED
+		game.hand = []
+		game.top_card = 0
+		game.add3
+		assert_equal 3, game.hand.size
+		assert_equal 3, game.top_card
+		assert_equal CARD1, game.hand[0]
+		assert_equal CARD2, game.hand[1]
+		assert_equal CARD3, game.hand[2]
 	end
 
 	def test_add3_to_empty_hand_2
 		game = SetGame.new
-		hand = []
-		top_card = 0
-		hand, top_card = game.add3 DECK_UNORDERED, hand, top_card
-		assert_equal 3, hand.size
-		assert_equal 3, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
+		game.deck = DECK_UNORDERED
+		game.hand = []
+		game.top_card = 0
+		game.add3
+		assert_equal 3, game.hand.size
+		assert_equal 3, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
 	end
 
 	def test_add3_to_empty_hand_3
 		game = SetGame.new
-		hand = []
-		top_card = 6
-		hand, top_card = game.add3 DECK_UNORDERED, hand, top_card
-		assert_equal 3, hand.size
-		assert_equal 9, top_card
-		assert_equal CARD5, hand[0]
-		assert_equal CARD9, hand[1]
-		assert_equal CARD7, hand[2]
+		game.deck = DECK_UNORDERED
+		game.hand = []
+		game.top_card = 6
+		game.add3
+		assert_equal 3, game.hand.size
+		assert_equal 9, game.top_card
+		assert_equal CARD5, game.hand[0]
+		assert_equal CARD9, game.hand[1]
+		assert_equal CARD7, game.hand[2]
 	end
 
 	def test_add3_to_hand_with_6cards_1
 		game = SetGame.new
-		hand = [CARD3, CARD4, CARD1, CARD5, CARD2, CARD6]
-		top_card = 6
-		hand, top_card = game.add3 DECK_ORDERED, hand, top_card
-		assert_equal 9, hand.size
-		assert_equal 9, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD5, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD7, hand[6]
-		assert_equal CARD8, hand[7]
-		assert_equal CARD9, hand[8]
+		game.deck = DECK_ORDERED
+		game.hand = [CARD3, CARD4, CARD1, CARD5, CARD2, CARD6]
+		game.top_card = 6
+		game.add3
+		assert_equal 9, game.hand.size
+		assert_equal 9, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD5, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD7, game.hand[6]
+		assert_equal CARD8, game.hand[7]
+		assert_equal CARD9, game.hand[8]
 	end
 
 	def test_add3_to_hand_with_6cards_2
 		game = SetGame.new
-		hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6]
-		top_card = 6
-		hand, top_card = game.add3 DECK_UNORDERED, hand, top_card
-		assert_equal 9, hand.size
-		assert_equal 9, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD7, hand[8]
+		game.deck = DECK_UNORDERED
+		game.hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6]
+		game.top_card = 6
+		game.add3
+		assert_equal 9, game.hand.size
+		assert_equal 9, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD7, game.hand[8]
 	end
 
 	def test_add3_to_hand_with_6cards_3
 		game = SetGame.new
-		hand = [CARD2, CARD4, CARD1, CARD3, CARD6, CARD8]
-		top_card = 12
-		hand, top_card = game.add3 DECK_UNORDERED, hand, top_card
-		assert_equal 9, hand.size
-		assert_equal 15, top_card
-		assert_equal CARD2, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD3, hand[3]
-		assert_equal CARD6, hand[4]
-		assert_equal CARD8, hand[5]
-		assert_equal CARD15, hand[6]
-		assert_equal CARD14, hand[7]
-		assert_equal CARD16, hand[8]
+		game.deck = DECK_UNORDERED
+		game.hand = [CARD2, CARD4, CARD1, CARD3, CARD6, CARD8]
+		game.top_card = 12
+		game.add3
+		assert_equal 9, game.hand.size
+		assert_equal 15, game.top_card
+		assert_equal CARD2, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD3, game.hand[3]
+		assert_equal CARD6, game.hand[4]
+		assert_equal CARD8, game.hand[5]
+		assert_equal CARD15, game.hand[6]
+		assert_equal CARD14, game.hand[7]
+		assert_equal CARD16, game.hand[8]
 	end
 
 	def test_add3_to_hand_with_12cards_1
 		game = SetGame.new
-		hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12]
-		top_card = 12
-		hand, top_card = game.add3 DECK_ORDERED, hand, top_card
-		assert_equal 15, hand.size
-		assert_equal 15, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD7, hand[8]
-		assert_equal CARD11, hand[9]
-		assert_equal CARD10, hand[10]
-		assert_equal CARD12, hand[11]
-		assert_equal CARD13, hand[12]
-		assert_equal CARD14, hand[13]
-		assert_equal CARD15, hand[14]
+		game.deck = DECK_ORDERED
+		game.hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12]
+		game.top_card = 12
+		game.add3
+		assert_equal 15, game.hand.size
+		assert_equal 15, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD7, game.hand[8]
+		assert_equal CARD11, game.hand[9]
+		assert_equal CARD10, game.hand[10]
+		assert_equal CARD12, game.hand[11]
+		assert_equal CARD13, game.hand[12]
+		assert_equal CARD14, game.hand[13]
+		assert_equal CARD15, game.hand[14]
 	end
 
 	def test_add3_to_hand_with_12cards_2
 		game = SetGame.new
-		hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12]
-		top_card = 18
-		hand, top_card = game.add3 DECK_ORDERED, hand, top_card
-		assert_equal 15, hand.size
-		assert_equal 21, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD7, hand[8]
-		assert_equal CARD11, hand[9]
-		assert_equal CARD10, hand[10]
-		assert_equal CARD12, hand[11]
-		assert_equal CARD19, hand[12]
-		assert_equal CARD20, hand[13]
-		assert_equal CARD21, hand[14]
+		game.deck = DECK_ORDERED
+		game.hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12]
+		game.top_card = 18
+		game.add3
+		assert_equal 15, game.hand.size
+		assert_equal 21, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD7, game.hand[8]
+		assert_equal CARD11, game.hand[9]
+		assert_equal CARD10, game.hand[10]
+		assert_equal CARD12, game.hand[11]
+		assert_equal CARD19, game.hand[12]
+		assert_equal CARD20, game.hand[13]
+		assert_equal CARD21, game.hand[14]
 	end
 
 	def test_add3_to_hand_with_15cards_1
 		game = SetGame.new
-		hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12, CARD15, CARD14, CARD13]
-		top_card = 15
-		hand, top_card = game.add3 DECK_ORDERED, hand, top_card
-		assert_equal 18, hand.size
-		assert_equal 18, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD7, hand[8]
-		assert_equal CARD11, hand[9]
-		assert_equal CARD10, hand[10]
-		assert_equal CARD12, hand[11]
-		assert_equal CARD15, hand[12]
-		assert_equal CARD14, hand[13]
-		assert_equal CARD13, hand[14]
-		assert_equal CARD16, hand[15]
-		assert_equal CARD17, hand[16]
-		assert_equal CARD18, hand[17]
+		game.deck = DECK_ORDERED
+		game.hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12, CARD15, CARD14, CARD13]
+		game.top_card = 15
+		game.add3
+		assert_equal 18, game.hand.size
+		assert_equal 18, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD7, game.hand[8]
+		assert_equal CARD11, game.hand[9]
+		assert_equal CARD10, game.hand[10]
+		assert_equal CARD12, game.hand[11]
+		assert_equal CARD15, game.hand[12]
+		assert_equal CARD14, game.hand[13]
+		assert_equal CARD13, game.hand[14]
+		assert_equal CARD16, game.hand[15]
+		assert_equal CARD17, game.hand[16]
+		assert_equal CARD18, game.hand[17]
 	end
 
 	def test_add3_to_hand_with_15cards_2
 		game = SetGame.new
-		hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12, CARD15, CARD14, CARD16]
-		top_card = 18
-		hand, top_card = game.add3 DECK_ORDERED, hand, top_card
-		assert_equal 18, hand.size
-		assert_equal 21, top_card
-		assert_equal CARD3, hand[0]
-		assert_equal CARD4, hand[1]
-		assert_equal CARD1, hand[2]
-		assert_equal CARD8, hand[3]
-		assert_equal CARD2, hand[4]
-		assert_equal CARD6, hand[5]
-		assert_equal CARD5, hand[6]
-		assert_equal CARD9, hand[7]
-		assert_equal CARD7, hand[8]
-		assert_equal CARD11, hand[9]
-		assert_equal CARD10, hand[10]
-		assert_equal CARD12, hand[11]
-		assert_equal CARD15, hand[12]
-		assert_equal CARD14, hand[13]
-		assert_equal CARD16, hand[14]
-		assert_equal CARD19, hand[15]
-		assert_equal CARD20, hand[16]
-		assert_equal CARD21, hand[17]
+		game.deck = DECK_ORDERED
+		game.hand = [CARD3, CARD4, CARD1, CARD8, CARD2, CARD6, CARD5, CARD9, CARD7, CARD11, CARD10, CARD12, CARD15, CARD14, CARD16]
+		game.top_card = 18
+		game.add3
+		assert_equal 18, game.hand.size
+		assert_equal 21, game.top_card
+		assert_equal CARD3, game.hand[0]
+		assert_equal CARD4, game.hand[1]
+		assert_equal CARD1, game.hand[2]
+		assert_equal CARD8, game.hand[3]
+		assert_equal CARD2, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD5, game.hand[6]
+		assert_equal CARD9, game.hand[7]
+		assert_equal CARD7, game.hand[8]
+		assert_equal CARD11, game.hand[9]
+		assert_equal CARD10, game.hand[10]
+		assert_equal CARD12, game.hand[11]
+		assert_equal CARD15, game.hand[12]
+		assert_equal CARD14, game.hand[13]
+		assert_equal CARD16, game.hand[14]
+		assert_equal CARD19, game.hand[15]
+		assert_equal CARD20, game.hand[16]
+		assert_equal CARD21, game.hand[17]
 	end
 end

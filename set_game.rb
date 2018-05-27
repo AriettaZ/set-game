@@ -6,7 +6,7 @@ class SetGame
 
 def initialize
 	@start_time = Time.now
-	@save_time = Time.now
+	@save_time = 0
 	@top_card = 0
 	@number_of_hint = 0
 	@number_of_correct = 0
@@ -30,10 +30,11 @@ attr_accessor :total_hint
 =begin
 	Author: Gail Chen
 	Date: 5/26
-	Edit: N/A
+	Edit: 5/26 Gail added more modes
 	Description:
-		Prints menu to the screen. The menu shows choices of New Game, Tutorial,
-		Load Game, Auto-Playing Game and Quit.
+		Prints menu to the screen and asks user to make a choice.
+		The menu shows choices of New Game, Tutorial, Load Game, Delette Saved Game,
+		Auto-Playing Game and Quit.
 	Requires: N/A
 	Updates: N/A
 	Returns: Prints menu to screen.
@@ -52,7 +53,7 @@ attr_accessor :total_hint
 =begin
 	Author: Gail Chen
 	Date: 5/25
-	Edit: 5/26 Gail added Auto-Playing Mode and called show_menu
+	Edit: 5/26 Gail created and used show_menu method
 	Description:
 		Prints menu to the screen and get valid user's choice.
 		The user must choose a valid option by typing the number of that option.
@@ -64,7 +65,7 @@ attr_accessor :total_hint
 	def menu_get_choice
 		show_menu
 		user_choice = gets.chomp
-		until valid_choice? user_choice
+		until valid_choice? user_choice, 6
 			show_menu
 			user_choice = gets.chomp
 		end
@@ -73,7 +74,7 @@ attr_accessor :total_hint
 
 	def clear
 		@start_time = Time.now
-		@save_time = Time.now
+		@save_time = 0
 		@top_card = 0
 		@number_of_hint = 0
 		@number_of_correct = 0
@@ -83,21 +84,27 @@ attr_accessor :total_hint
 		@username = ""
 		@total_hint=0
 	end
+
 =begin
 	Author: Gail Chen
 	Created: 5/25
 	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
-	Description: This method checks that user enters an integer between 1 and 6.
-	Requires: user_input.class == String
+				5/27 Gail modified the method to check valid menu option and valid level
+	Description:
+		Checks user enters an integer between 1 and max where max is the largest
+		integer the user is allowed to enter.
+	Requires:
+		user_input.class == String, max == 6 if this method is called in
+		menu_get_choice, max == 3 if this method is called in select_level.
 	Updates: N/A
-	Returns: true if user_input is a string of an integer in range [1, 6]
-		 false else
+	Returns:
+		true if user_input is a string of an integer in range [1, max], false else
 =end
-	def valid_choice?(user_input)
-		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= 6
+	def valid_choice?(user_input, max)
+		if user_input.length == 1 && user_input.to_i.to_s == user_input && user_input.to_i >= 1 && user_input.to_i <= max
 			return true
 		else
-			puts "You chose " + user_input +" -- I have no idea what to do with that."
+			puts "You chose " + user_input +", I have no idea what to do with that."
 			return false
 		end
 	end
@@ -105,7 +112,7 @@ attr_accessor :total_hint
 =begin
 	Author: Ariel
 	Created: 5/26
-	Edit: N/A
+	Edit: 5/26 Gail minor changes
 	Description: This method redirects user to different tracks
 	Requires: choice.class == integer
 	Updates: N/A
@@ -124,49 +131,99 @@ attr_accessor :total_hint
 			load_game
 		when 4
 			puts "=========Delete Saved Game========="
-			delete_save_game
+			delete_game
 		when 5
 			puts "=========Auto-playing Mode========="
 			auto_game
 		end
 	end
 
-
-	#Author: Mike
-	#Create Date: 5/22
-	#Edit: Ariel 5/26
-	#Edit: Mike 5/26
+=begin
+	Author: Mike
+	Create Date: 5/26
+	Edit: 5/26 Ariel, Mike
+				5/27 Gail
+	Description: Starts a new game.
+	Require: N/A
+	Updates:
+		@start_time, @save_time, @top_card, @number_of_hint,@number_of_correct,
+		@number_of_wrong, @deck, @hand, @username, @total_hint
+	Returns: N/A
+=end
 	def new_game
 		clear
-		#generate 81 cards and shuffled
+		select_level
 		get_deck
 		shuffle
-		#top_card is the next card to be selected in deck
 		get_hand
-		@save_time = 0
-		@num_of_hint = 0
-		@num_of_correct = 0
-
 		continue_game
+	end
+
+=begin
+	Author: Gail Chen
+  Date created: 5/27
+	Edit: N/A
+	Description:
+		Selects difficulty level from easy, medium, hard. In the easy level,
+		the user can ask for hint 27 times at most and the specific cards in a
+		set wil be given. The medium level gives hints for 10 times at most and
+		tells two of the three cards in the set. The hard level gives hints for
+		5 times at most with one of the three cards in the set.
+	Require: N/A
+	Updates: @total_hint
+	Returns: N/A
+=end
+	def select_level
+		puts ""
+		puts "Choose difficulty Level:"
+		puts "[1] Easy"
+		puts "[2] Medium"
+		puts "[3] Hard"
+		puts "Enter the number of the corresponding difficulty level:"
+		mode = gets.chomp
+		until valid_choice? mode, 3
+			puts ""
+			puts "Choose difficulty Level:"
+			puts "[1] Easy"
+			puts "[2] Medium"
+			puts "[3] Hard"
+			puts "Enter the number of the corresponding difficulty level:"
+			mode = gets.chomp
+		end
+		case mode
+		when "1"
+			@total_hint = 27
+		when "2"
+			@total_hint = 10
+		when "3"
+			@total_hint = 5
+		end
 	end
 
 	#Author: Mike
 	#Creation Date: 5/26
+	#Edit: 5/27 Gail, minor changes
 	def continue_game
-		until @top_card==81 && find_set.empty?
-			show_hand
-
-			hint = []
-			find_set.each do |card| hint.push(@hand.index(card)) end
-			puts hint.to_s
-			puts "Want to save game?"
-			if gets.chomp==="yes"
-				save_game
-				break
+		show_hand
+		puts "Want to save game? Enter \"yes\" to save game."
+		if gets.chomp.downcase[0] === "yes"
+			save_game
+		else
+			user_input = get_user_cards
+			until user_input.empty? && @top_card == 81 && find_set.empty?
+				hint = []
+				find_set.each do |card| hint.push(@hand.index(card)) end
+				puts hint.to_s
+				puts "Want to save game? Enter \"yes\" to save game."
+				if gets.chomp === "yes"
+					save_game
+					break
+				end
+				update user_input
+				show_hand
+		  	user_input = get_user_cards
 			end
-
-	  		user_input = get_user_cards
-	  		update user_input
+			update user_input
 		end
 	end
 
@@ -238,20 +295,27 @@ attr_accessor :total_hint
 	#Author: Mike
 	#Create Date: 5/26
 	#Edit: Ariel 5/26
+	#Edit: Gail 5/27
 	def auto_game
 	  #generate 81 cards and shuffled
 		clear
+		@save_time = 0
 	  get_deck
 	  shuffle
 	  #top_card is the next card to be selected in deck
 	  get_hand
-		until @top_card== 81 && find_set.empty?
+		show_hand
+		hint = []
+		find_set.each do |card| hint.push(@hand.index(card)) end
+		puts hint.to_s
+		until hint.empty? && @top_card == 81 && find_set.empty?
+			update hint
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
 			puts hint.to_s
-	  	update hint
 		end
+		update hint
 	end
 
  	#Author: Ariel
@@ -283,15 +347,11 @@ attr_accessor :total_hint
 	Date created: 5/22
 	Edit: 5/25 Gail Chen optimized the method
 	Description:
-		This method creates a hand with 12 top cards from deck.
-		It returns the created hand and the index of the next top card in deck.
+		This method adds 12 top cards from deck to @deck array.
 	Requires:
-		deck != nil, deck.length >= 12
-	Updates:
-		New array variable named hand with 12 top cards from deck.
-		New integer variable named top_card indicates the index of next top card in deck.
-	Returns:
-		hand, top_card
+		@deck != nil, @deck.length >= 12, @hand != nil, @top_card == 0
+	Updates: @hand.length += 12, @top_card += 12
+	Returns: N/A
 =end
 	def get_hand
 		12.times {
@@ -307,7 +367,7 @@ attr_accessor :total_hint
 		Description:
 			This method pretty prints #, color, shading, symbol and number of cards
 			in hand to the screen for user.
-		Requires: hand != nil
+		Requires: @hand != nil
 		Updates: N/A
 		Returns: Pretty prints details of cards in hand to the screen.
 =end
@@ -319,9 +379,9 @@ attr_accessor :total_hint
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 
-		hint = []
-		find_set.each do |card| hint.push(@hand.index(card)) end
-		puts hint.to_s
+		# hint = []
+		# find_set.each do |card| hint.push(@hand.index(card)) end
+		# puts hint.to_s
 	end
 
 =begin
@@ -354,7 +414,6 @@ attr_accessor :total_hint
 	Returns: hash with keys representing card attributes: {$Colors + $Shadings + $Symbols + $Numbers}
 		 and values corresponding to number of cards with this attribute in hand.
 		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
-
 =end
 	def organize
 		# create hash
@@ -370,8 +429,6 @@ attr_accessor :total_hint
 		end
 		hand_stat
 	end
-
-
 
 =begin
 	Author: Mike
@@ -605,6 +662,7 @@ end
 	elsif user_input.empty? && @top_card==81 && find_set.empty?
 			puts "Congrats! No set on hand and no card in deck. Game is cleared."
 			puts "All Clear! Good Game!"
+			show_stat
 			puts "You get #{Time.now-@start_time} scores. (Lower score is better)"
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
@@ -632,14 +690,14 @@ end
 		user from hand if there are less than or more than 12 cards in hand,
 		or all cards in deck have been placed in hand before.
 	Requires:
-		top_card and hand.size are multiples of 3,
-		0 < hand.size <= 21, hand.size <= top_card <= deck.size,
-		If hand.size < 12, then top_card must equals to deck.size.
+		@top_card and @hand.size are multiples of 3,
+		0 < @hand.size <= 21, @hand.size <= @top_card <= @deck.size,
+		If @hand.size < 12, then @top_card must equals to @deck.size.
 	Updates:
-		If hand.size == 12 and top_card < deck.size, replace 3 cards in hand as
-		indicated by user_input, top_card += 3; otherwise, remove 3 cards from hand
-		as indicated by user_input, hand.size -= 3.
-	Returns: hand, top_card
+		If @hand.size == 12 and @top_card < @deck.size, replace 3 cards in @hand as
+		indicated by user_input, top_card += 3; otherwise, remove 3 cards from @hand
+		as indicated by user_input, @hand.size -= 3.
+	Returns: N/A
 =end
 	def replace3(user_input)
 			delete_count = 0
@@ -659,15 +717,33 @@ end
 	Date created: 5/22
 	Edit: 5/24 Gail Chen changed the for loop to 3.times
 	Description: This method adds next 3 top cards from deck to the end of hand.
-	Requires: deck != nil, top_card < deck.length, top_card >= hand.length
-	Updates: hand.size += 3, top_card += 3, push 3 top cards from deck to hand
-	Returns: hand, top_card
+	Requires: @deck != nil, @hand.length <= @top_card < @deck.length
+	Updates: @hand.size += 3, @top_card += 3, push 3 top cards from @deck to @hand
+	Returns: N/A
 =end
 	def add3
 		3.times {
 			@hand.push(@deck[@top_card])
 			@top_card += 1
 		}
+	end
+
+=begin
+	Author: Gail Chen
+	Date created: 5/27
+	Edit: 5/24 Gail Chen changed the for loop to 3.times
+	Description:
+		This method prints statistics of this game including total time spend, score,
+		number of hints used, percentage of using hint to find a correct set.
+	Requires: N/A
+	Updates: N/A
+	Returns: N/A
+=end
+	def show_stat
+		#puts "Score: #{calc_score}"
+		puts "Totol time: #{Time.now - @start_time + @save_time}"
+		puts "Number of hints used: #{@number_of_hint}"
+		puts "% of hint used to find set: #{@number_of_hint - @number_of_correct}"
 	end
 
 	#Author: Mike
@@ -719,7 +795,7 @@ end
 			cardF = Card.new('purple','open','diamond','3')
 			puts "","This is an example of a 6 cards: "
 			show_hand [cardA, cardB, cardC,cardD,cardE,cardF]
-			puts "","card #0, #1 and #2 are a set: "
+			puts "","cards #0, #1 and #2 form a set: "
 			show_hand [cardA, cardB, cardC]
 			puts "To choose this set, enter their card numbers separated by ',': 0,1,2"
 
