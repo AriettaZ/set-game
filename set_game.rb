@@ -108,6 +108,7 @@ attr_reader :startTime
 	#Edit: Mike 5/26
 	def new_game
 		#generate 81 cards and shuffled
+		puts "Select "
 		deck = get_deck
 		shuffle(deck)
 		#top_card is the next card to be selected in deck
