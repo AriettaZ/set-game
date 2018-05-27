@@ -299,7 +299,6 @@ attr_accessor :total_hint
 	def auto_game
 	  #generate 81 cards and shuffled
 		clear
-		@save_time = 0
 	  get_deck
 	  shuffle
 	  #top_card is the next card to be selected in deck
