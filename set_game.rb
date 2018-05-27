@@ -5,9 +5,27 @@ require_relative 'card'
 class SetGame
 
 def initialize
-	@startTime = Time.now
+	@start_time = Time.now
+	@save_time = Time.now
+	@top_card = 0
+	@number_of_hint = 0
+	@number_of_correct = 0
+	@number_of_wrong= 0
+	@deck = []
+	@hand = []
+	@username = ""
+	@total_hint=0
 end
-attr_reader :startTime
+attr_accessor :start_time
+attr_accessor :save_time
+attr_accessor :top_card
+attr_accessor :number_of_hint
+attr_accessor :number_of_correct
+attr_accessor :number_of_wrong
+attr_accessor :deck
+attr_accessor :hand
+attr_accessor :username
+attr_accessor :total_hint
 
 =begin
 	Author: Gail Chen
@@ -53,6 +71,18 @@ attr_reader :startTime
 		user_choice.to_i
 	end
 
+	def clear
+		@start_time = Time.now
+		@save_time = Time.now
+		@top_card = 0
+		@number_of_hint = 0
+		@number_of_correct = 0
+		@number_of_wrong= 0
+		@deck = []
+		@hand = []
+		@username = ""
+		@total_hint=0
+	end
 =begin
 	Author: Gail Chen
 	Created: 5/25
@@ -107,38 +137,37 @@ attr_reader :startTime
 	#Edit: Ariel 5/26
 	#Edit: Mike 5/26
 	def new_game
+		clear
 		#generate 81 cards and shuffled
-		deck = get_deck
-		shuffle(deck)
+		get_deck
+		shuffle
 		#top_card is the next card to be selected in deck
-		hand, top_card = get_hand deck
-		saved_time = 0
-		num_of_hint = 0
-		num_of_correct = 0
+		get_hand
+		@save_time = 0
+		@num_of_hint = 0
+		@num_of_correct = 0
 
-		continue_game top_card, deck, hand, num_of_hint,num_of_correct
+		continue_game
 	end
 
 	#Author: Mike
 	#Creation Date: 5/26
-	def continue_game top_card, deck, hand, num_of_hint,num_of_correct
-		until top_card==81 && find_set(hand).empty?
-			show_hand hand
+	def continue_game
+		until @top_card==81 && find_set.empty?
+			show_hand
 
-#			hint = []
-#			find_set(hand).each do |card| hint.push(hand.index(card)) end
-#			puts hint.to_s
-#			puts "Want to save game?"
-#			if gets.chomp==="yes"
-#				save_game(Time.new - startTime,0,0,top_card,deck,hand)
-#				break
-#			end
+			hint = []
+			find_set.each do |card| hint.push(@hand.index(card)) end
+			puts hint.to_s
+			puts "Want to save game?"
+			if gets.chomp==="yes"
+				save_game
+				break
+			end
 
-	  		user_input = get_user_cards hand.length
-	  		hand, top_card = update(hand,user_input,top_card,deck)
+	  		user_input = get_user_cards
+	  		update user_input
 		end
-	  puts "All Clear! Good Game!"
-		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
 
 	#Author: Mike
@@ -147,9 +176,9 @@ attr_reader :startTime
 
 	#Author: Mike
 	#Creation Date: 5/26
-	def save_game(time,num_of_hint,num_of_correct,top_card,deck,hand)
+	def save_game
 		file_name = get_save_information
-		File.write file_name,Marshal.dump({time: time,num_of_hint: num_of_hint,num_of_correct: num_of_correct,top_card: top_card,deck: deck,hand: hand})
+		File.write file_name,Marshal.dump({time: Time.now - @start_time + @save_time,num_of_hint: @number_of_hint,num_of_correct: @number_of_correct,top_card: @top_card,deck: @deck,hand: @hand})
 	end
 
 	#Author: Mike
@@ -170,14 +199,14 @@ attr_reader :startTime
 		file_name = get_stored_games
 		load = Marshal.load File.read(file_name)
 		  #Load the game
-		  	saved_time = load[:time]
-			num_of_hint = load[:num_of_hint]
-			num_of_correct = load[:num_of_correct]
-			top_card = load[:top_card]
-			deck = load[:deck]
-			hand = load[:hand]
+		  @save_time= load[:time]
+			@number_of_hint = load[:num_of_hint]
+			@number_of_correct = load[:num_of_correct]
+			@top_card = load[:top_card]
+			@deck = load[:deck]
+			@hand = load[:hand]
 
-			continue_game top_card, deck, hand, num_of_hint,num_of_correct
+			continue_game
 
 	end
 
@@ -203,19 +232,18 @@ attr_reader :startTime
 
 	def auto_game
 	  #generate 81 cards and shuffled
-	  deck = get_deck
-	  shuffle(deck)
+		clear
+	  get_deck
+	  shuffle
 	  #top_card is the next card to be selected in deck
-	  hand, top_card = get_hand(deck)
-		until top_card== 81 && find_set(hand).empty?
-			show_hand hand
+	  get_hand
+		until @top_card== 81 && find_set.empty?
+			show_hand
 			hint = []
-			find_set(hand).each do |card| hint.push(hand.index(card)) end
+			find_set.each do |card| hint.push(@hand.index(card)) end
 			puts hint.to_s
-	  	hand, top_card = update(hand,hint,top_card,deck)
+	  	update hint
 		end
-	  puts "All Clear! Good Game!"
-		puts "You get #{Time.now-startTime} scores. (Lower score is better)"
 	end
 
  	#Author: Ariel
@@ -223,13 +251,11 @@ attr_reader :startTime
 	#Edit: Mike 5/24
 	#Edit: Mike 5/25
 	def get_deck
-		deck = []
 		$Colors.each{ |color|
 			$Shadings.each {|shading|
 				$Symbols.each{|symbol|
 					$Numbers.each{|number|
-					deck.push(Card.new(color, shading, symbol, number)) }}}}
-		deck
+					@deck.push(Card.new(color, shading, symbol, number)) }}}}
 	end
 
 =begin
@@ -240,8 +266,8 @@ attr_reader :startTime
 		Updates: deck
 		Returns: Shuffled deck
 =end
-	def shuffle(deck)
-		deck.shuffle!
+	def shuffle
+		@deck.shuffle!
 	end
 
 =begin
@@ -259,14 +285,11 @@ attr_reader :startTime
 	Returns:
 		hand, top_card
 =end
-	def get_hand(deck)
-		hand = []
-		top_card = 0
+	def get_hand
 		12.times {
-			hand.push(deck[top_card])
-			top_card += 1
+			@hand.push(@deck[@top_card])
+			@top_card += 1
 		}
-		return hand, top_card
 	end
 
 =begin
@@ -280,7 +303,7 @@ attr_reader :startTime
 		Updates: N/A
 		Returns: Pretty prints details of cards in hand to the screen.
 =end
-	def show_hand(hand)
+	def show_hand hand=@hand
 		puts ""
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
@@ -288,9 +311,9 @@ attr_reader :startTime
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 
-		# hint = []
-		# find_set(hand).each do |card| hint.push(hand.index(card)) end
-		# puts hint.to_s
+		hint = []
+		find_set.each do |card| hint.push(hand.index(card)) end
+		puts hint.to_s
 	end
 
 =begin
@@ -299,9 +322,9 @@ attr_reader :startTime
 	Editor: N/A
 	Description: Finds 1 or all valid sets in hand.
 =end
-	def find_set(hand, mode = 'hint')
+	def find_set(mode = 'hint')
 		# Create a hash to represent the number of cards in each section of the table
-		hand_stat  = organize(hand)
+		hand_stat  = organize
 
 		# Score the subarrays to find the one that contains the least possible sets
 		score = get_score(hand_stat) # set of sets returned
@@ -325,14 +348,14 @@ attr_reader :startTime
 		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
 
 =end
-	def organize hand
+	def organize
 		# create hash
 		hand_stat = Hash.new {|k,v| k[v] = []}
 		# create keys based on card attr, set to default [] value
 		card_attrs = $Colors + $Shadings + $Symbols + $Numbers
 		card_attrs.each {|attr| hand_stat[attr.intern]}
 		# add cards to hash
-		for card in hand
+		for card in @hand
 			[:color, :shading, :symbol, :number].each {|catg|
 				hand_stat[card[catg].intern] << card
 			}
@@ -460,9 +483,9 @@ end
 
 =end
 
-def get_user_cards hand_size
+def get_user_cards
 	user_array = [-1]
-	until valid_syntax?(user_array, hand_size)
+	until valid_syntax?(user_array, @hand.size)
 		puts "\nChoose 3 cards from your hand using their # separated by ','."
 		puts "Or type 'none' if you believe no set exists."
 		user_array = gets.chomp.split(",")
@@ -565,26 +588,27 @@ end
 	give feedback on users choice and change the hand, deck hand
 	top_card according to user's input
 =end
-	def update(hand,user_input,top_card,deck)
+	def update(user_input)
 	  # when user_input==[] && hand.length<21 && top_card<81
-		if user_input.empty? && hand.length<21 && top_card<81
+		if user_input.empty? && @hand.length<21 && @top_card<81
 			puts "You entered no set. 3 cards will be added."
-			hand, top_card = add3(deck,hand,top_card)
+			add3
 		# when user_input==[] && top_card==81 && no sets on hand
-		elsif user_input.empty? && top_card==81 && find_set(hand).empty?
+	elsif user_input.empty? && @top_card==81 && find_set.empty?
 			puts "Congrats! No set on hand and no card in deck. Game is cleared."
+			puts "All Clear! Good Game!"
+			puts "You get #{Time.now-@start_time} scores. (Lower score is better)"
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
 			puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
-		elsif check_set?(hand[user_input[0]], hand[user_input[1]],hand[user_input[2]],["color","shading","symbol","number"])
+	elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
 			puts "Congrats! You entered a correct set!"
-			hand, top_card = replace3(deck,hand,user_input,top_card)
+			replace3(user_input)
 		# when user_input!=[] && user_input is not a correct set
 		else
 			puts "Sorry. Wrong set."
 		end
-		return hand, top_card
 	end
 
 =begin
@@ -609,18 +633,17 @@ end
 		as indicated by user_input, hand.size -= 3.
 	Returns: hand, top_card
 =end
-	def replace3(deck, hand, user_input, top_card)
+	def replace3(user_input)
 			delete_count = 0
 			user_input.each { |card|
-				if hand.size == 12 && top_card < deck.size
-					hand[card] = deck[top_card]
-					top_card += 1
+				if @hand.size == 12 && @top_card < @deck.size
+					@hand[card] = @deck[@top_card]
+					@top_card += 1
 				else
-					hand.delete_at(card - delete_count)
+					@hand.delete_at(card - delete_count)
 					delete_count += 1
 				end
 			}
-		return hand, top_card
 	end
 
 =begin
@@ -632,12 +655,11 @@ end
 	Updates: hand.size += 3, top_card += 3, push 3 top cards from deck to hand
 	Returns: hand, top_card
 =end
-	def add3(deck,hand,top_card)
+	def add3
 		3.times {
-			hand.push(deck[top_card])
-			top_card += 1
+			@hand.push(@deck[@top_card])
+			@top_card += 1
 		}
-		return hand, top_card
 	end
 
 	#Author: Mike
