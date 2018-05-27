@@ -52,7 +52,7 @@ attr_accessor :total_hint
 =begin
 	Author: Gail Chen
 	Date: 5/25
-	Edit: 5/26 Gail used show_menu
+	Edit: 5/26 Gail added Auto-Playing Mode and called show_menu
 	Description:
 		Prints menu to the screen and get valid user's choice.
 		The user must choose a valid option by typing the number of that option.
@@ -120,11 +120,11 @@ attr_accessor :total_hint
 		  puts "======Entering Tutorial======"
 		  get_tutorial
 		when 3
-		  puts "=========Load Game========="
+			puts "=========Load Game========="
 			load_game
 		when 4
 			puts "=========Delete Saved Game========="
-			delete_saved_game
+			delete_save_game
 		when 5
 			puts "=========Auto-playing Mode========="
 			auto_game
@@ -172,6 +172,11 @@ attr_accessor :total_hint
 
 	#Author: Mike
 	#Creation Date: 5/26
+	def delete_game
+		file_name = get_stored_games
+		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
+		File.delete(file_name) if gets.chomp.downcase[0]=="y"
+	end
 
 
 	#Author: Mike
@@ -230,6 +235,9 @@ attr_accessor :total_hint
 		file_name
 	end
 
+	#Author: Mike
+	#Create Date: 5/26
+	#Edit: Ariel 5/26
 	def auto_game
 	  #generate 81 cards and shuffled
 		clear
@@ -312,7 +320,7 @@ attr_accessor :total_hint
 		}
 
 		hint = []
-		find_set.each do |card| hint.push(hand.index(card)) end
+		find_set.each do |card| hint.push(@hand.index(card)) end
 		puts hint.to_s
 	end
 
@@ -600,14 +608,14 @@ end
 			puts "You get #{Time.now-@start_time} scores. (Lower score is better)"
 		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
 		elsif user_input.empty?
-			puts "You entered no set but at least one set exist."
+				puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 	elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
 			puts "Congrats! You entered a correct set!"
 			replace3(user_input)
 		# when user_input!=[] && user_input is not a correct set
 		else
-			puts "Sorry. Wrong set."
+				puts "Sorry. Wrong set."
 		end
 	end
 
