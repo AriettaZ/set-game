@@ -4,9 +4,12 @@
 require_relative 'card'
 class SetGame
 
+#Create: Ariel
+#Create Date: 5/26
+#Edit: Mike 5/27
 def initialize
 	@start_time = Time.now
-	@save_time = Time.now
+	@save_time = 0
 	@top_card = 0
 	@number_of_hint = 0
 	@number_of_correct = 0
@@ -71,9 +74,12 @@ attr_accessor :total_hint
 		user_choice.to_i
 	end
 
+	#Create: Ariel
+	#Created: 5/26
+	#Edit: Mike 5/27
 	def clear
 		@start_time = Time.now
-		@save_time = Time.now
+		@save_time = 0
 		@top_card = 0
 		@number_of_hint = 0
 		@number_of_correct = 0
@@ -83,6 +89,7 @@ attr_accessor :total_hint
 		@username = ""
 		@total_hint=0
 	end
+	
 =begin
 	Author: Gail Chen
 	Created: 5/25
@@ -156,11 +163,8 @@ attr_accessor :total_hint
 		until @top_card==81 && find_set.empty?
 			show_hand
 
-			hint = []
-			find_set.each do |card| hint.push(@hand.index(card)) end
-			puts hint.to_s
 			puts "Want to save game?"
-			if gets.chomp==="yes"
+			if gets.chomp.downcase[0]=="y"
 				save_game
 				break
 			end
@@ -181,9 +185,20 @@ attr_accessor :total_hint
 
 	#Author: Mike
 	#Creation Date: 5/26
+	#Edit: Mike 5/27
 	def save_game
 		file_name = get_save_information
-		File.write file_name,Marshal.dump({time: Time.now - @start_time + @save_time,num_of_hint: @number_of_hint,num_of_correct: @number_of_correct,top_card: @top_card,deck: @deck,hand: @hand})
+		File.write file_name,Marshal.dump({
+			save_time: Time.now - @start_time + @save_time,
+			top_card: @top_card,
+			number_of_hint: @number_of_hint,
+			number_of_correct: @number_of_correct,
+			number_of_wrong: @number_of_wrong,
+			deck: @deck,
+			hand: @hand,
+			username: @username,
+			total_hint: @total_hint
+			})
 	end
 
 	#Author: Mike
@@ -200,18 +215,29 @@ attr_accessor :total_hint
 
 	#Author: Mike
 	#Creation Date: 5/26
+	#Edit: Mike 5/27 Output messages to give more information about the progress
 	def load_game
 		file_name = get_stored_games
 		load = Marshal.load File.read(file_name)
-		  #Load the game
-		  @save_time= load[:time]
-			@number_of_hint = load[:num_of_hint]
-			@number_of_correct = load[:num_of_correct]
-			@top_card = load[:top_card]
-			@deck = load[:deck]
-			@hand = load[:hand]
-
-			continue_game
+		#Load the game
+		@start_time = 0
+		@save_time = load[:save_time]
+		@top_card = load[:top_card]
+		@number_of_hint = load[:number_of_hint]
+		@number_of_correct = load[:number_of_correct]
+		@number_of_wrong= load[:number_of_correct]
+		@deck = load[:deck]
+		@hand = load[:hand]
+		@username = load[:username]
+		@total_hint=load[:total_hint]
+		
+		msg = "You have completed #{@number_of_corret} sets (roughly #{@number_of_correct/27.0*100}%) in this game. Lets Continue!"
+		puts
+		(msg.length+10).times {print "*"}
+		puts 
+		puts "**** "+msg+" ****"
+		(msg.length+10).times {print "*"}
+		continue_game
 
 	end
 
@@ -238,6 +264,7 @@ attr_accessor :total_hint
 	#Author: Mike
 	#Create Date: 5/26
 	#Edit: Ariel 5/26
+	#Edit: Mike 5/27
 	def auto_game
 	  #generate 81 cards and shuffled
 		clear
@@ -249,8 +276,7 @@ attr_accessor :total_hint
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
-			puts hint.to_s
-	  	update hint
+	  		update hint
 		end
 	end
 
@@ -258,12 +284,11 @@ attr_accessor :total_hint
 	#Create date: 5/21
 	#Edit: Mike 5/24
 	#Edit: Mike 5/25
+	#Edit: Mike 5/27
 	def get_deck
-		$Colors.each{ |color|
-			$Shadings.each {|shading|
-				$Symbols.each{|symbol|
-					$Numbers.each{|number|
-					@deck.push(Card.new(color, shading, symbol, number)) }}}}
+		for color,shading,symbol,number in $Colors.product($Shadings,$Symbols, $Numbers)
+			@deck.push Card.new(color, shading, symbol, number)
+		end
 	end
 
 =begin
@@ -327,20 +352,21 @@ attr_accessor :total_hint
 =begin
 	Author: Channing, Mike
 	Date: 5/25
-	Editor: N/A
+	Editor: Mike 5/27
 	Description: Finds 1 or all valid sets in hand.
 =end
 	def find_set(mode = 'hint')
 		# Create a hash to represent the number of cards in each section of the table
 		hand_stat  = organize
 
-		# Score the subarrays to find the one that contains the least possible sets
-		score = get_score(hand_stat) # set of sets returned
+		# Score the catgories to find the one that contains the least possible sets
+		catg_score = catg_set(hand_stat)
 
-		check_table = get_check_table(hand_stat, score)
+		# Get all the possible sets from the catgory with lowest catg_score
+		check_table = get_check_table(hand_stat, catg_score)
 
-		# Use scores and card_table to find one or all valid sets
-		set_exist(check_table, score)
+		# Use catg_score and card_table to find one valid sets
+		set_exist(check_table, catg_score)
 	end
 
 =begin
@@ -371,21 +397,17 @@ attr_accessor :total_hint
 		hand_stat
 	end
 
-
-
 =begin
 	Author: Mike
 	Date: 5/25
 	Editor: N/A
-
 	Description: Return a valid array of categories and their scores.
-
 	Requires: hand_Stat filled up
 	Updates: N/A
 	Returns: [["color",color_score],["shading",shading_score],["symbol",symbol_score],["number",number_score]]
 		 where for all scores, 0<=scores<=220
 =end
-def get_score(hand_stat)
+def catg_set(hand_stat)
 	score=[['color',0],['shading',0],['symbol',0],['number',0]]
 
 	score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
@@ -459,17 +481,14 @@ def get_check_table(hand_stat,score)
 	end
 
 	check_table = []
-
 	category.each {
 		|attr|
 		check_table.push(*hand_stat[attr.intern].combination(3).to_a)
 	}
-
 	attr_card_table = category.map do
 		|attr|
 		hand_stat[attr.intern]
 	end
-
 	check_table.push *(attr_card_table[0].product(attr_card_table[1],attr_card_table[2]))
 end
 
@@ -673,6 +692,7 @@ end
 	#Author: Mike
 	#Create Date: 5/23
 	#Edit: 5/24 by Mike, minor changes
+	#Edit: 5/27 Mike, minor changes
 =begin
 	Requires: check_table.class = Array,
 				for combination in check_table, combination.class = Array, combination.length = 3,
@@ -688,9 +708,7 @@ end
 		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
 
 		for combination in check_table
-			if check_set?(combination[0],combination[1],combination[2],order)
-				return combination
-			end
+			return combination if check_set?(combination[0],combination[1],combination[2],order)
 		end
 		return []
 	end
