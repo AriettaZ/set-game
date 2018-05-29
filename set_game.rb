@@ -2,13 +2,16 @@
 #Create Date: 5/22
 
 require_relative 'card'
+require 'csv'
 class SetGame
 
 #Create: Ariel
 #Create Date: 5/26
 #Edit: Mike 5/27
+#Edit: Ariel 5/29
 def initialize
 	@start_time = Time.now
+	@end_time=Time.now
 	@save_time = 0
 	@top_card = 0
 	@number_of_hint = 0
@@ -18,8 +21,10 @@ def initialize
 	@hand = []
 	@username = ""
 	@total_hint=0
+	@is_end=false
 end
 attr_accessor :start_time
+attr_accessor :end_time
 attr_accessor :save_time
 attr_accessor :top_card
 attr_accessor :number_of_hint
@@ -29,6 +34,7 @@ attr_accessor :deck
 attr_accessor :hand
 attr_accessor :username
 attr_accessor :total_hint
+attr_accessor :is_end
 
 =begin
 	Author: Gail Chen
@@ -78,8 +84,8 @@ attr_accessor :total_hint
 	#Create: Ariel
 	#Created: 5/26
 	#Edit: Mike 5/27
+  #      Ariel	 5/29 move start_time setter to get_hand
 	def clear
-		@start_time = Time.now
 		@save_time = 0
 		@top_card = 0
 		@number_of_hint = 0
@@ -89,6 +95,7 @@ attr_accessor :total_hint
 		@hand = []
 		@username = ""
 		@total_hint=0
+		@is_end=false
 	end
 
 =begin
@@ -133,7 +140,7 @@ attr_accessor :total_hint
 		  puts "===========New Game==========="
 		  new_game
 		when 2
-		  puts "======Entering Tutorial======"
+		  puts "=========Enter Tutorial========"
 		  get_tutorial
 		when 3
 			puts "=========Load Game========="
@@ -142,14 +149,14 @@ attr_accessor :total_hint
 			puts "=========Delete Saved Game========="
 			delete_game
 		when 5
-			puts "=========Auto-playing Mode========="
+			puts "=========Autoplay Mode========="
 			auto_game
 		when 6
 			return false	# indicates exit game
 		end
 		return true	# don't exit game
 	end
-	
+
 =begin
 	Author: Mike
 	Date created: 5/28
@@ -173,7 +180,7 @@ attr_accessor :total_hint
 	#				puts "Sorry, the user name has taken. Please enter another one."
 	#				@username = gets.chomp
 	#			end
-			
+
 	end
 
 =begin
@@ -242,7 +249,7 @@ attr_accessor :total_hint
 	Author: Mike
 	Date created: 5/26
 	Edit: Gail 5/27
-	Description:Continue the game from new_game or load_game 
+	Description:Continue the game from new_game or load_game
 			by showing the user current hand and let user find a set.
 	Require: SetGame object has all instance variable set up
 	Updates: N/A
@@ -251,16 +258,18 @@ attr_accessor :total_hint
 
 	#Author: Mike
 	#Edit: Channing, moved user save input handling to get_user_cards & added sleep
+	#Edit: Ariel: comment out sleep since time measurement, add handle_no_set
 	#Creation Date: 5/26
 	#Edit: Gail 5/27
 	def continue_game
-		until @top_card==81 && find_set.empty?
-			sleep(1) # wait 1 second
+		handle_no_set
+		until @is_end
+			# sleep(1) # wait 1 second
 			show_hand
 			user_input = get_user_cards
 			update user_input
+			handle_no_set
 		end
-		update []
 	end
 
 =begin
@@ -338,7 +347,7 @@ attr_accessor :total_hint
 	Author: Mike
 	Date created: 5/26
 	Edit: Mike 5/27 Output message to give more information about the progress
-	Description: Load all instance variables of a game, output a message and let the user continue the game. 
+	Description: Load all instance variables of a game, output a message and let the user continue the game.
 	Require: N/A
 	Updates: N/A
 	Returns: N/A
@@ -368,9 +377,9 @@ attr_accessor :total_hint
 		(msg.length+10).times {print "*"}
 
 		sleep(2)
-		
+
 		continue_game
-		
+
 	end
 
 =begin
@@ -401,29 +410,29 @@ attr_accessor :total_hint
 	Date created: 5/26
 	Edit: Mike 5/28
 	Description: Output a list of saved game and let the user to choose which game to load from.
-	Require: N/A 
+	Require: N/A
 	Updates: N/A
 	Returns: File name for the game to load or "menu" if the user want to go back to menu
 =end
 	def get_saved_games
 		return "menu" if show_saved_games=="menu"
-		
+
 		puts "Please enter file name:(Enter \"menu\" to return menu)"
 		file_name = gets.chomp
 		path="stored_game/"+@username+"/"
 		return "menu" if file_name=="menu"
 		file_name = path+file_name+".setgame"
-		
+
 		until File.exist? file_name
 			puts "File name does not exist."
 			puts
 			puts "=========Saved Game========="
-			
+
 			Dir.foreach(path) do
 				|file_name|
 				puts File.basename(file_name,'.setgame')+"  "+File.new(path+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
 			end
-			
+
 			puts
 			puts "Please enter file name to load:(Enter \"menu\" to return menu)"
 			file_name = gets.chomp
@@ -434,12 +443,37 @@ attr_accessor :total_hint
 	end
 
 =begin
+	Author: Ariel
+	Date created: 5/29
+	Edit:
+	Description:
+	Require: N/A
+	Updates: N/A
+	Returns:
+=end
+def save_end_game
+	path="game_result/"
+	Dir.mkdir path unless Dir.exist? path
+	file_name = path+"#{@username}.csv"
+	if File.file?(file_name)
+		CSV.open(file_name, "a+") do |csv|
+			csv << [@start_time, @end_time-@start_time+@save_time,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
+		end
+	else
+		CSV.open(file_name, "a+",	:write_headers => true,
+				:headers => ["Start Time","Time Spent(secs)","Score","Number of Correct Sets","Number of Wrong Sets","Number of Total Hints","Number of Used Hints"]) do |csv|
+			csv << [@start_time, @end_time-@start_time+@save_time,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
+		end
+	end
+end
+=begin
 	Author: Mike
 	Date created: 5/26
 	Edit: Ariel 5/26
 	Edit: Gail 5/27
+	Edit: Ariel 5/29
 	Description: Enter auto_game mode to let the machine play the game.
-	Require: N/A 
+	Require: N/A
 	Updates: N/A
 	Returns: N/A
 =end
@@ -450,14 +484,16 @@ attr_accessor :total_hint
 	  shuffle
 	  #top_card is the next card to be selected in deck
 	  get_hand
-		until @top_card == 81 && find_set.empty?
+		handle_no_set
+		until @is_end
+			# sleep(1) # wait 1 second
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
 			puts hint.to_s
 	  	update hint
+			handle_no_set
 		end
-		update []
 	end
 
 =begin
@@ -467,7 +503,7 @@ attr_accessor :total_hint
 	Edit: Mike 5/25
 	Edit: Mike 5/27
 	Description: Create a deck of 81 Card objects. ∀x,y∈deck(x.color!=y.color;x.shading!=y.shading;x.symbol!=y.symbol;x.number!=y.number)
-	Require: N/A 
+	Require: N/A
 	Updates: @deck
 	Returns: N/A
 =end
@@ -493,6 +529,7 @@ attr_accessor :total_hint
 	Author: Gail Chen
 	Date created: 5/22
 	Edit: 5/25 Gail Chen optimized the method
+	5/29 Ariel add start_time
 	Description:
 		This method adds 12 top cards from deck to @deck array.
 	Requires:
@@ -505,6 +542,7 @@ attr_accessor :total_hint
 			@hand.push(@deck[@top_card])
 			@top_card += 1
 		}
+		@start_time = Time.now
 	end
 
 =begin
@@ -527,11 +565,27 @@ attr_accessor :total_hint
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 
-		# hint = []
-		# find_set.each do |card| hint.push(@hand.index(card)) end
-		# puts hint.to_s
+		hint = []
+		find_set.each do |card| hint.push(@hand.index(card)) end
+		puts hint.to_s
 	end
 
+
+def handle_no_set
+	while find_set.empty? && !@is_end
+		if @top_card<81
+			add3
+			puts "No sets on hand, add three cards"
+		else
+			puts "No sets on hand, no cards in deck, game is cleared"
+			puts "=============Game Over============="+""
+			@is_end=true
+			@end_time=Time.now()
+			show_stat
+			save_end_game
+		end
+	end
+end
 =begin
 	Author: Channing, Mike
 	Date: 5/25
@@ -677,7 +731,7 @@ end
 =begin
 	Author: Channing Jacobs
 	Date: 2/24 (heavily revised on 2/28)
-	Editor:
+	Editor: 5/29 Ariel (change return value of quit)
 
 	Description: Handles user input. Non-return cases: handles tutorial display,
 	hint display, save_game call, and will show_hand.
@@ -722,7 +776,7 @@ def get_user_cards
 			# setting up conditions to allow for quiting
 			@top_card = 81
 			@hand = []
-			return []
+			return ["quit"]
 		when ["save"]
 			save_game
 			show_hand
@@ -846,17 +900,24 @@ end
 =end
 	def update(user_input)
 	  # when user_input==[] && hand.length<21 && top_card<81
-		if user_input.empty? && @hand.length<21 && @top_card<81
-			puts "You entered no set. 3 cards will be added."
-			add3
-		# when user_input==[] && top_card==81 && no sets on hand
-		elsif user_input.empty? && @top_card==81 && find_set.empty?
-			puts "Congrats! No set on hand and no card in deck. Game is cleared."
-			puts "All Clear! Good Game!"
+		if user_input==["quit"]
+			@is_end=true
+			@end_time=Time.now()
+			puts "=============Game Over============="+""
+			puts ""
 			show_stat
-		# when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
-		elsif user_input.empty?
-			puts "You entered no set but at least one set exist."
+		# elsif user_input.empty? && @hand.length<21 && @top_card<81
+		# 	puts "You entered no set. 3 cards will be added."
+		# 	add3
+		# # when user_input==[] && top_card==81 && no sets on hand
+		# elsif user_input.empty? && @top_card==81 && find_set.empty?
+		# 	puts "Congrats! No set on hand and no card in deck. Game is cleared."
+		# 	puts "All Clear! Good Game!"
+		# 	@is_end=true
+		# 	show_stat
+		# # when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
+		# elsif user_input.empty?
+		# 	puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
 			@number_of_correct += 1
@@ -924,6 +985,7 @@ end
 	Author: Gail Chen
 	Date created: 5/27
 	Edit: 5/27
+	Edit: 5/29 Ariel add score, change format of hint calculation
 	Description:
 		This method prints statistics of this game including total time spend, score,
 		number of hints used, percentage of using hint to find a correct set.
@@ -932,11 +994,13 @@ end
 	Returns: N/A
 =end
 	def show_stat
-		#puts "Score: #{calc_score}"
-		puts "Total time: #{Time.now - @start_time + @save_time}"
+		puts "=============Statistics============"
+		puts "Score: "+ "%0.2f"%(get_score)
+		puts "Total time: #{@end_time - @start_time + @save_time}"
 		puts "Number of sets: #{@number_of_correct}"
 		puts "Number of hints used: #{@number_of_hint}"
-		puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
+		# puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
+		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
 
 	#Author: Mike
@@ -1043,5 +1107,15 @@ end
 			puts "You are out of hints. #{@number_of_hint} have been used."
 		end
 	end
-
+	#Author: Ariel
+	#Create Date: 5/29
+	#Edit:
+=begin
+	Requires: N/A
+	Returns:  N/A
+	Description: Give user score
+=end
+	def get_score
+		return ((360000/(@end_time - @start_time + @save_time))*((@number_of_correct-@number_of_hint)/@number_of_correct))
+	end
 end
