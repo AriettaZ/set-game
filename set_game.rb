@@ -64,7 +64,7 @@ attr_accessor :is_end
 			puts "[7] Quit"
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
-			break if valid_choice? user_choice, 6
+			break if valid_choice? user_choice, 7
 		end
 		user_choice.to_i
 	end
@@ -365,7 +365,7 @@ attr_accessor :is_end
 		(msg.length+10).times {print "*"}
 		puts "\n**** "+msg+" ****"
 		(msg.length+10).times {print "*"}
-		puts 
+		puts
 #		sleep(2)
 
 		continue_game
@@ -548,7 +548,7 @@ end
 		Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand hand=@hand
-		system('clear'); system('cls')
+		# system('clear'); system('cls')
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
@@ -767,6 +767,7 @@ def get_user_cards
 			@top_card = 81
 			@hand = []
 			return ["quit"]
+			# menu_get_choice
 		when ["save"]
 			save_game
 			print ">>>[Game saved]<<<"
@@ -888,6 +889,7 @@ end
 	top_card according to user's input
 =end
 	def update(user_input)
+		system('clear'); system('cls')
 	  # when user_input==[] && hand.length<21 && top_card<81
 		if user_input==["quit"]
 			@is_end=true
@@ -909,13 +911,16 @@ end
 		# 	puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
+			puts user_input.to_s
+			puts
 			@number_of_correct += 1
-			puts "Congrats! You entered a correct set!\n\n"
+			puts "Congrats! You entered a correct set!\n\n",""
 			replace3(user_input)
 		# when user_input!=[] && user_input is not a correct set
 		else
+			puts user_input.to_s
 			@number_of_wrong += 1
-			puts "Sorry. Wrong set."
+			puts "Sorry. Wrong set.",""
 		end
 	end
 
@@ -1096,7 +1101,7 @@ end
 			puts "You are out of hints. #{@number_of_hint} have been used."
 		end
 	end
-	
+
 =begin
 	Author: Ariel
 	Create Date: 5/29
@@ -1121,5 +1126,5 @@ Description: Give user score
 def show_result
 	get_username
 	path="game_result/#{@username}.csv"
-	
+
 end
