@@ -59,8 +59,9 @@ attr_accessor :is_end
 			puts "[2] Tutorial"
 			puts "[3] Load Game"
 			puts "[4] Delete Saved Game"
-			puts "[5] Auto-Playing Mode"
-			puts "[6] Quit"
+			puts "[5] Autoplay Mode"
+			puts "[6] Game Result History"
+			puts "[7] Quit"
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
 			break if valid_choice? user_choice, 6
@@ -114,6 +115,7 @@ attr_accessor :is_end
 	Created: 5/26
 	Edit: 5/26 Gail minor changes
 	Edit: 5/28 Channing, Updated to return a polar value.
+	Edit: 5/29 Ariel add choice 6
 	Description: This method redirects user to different tracks.
 	A polar return value tracks whether the user wants to quit
 	the game.
@@ -139,6 +141,9 @@ attr_accessor :is_end
 			puts "=========Autoplay Mode========="
 			auto_game
 		when 6
+			puts "=========Game Result History========="
+			show_result
+		when 7
 			return false	# indicates exit game
 		end
 		return true	# don't exit game
@@ -436,7 +441,7 @@ attr_accessor :is_end
 	Updates: N/A
 	Returns:
 =end
-def save_end_game
+def save_game_result
 	path="game_result/"
 	Dir.mkdir path unless Dir.exist? path
 	file_name = path+"#{@username}.csv"
@@ -567,7 +572,7 @@ def handle_no_set
 			@is_end=true
 			@end_time=Time.now()
 			show_stat
-			save_end_game
+			save_game_result
 		end
 	end
 end
@@ -1103,4 +1108,16 @@ end
 	def get_score
 		return ((360000/(@end_time - @start_time + @save_time))*((@number_of_correct-@number_of_hint)/@number_of_correct))
 	end
+end
+
+#Author: Ariel
+#Create Date: 5/29
+#Edit:
+=begin
+Requires: N/A
+Returns:  N/A
+Description: Give user score
+=end
+def show_result
+	get_username
 end
