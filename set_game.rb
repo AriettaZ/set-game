@@ -1120,4 +1120,6 @@ Description: Give user score
 =end
 def show_result
 	get_username
+	path="game_result/#{@username}.csv"
+	
 end
