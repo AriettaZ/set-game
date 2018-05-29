@@ -149,6 +149,32 @@ attr_accessor :total_hint
 		end
 		return true	# don't exit game
 	end
+	
+=begin
+	Author: Mike
+	Date created: 5/28
+	Edit: N/A
+	Description: Get username from user
+	Require: N/A
+	Updates: @username
+	Returns: N/A
+=end
+	def get_username mode="new"
+		puts "Please enter your username:"
+		@username = gets.chomp
+	#	case mode
+	#		when "exist"
+	#			unless Dir.exist? "stat/"+username+".setgame.stat" || Dir.exist
+	#				puts "Sorry, the user name. Please enter another one."
+	#				@username = gets.chomp
+	#			end
+	#		when "new"
+	#			while Dir.exist? "stat/"+username+".setgame.stat"
+	#				puts "Sorry, the user name has taken. Please enter another one."
+	#				@username = gets.chomp
+	#			end
+			
+	end
 
 =begin
 	Author: Mike
@@ -164,6 +190,7 @@ attr_accessor :total_hint
 =end
 	def new_game
 		clear
+		get_username
 		select_level
 		get_deck
 		shuffle
@@ -208,8 +235,19 @@ attr_accessor :total_hint
 		when "3"
 			@total_hint = 5
 		end
-
 	end
+
+
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: Gail 5/27
+	Description:Continue the game from new_game or load_game 
+			by showing the user current hand and let user find a set.
+	Require: SetGame object has all instance variable set up
+	Updates: N/A
+	Returns: N/A
+=end
 
 	#Author: Mike
 	#Edit: Channing, moved user save input handling to get_user_cards & added sleep
@@ -225,22 +263,36 @@ attr_accessor :total_hint
 		update []
 	end
 
-	#Author: Mike
-	#Creation Date: 5/26
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: N/A
+	Description:Delete game archive from saved games
+	Require: N/A
+	Updates: Selected game file.
+	Returns: N/A
+=end
 	def delete_game
-		file_name = get_stored_games
+		clear
+		get_username
+		file_name = get_saved_games
 		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
 		File.delete(file_name) if gets.chomp.downcase[0]=="y"
 	end
 
-
-	#Author: Mike
-	#Creation Date: 5/26
-	#Edit: Mike 5/27
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: Mike 5/27
+	Description:Save a game archive by creating a .setgame file under stored_game directory
+	Require: N/A
+	Updates: N/A
+	Returns: N/A
+=end
 	def save_game
 		file_name = get_save_information
 		File.write file_name,Marshal.dump({
-			save_time: Time.now - @start_time + @save_time,
+			save_time: (Time.now - @start_time) + @save_time.to_i,
 			top_card: @top_card,
 			number_of_hint: @number_of_hint,
 			number_of_correct: @number_of_correct,
@@ -250,29 +302,52 @@ attr_accessor :total_hint
 			username: @username,
 			total_hint: @total_hint
 			})
+		puts "Your game #{File.basename file_name,'.setgame'} is saved successfully."
 	end
 
-	#Author: Mike
-	#Edit: Channing, rewritten to allow for overwriting of existing files
-	#Creation Date: 5/26
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: Channing (pending on channing_dev #=> allowing for overwriting of files)
+	Description:Get file name for the game to save
+	Require: N/A
+	Updates: N/A
+	Returns: File name for the game to save
+=end
 	def get_save_information
-		puts "Please enter file name"
-		file_name = "stored_game/"+gets.chomp+".setgame"
-		while File.exist? file_name
-			puts "File name exists, do you want to overwrite this file? y/n:"
-			break if gets.chomp.downcase[0] == 'y'
-			puts "Enter a different file name."
-			file_name = "stored_game/"+gets.chomp+".setgame"
+		puts "Please enter file name:"
+		path="stored_game/"+@username+"/"
+		Dir.mkdir path unless Dir.exist? path
+		file_name = path+gets.chomp+".setgame"
+		while File.exist?(file_name) || file_name.downcase.include?("menu")
+			puts "File name exist, please enter a new name."
+			puts "(Enter \"saved\" to see the saved games)"
+			file_name = gets.chomp
+			if file_name=="saved"
+				show_saved_games
+				puts "Please enter a different file name to save the game: "
+				file_name = path+gets.chomp+".setgame"
+			else
+				file_name = path+file_name+".setgame"
+			end
 		end
 		file_name
 	end
 
-	#Author: Mike
-	#Creation Date: 5/26
-	#Edit: Mike 5/27 Output messages to give more information about the progress
-	# TODO handle bugs in loading games - Channing
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: Mike 5/27 Output message to give more information about the progress
+	Description: Load all instance variables of a game, output a message and let the user continue the game. 
+	Require: N/A
+	Updates: N/A
+	Returns: N/A
+	#TODO handle bugs in loading games - Talk with Channing
+=end
 	def load_game
-		file_name = get_stored_games
+		get_username
+		file_name = get_saved_games
+		return if file_name=="menu"
 		load = Marshal.load File.read(file_name)
 		#Load the game
 		@start_time = 0
@@ -286,44 +361,91 @@ attr_accessor :total_hint
 		@username = load[:username]
 		@total_hint=load[:total_hint]
 
-		msg = "You have completed #{@number_of_correct} sets (roughly #{@number_of_correct/27.0*100}%) in this game. Lets Continue!"
+		msg = "You have completed #{@number_of_correct} sets (roughly #{@number_of_correct/27.0*100}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
 		puts
 		(msg.length+10).times {print "*"}
-		puts
-		puts "**** "+msg+" ****"
+		puts "\n**** "+msg+" ****"
 		(msg.length+10).times {print "*"}
-		sleep(2)
-		continue_game
 
+		sleep(2)
+		
+		continue_game
+		
 	end
 
-	#Author: Mike
-	#Creation Date: 5/26
-	def get_stored_games
-		Dir.foreach("stored_game/") do
+=begin
+	Author: Mike
+	Date created: 5/28
+	Edit: N/A
+	Description: Output saved games with current username
+	Require: N/A
+	Updates: N/A
+	Returns: N/A
+=end
+	def show_saved_games
+		puts "\n=========Saved Game========="
+		path = "stored_game/"+@username+"/"
+		if !Dir.exist?(path) || Dir.empty?(path)
+			puts "You don't have saved games.\n\n"
+			return "menu"
+		end
+		Dir.foreach(path) do
 			|file_name|
-			puts File.basename(file_name,'.setgame')+"  "+File.new("stored_game/"+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
+			puts File.basename(file_name,'.setgame')+"  "+File.new(path+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
 		end
 		puts
-		puts "Please enter file name"
-		file_name = "stored_game/"+gets.chomp+".setgame"
-		unless File.exist? file_name
-			puts "File name not exist, please enter another name."
-			Dir.foreach("stored_game/") do
+	end
+
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: Mike 5/28
+	Description: Output a list of saved game and let the user to choose which game to load from.
+	Require: N/A 
+	Updates: N/A
+	Returns: File name for the game to load or "menu" if the user want to go back to menu
+=end
+	def get_saved_games
+		return "menu" if show_saved_games=="menu"
+		
+		puts "Please enter file name:(Enter \"menu\" to return menu)"
+		file_name = gets.chomp
+		path="stored_game/"+@username+"/"
+		return "menu" if file_name=="menu"
+		file_name = path+file_name+".setgame"
+		
+		until File.exist? file_name
+			puts "File name does not exist."
+			puts
+			puts "=========Saved Game========="
+			
+			Dir.foreach(path) do
 				|file_name|
-				puts file_name+"  "+File.new(file_name).ctime.strftime("%F %T")
+				puts File.basename(file_name,'.setgame')+"  "+File.new(path+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
 			end
+			
+			puts
+			puts "Please enter file name to load:(Enter \"menu\" to return menu)"
+			file_name = gets.chomp
+			return "menu" if file_name=="menu"
+			file_name = path+file_name+".setgame"
 		end
 		file_name
 	end
 
-	#Author: Mike
-	#Create Date: 5/26
-	#Edit: Ariel 5/26
-	#Edit: Gail 5/27
+=begin
+	Author: Mike
+	Date created: 5/26
+	Edit: Ariel 5/26
+	Edit: Gail 5/27
+	Description: Enter auto_game mode to let the machine play the game.
+	Require: N/A 
+	Updates: N/A
+	Returns: N/A
+=end
 	def auto_game
 	  #generate 81 cards and shuffled
-		clear
+	  clear
 	  get_deck
 	  shuffle
 	  #top_card is the next card to be selected in deck
@@ -338,11 +460,17 @@ attr_accessor :total_hint
 		update []
 	end
 
- 	#Author: Ariel
-	#Create date: 5/21
-	#Edit: Mike 5/24
-	#Edit: Mike 5/25
-	#Edit: Mike 5/27
+=begin
+	Author: Ariel
+	Date created: 5/21
+	Edit: Mike 5/24
+	Edit: Mike 5/25
+	Edit: Mike 5/27
+	Description: Create a deck of 81 Card objects. ∀x,y∈deck(x.color!=y.color;x.shading!=y.shading;x.symbol!=y.symbol;x.number!=y.number)
+	Require: N/A 
+	Updates: @deck
+	Returns: N/A
+=end
 	def get_deck
 		for color,shading,symbol,number in $Colors.product($Shadings,$Symbols, $Numbers)
 			@deck.push Card.new(color, shading, symbol, number)
