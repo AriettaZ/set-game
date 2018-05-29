@@ -32,45 +32,32 @@ attr_accessor :total_hint
 
 =begin
 	Author: Gail Chen
-	Date: 5/26
-	Edit: 5/26 Gail added more modes
-	Description:
-		Prints menu to the screen and asks user to make a choice.
-		The menu shows choices of New Game, Tutorial, Load Game, Delette Saved Game,
-		Auto-Playing Game and Quit.
-	Requires: N/A
-	Updates: N/A
-	Returns: Prints menu to screen.
-=end
-	def show_menu
-		puts "\nMenu:"
-		puts "[1] New Game"
-		puts "[2] Tutorial"
-		puts "[3] Load Game"
-		puts "[4] Delete Saved Game"
-		puts "[5] Auto-Playing Mode"
-		puts "[6] Quit"
-		puts "Choose an option from menu by typing the number of that option:"
-	end
-
-=begin
-	Author: Gail Chen
 	Date: 5/25
 	Edit: 5/26 Gail created and used show_menu method
+		  5/29 Gail shortened method and deleted show_menu method
 	Description:
-		Prints menu to the screen and get valid user's choice.
-		The user must choose a valid option by typing the number of that option.
-		The method returns an integer of corresponding user's choice.
+		Prints menu to the screen and get valid user's choice. The menu shows
+		choices of New Game, Tutorial, Load Game, Delette Saved Game,
+		Auto-Playing Game and Quit. The user must choose a valid option by typing
+		the number of that option. The method returns an integer of corresponding
+		user's choice.
 	Requires: N/A
 	Updates: N/A
 	Returns: Integer where 1 <= Integer <= 6
 =end
 	def menu_get_choice
-		show_menu
-		user_choice = gets.chomp
-		until valid_choice? user_choice, 6
-			show_menu
+		user_choice = nil
+		loop do
+			puts "\nMenu:"
+			puts "[1] New Game"
+			puts "[2] Tutorial"
+			puts "[3] Load Game"
+			puts "[4] Delete Saved Game"
+			puts "[5] Auto-Playing Mode"
+			puts "[6] Quit"
+			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
+			break if valid_choice? user_choice, 6
 		end
 		user_choice.to_i
 	end
@@ -95,7 +82,7 @@ attr_accessor :total_hint
 	Author: Gail Chen
 	Created: 5/25
 	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
-				5/27 Gail modified the method to check valid menu option and valid level
+	      5/27 Gail modified the method to check valid menu option and valid level
 	Description:
 		Checks user enters an integer between 1 and max where max is the largest
 		integer the user is allowed to enter.
@@ -148,7 +135,7 @@ attr_accessor :total_hint
 	Author: Mike
 	Create Date: 5/26
 	Edit: 5/26 Ariel, Mike
-				5/27 Gail
+		  5/27 Gail added select_level
 	Description: Starts a new game.
 	Require: N/A
 	Updates:
@@ -167,7 +154,7 @@ attr_accessor :total_hint
 
 =begin
 	Author: Gail Chen
-  Date created: 5/27
+	Date created: 5/27
 	Edit: N/A
 	Description:
 		Selects difficulty level from easy, medium, hard. In the easy level,
@@ -180,14 +167,8 @@ attr_accessor :total_hint
 	Returns: N/A
 =end
 	def select_level
-		puts ""
-		puts "Choose difficulty Level:"
-		puts "[1] Easy"
-		puts "[2] Medium"
-		puts "[3] Hard"
-		puts "Enter the number of the corresponding difficulty level:"
-		mode = gets.chomp
-		until valid_choice? mode, 3
+		mode = nil
+		loop do
 			puts ""
 			puts "Choose difficulty Level:"
 			puts "[1] Easy"
@@ -195,6 +176,7 @@ attr_accessor :total_hint
 			puts "[3] Hard"
 			puts "Enter the number of the corresponding difficulty level:"
 			mode = gets.chomp
+			break if valid_choice? mode, 3
 		end
 		case mode
 		when "1"
@@ -208,7 +190,7 @@ attr_accessor :total_hint
 
 	#Author: Mike
 	#Creation Date: 5/26
-	#Edit: Gail 5/27
+	#Edit: Gail 5/27 added update call after the loop to show the result of game
 	def continue_game
 		until @top_card==81 && find_set.empty?
 			show_hand
@@ -248,7 +230,7 @@ attr_accessor :total_hint
 			hand: @hand,
 			username: @username,
 			total_hint: @total_hint
-			})
+		})
 	end
 
 	#Author: Mike
@@ -314,14 +296,13 @@ attr_accessor :total_hint
 	#Author: Mike
 	#Create Date: 5/26
 	#Edit: Ariel 5/26
-	#Edit: Gail 5/27
+	#Edit: Gail 5/27 added update call after the loop to show the result of game
 	def auto_game
 	  #generate 81 cards and shuffled
 		clear
-	  get_deck
-	  shuffle
-	  #top_card is the next card to be selected in deck
-	  get_hand
+		get_deck
+		shuffle
+		get_hand
 		until @top_card == 81 && find_set.empty?
 			show_hand
 			hint = []
@@ -345,12 +326,12 @@ attr_accessor :total_hint
 	end
 
 =begin
-		Author: Mike
-		Date created: 5/22
-		Description: Shuffle the deck
-		Requires: deck != nil
-		Updates: deck
-		Returns: Shuffled deck
+	Author: Mike
+	Date created: 5/22
+	Description: Shuffle the deck
+	Requires: deck != nil
+	Updates: deck
+	Returns: Shuffled deck
 =end
 	def shuffle
 		@deck.shuffle!
@@ -375,18 +356,18 @@ attr_accessor :total_hint
 	end
 
 =begin
-		Author: Gail Chen
-		Created: 5/22
-		Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
-		Description:
-			This method pretty prints #, color, shading, symbol and number of cards
-			in hand to the screen for user.
-		Requires: @hand != nil
-		Updates: N/A
-		Returns: Pretty prints details of cards in hand to the screen.
+	Author: Gail Chen
+	Created: 5/22
+	Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
+	Description:
+		This method pretty prints #, color, shading, symbol and number of cards
+		in hand to the screen for user.
+	Requires: @hand != nil
+	Updates: N/A
+	Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand hand=@hand
-		puts ""
+		system('clear'); system('cls')
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
@@ -711,16 +692,16 @@ end
 	Returns: N/A
 =end
 	def replace3(user_input)
-			delete_count = 0
-			user_input.each { |card|
-				if @hand.size == 12 && @top_card < @deck.size
-					@hand[card] = @deck[@top_card]
-					@top_card += 1
-				else
-					@hand.delete_at(card - delete_count)
-					delete_count += 1
-				end
-			}
+		delete_count = 0
+		user_input.each { |card|
+			if @hand.size == 12 && @top_card < @deck.size
+				@hand[card] = @deck[@top_card]
+				@top_card += 1
+			else
+				@hand.delete_at(card - delete_count)
+				delete_count += 1
+			end
+		}
 	end
 
 =begin
@@ -752,7 +733,7 @@ end
 =end
 	def show_stat
 		#puts "Score: #{calc_score}"
-		puts "Totol time: #{Time.now - @start_time + @save_time}"
+		puts "Totol time: #{Time.now - @start_time + @save_time} seconds"
 		puts "Number of sets: #{@number_of_correct}"
 		puts "Number of hints used: #{@number_of_hint}"
 		puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
