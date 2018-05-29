@@ -1111,7 +1111,7 @@ end
 	Description: Give user score
 =end
 	def get_score
-		return ((360000/(@end_time.to_i - @start_time.to_i + @save_time.to_i))*((@number_of_correct-@number_of_hint)/@number_of_correct))
+		return ((36000000/((@end_time - @start_time).to_i + @save_time.to_i))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
 	end
 end
 
