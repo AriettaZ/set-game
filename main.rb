@@ -12,3 +12,4 @@ until choice == 6
   choice = game.menu_get_choice
 end
 puts "Goodbye~"
+
