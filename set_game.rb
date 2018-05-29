@@ -38,45 +38,32 @@ attr_accessor :is_end
 
 =begin
 	Author: Gail Chen
-	Date: 5/26
-	Edit: 5/26 Gail added more modes
-	Description:
-		Prints menu to the screen and asks user to make a choice.
-		The menu shows choices of New Game, Tutorial, Load Game, Delette Saved Game,
-		Auto-Playing Game and Quit.
-	Requires: N/A
-	Updates: N/A
-	Returns: Prints menu to screen.
-=end
-	def show_menu
-		puts "\nMenu:"
-		puts "[1] New Game"
-		puts "[2] Tutorial"
-		puts "[3] Load Game"
-		puts "[4] Delete Saved Game"
-		puts "[5] Auto-Playing Mode"
-		puts "[6] Quit"
-		puts "Choose an option from menu by typing the number of that option:"
-	end
-
-=begin
-	Author: Gail Chen
 	Date: 5/25
 	Edit: 5/26 Gail created and used show_menu method
+		  5/29 Gail shortened method and deleted show_menu method
 	Description:
-		Prints menu to the screen and get valid user's choice.
-		The user must choose a valid option by typing the number of that option.
-		The method returns an integer of corresponding user's choice.
+		Prints menu to the screen and get valid user's choice. The menu shows
+		choices of New Game, Tutorial, Load Game, Delette Saved Game,
+		Auto-Playing Game and Quit. The user must choose a valid option by typing
+		the number of that option. The method returns an integer of corresponding
+		user's choice.
 	Requires: N/A
 	Updates: N/A
 	Returns: Integer where 1 <= Integer <= 6
 =end
 	def menu_get_choice
-		show_menu
-		user_choice = gets.chomp
-		until valid_choice? user_choice, 6
-			show_menu
+		user_choice = nil
+		loop do
+			puts "\nMenu:"
+			puts "[1] New Game"
+			puts "[2] Tutorial"
+			puts "[3] Load Game"
+			puts "[4] Delete Saved Game"
+			puts "[5] Auto-Playing Mode"
+			puts "[6] Quit"
+			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
+			break if valid_choice? user_choice, 6
 		end
 		user_choice.to_i
 	end
@@ -102,7 +89,7 @@ attr_accessor :is_end
 	Author: Gail Chen
 	Created: 5/25
 	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
-				5/27 Gail modified the method to check valid menu option and valid level
+	      5/27 Gail modified the method to check valid menu option and valid level
 	Description:
 		Checks user enters an integer between 1 and max where max is the largest
 		integer the user is allowed to enter.
@@ -187,7 +174,7 @@ attr_accessor :is_end
 	Author: Mike
 	Create Date: 5/26
 	Edit: 5/26 Ariel, Mike
-				5/27 Gail
+		  5/27 Gail added select_level
 	Description: Starts a new game.
 	Require: N/A
 	Updates:
@@ -220,9 +207,7 @@ attr_accessor :is_end
 	Returns: N/A
 =end
 	def select_level
-
 		mode = nil
-
 		loop do
 			puts ""
 			puts "Choose difficulty Level:"
@@ -260,7 +245,7 @@ attr_accessor :is_end
 	#Edit: Channing, moved user save input handling to get_user_cards & added sleep
 	#Edit: Ariel: comment out sleep since time measurement, add handle_no_set
 	#Creation Date: 5/26
-	#Edit: Gail 5/27
+	#Edit: Gail 5/27 added update call after the loop to show the result of game
 	def continue_game
 		handle_no_set
 		until @is_end
@@ -514,12 +499,12 @@ end
 	end
 
 =begin
-		Author: Mike
-		Date created: 5/22
-		Description: Shuffle the deck
-		Requires: deck != nil
-		Updates: deck
-		Returns: Shuffled deck
+	Author: Mike
+	Date created: 5/22
+	Description: Shuffle the deck
+	Requires: deck != nil
+	Updates: deck
+	Returns: Shuffled deck
 =end
 	def shuffle
 		@deck.shuffle!
@@ -953,16 +938,16 @@ end
 	Returns: N/A
 =end
 	def replace3(user_input)
-			delete_count = 0
-			user_input.each { |card|
-				if @hand.size == 12 && @top_card < @deck.size
-					@hand[card] = @deck[@top_card]
-					@top_card += 1
-				else
-					@hand.delete_at(card - delete_count)
-					delete_count += 1
-				end
-			}
+		delete_count = 0
+		user_input.each { |card|
+			if @hand.size == 12 && @top_card < @deck.size
+				@hand[card] = @deck[@top_card]
+				@top_card += 1
+			else
+				@hand.delete_at(card - delete_count)
+				delete_count += 1
+			end
+		}
 	end
 
 =begin
@@ -996,7 +981,7 @@ end
 	def show_stat
 		puts "=============Statistics============"
 		puts "Score: "+ "%0.2f"%(get_score)
-		puts "Total time: #{@end_time - @start_time + @save_time}"
+		puts "Total time: #{@end_time - @start_time + @save_time} seconds"
 		puts "Number of sets: #{@number_of_correct}"
 		puts "Number of hints used: #{@number_of_hint}"
 		# puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
