@@ -365,8 +365,8 @@ attr_accessor :is_end
 		(msg.length+10).times {print "*"}
 		puts "\n**** "+msg+" ****"
 		(msg.length+10).times {print "*"}
-
-		sleep(2)
+		puts 
+#		sleep(2)
 
 		continue_game
 
@@ -769,7 +769,6 @@ def get_user_cards
 			return ["quit"]
 		when ["save"]
 			save_game
-			show_hand
 			print ">>>[Game saved]<<<"
 		when ["show"]
 			show_hand
@@ -911,7 +910,7 @@ end
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
 			@number_of_correct += 1
-			puts "Congrats! You entered a correct set!"
+			puts "Congrats! You entered a correct set!\n\n"
 			replace3(user_input)
 		# when user_input!=[] && user_input is not a correct set
 		else
@@ -1097,16 +1096,17 @@ end
 			puts "You are out of hints. #{@number_of_hint} have been used."
 		end
 	end
-	#Author: Ariel
-	#Create Date: 5/29
-	#Edit:
+	
 =begin
+	Author: Ariel
+	Create Date: 5/29
+	Edit: Mike 5/29
 	Requires: N/A
 	Returns:  N/A
 	Description: Give user score
 =end
 	def get_score
-		return ((360000/(@end_time - @start_time + @save_time))*((@number_of_correct-@number_of_hint)/@number_of_correct))
+		return ((360000/(@end_time.to_i - @start_time.to_i + @save_time.to_i))*((@number_of_correct-@number_of_hint)/@number_of_correct))
 	end
 end
 
