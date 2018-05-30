@@ -3,6 +3,8 @@
 
 require_relative 'card'
 require 'csv'
+
+
 class SetGame
 
 #Create: Ariel
@@ -12,7 +14,7 @@ class SetGame
 def initialize
 	@start_time = Time.now
 	@end_time=Time.now
-	@save_time = 0
+	@save_time = 0.0
 	@top_card = 0
 	@number_of_hint = 0
 	@number_of_correct = 0
@@ -70,12 +72,14 @@ attr_accessor :is_end
 		user_choice.to_i
 	end
 
-	#Create: Ariel
-	#Created: 5/26
-	#Edit: Mike 5/27
-  #      Ariel	 5/29 move start_time setter to get_hand
+=begin
+	Author: Ariel
+	Created: 5/26
+	Edit: Mike 5/27 change save_time to 0
+	Edit: Ariel 5/29 move start_time setter to get_hand
+=end
 	def clear
-		@save_time = 0
+		@save_time = 0.0
 		@top_card = 0
 		@number_of_hint = 0
 		@number_of_correct = 0
@@ -176,7 +180,6 @@ attr_accessor :is_end
 	#				puts "Sorry, the user name has taken. Please enter another one."
 	#				@username = gets.chomp
 	#			end
-
 	end
 
 =begin
@@ -242,19 +245,16 @@ attr_accessor :is_end
 =begin
 	Author: Mike
 	Date created: 5/26
-	Edit: Gail 5/27
+
+	Edit: Gail 5/27 added update call after the loop to show the result of game
+	Edit: Channing, moved user save input handling to get_user_cards & added sleep
+	Edit: Ariel: comment out sleep since time measurement, add handle_no_set
 	Description:Continue the game from new_game or load_game
 			by showing the user current hand and let user find a set.
 	Require: SetGame object has all instance variable set up
 	Updates: N/A
 	Returns: N/A
 =end
-
-	#Author: Mike
-	#Edit: Channing, moved user save input handling to get_user_cards & added sleep
-	#Edit: Ariel: comment out sleep since time measurement, add handle_no_set
-	#Creation Date: 5/26
-	#Edit: Gail 5/27 added update call after the loop to show the result of game
 	def continue_game
 		handle_no_set
 		until @is_end
@@ -296,7 +296,7 @@ attr_accessor :is_end
 	def save_game
 		file_name = get_save_information
 		File.write file_name,Marshal.dump({
-			save_time: (Time.now - @start_time) + @save_time.to_i,
+			save_time: (Time.now - @start_time).to_f + @save_time.to_f,
 			top_card: @top_card,
 			number_of_hint: @number_of_hint,
 			number_of_correct: @number_of_correct,
@@ -306,7 +306,7 @@ attr_accessor :is_end
 			username: @username,
 			total_hint: @total_hint
 			})
-		puts "Your game #{File.basename file_name,'.setgame'} is saved successfully."
+		puts ">>>[Game #{File.basename file_name,'.setgame'} saved under username #{@username}]<<<"
 	end
 
 =begin
@@ -364,17 +364,14 @@ attr_accessor :is_end
 		@hand = load[:hand]
 		@username = load[:username]
 		@total_hint=load[:total_hint]
-
-		msg = "You have completed #{@number_of_correct} sets (roughly #{@number_of_correct/27.0*100}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
+		@is_end = false
+		msg = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
 		puts
 		(msg.length+10).times {print "*"}
 		puts "\n**** "+msg+" ****"
 		(msg.length+10).times {print "*"}
 		puts
-#		sleep(2)
-
 		continue_game
-
 	end
 
 =begin
@@ -452,15 +449,16 @@ def save_game_result
 	file_name = path+"#{@username}.csv"
 	if File.file?(file_name)
 		CSV.open(file_name, "a+") do |csv|
-			csv << [@start_time, @end_time-@start_time+@save_time,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
+			csv << [@start_time, (@end_time - @start_time + @save_time).to_f,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
 		end
 	else
 		CSV.open(file_name, "a+",	:write_headers => true,
-				:headers => ["Start Time","Time Spent(secs)","Score","Number of Correct Sets","Number of Wrong Sets","Number of Total Hints","Number of Used Hints"]) do |csv|
-			csv << [@start_time, @end_time-@start_time+@save_time,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
+				:headers => ["Start Time","Time Spent(secs)","Score","Correct Sets","Wrong Sets","Total Hints","Used Hints"]) do |csv|
+			csv << [@start_time, (@end_time - @start_time + @save_time).to_f,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
 		end
 	end
 end
+
 =begin
 	Author: Mike
 	Date created: 5/26
@@ -485,6 +483,8 @@ end
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
+			@number_of_hint += 1
+			@total_hint += 1
 			puts hint.to_s
 	  	update hint
 			handle_no_set
@@ -541,16 +541,16 @@ end
 	end
 
 =begin
-		Author: Gail Chen
-		Created: 5/22
-		Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
-		Edit: 5/28 Channing, added clearing of screen to make output easier to read
-		Description:
-			This method pretty prints #, color, shading, symbol and number of cards
-			in hand to the screen for user.
-		Requires: @hand != nil
-		Updates: N/A
-		Returns: Pretty prints details of cards in hand to the screen.
+	Author: Gail Chen
+	Created: 5/22
+	Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
+	Edit: 5/28 Channing, added clearing of screen to make output easier to read
+	Description:
+		This method pretty prints #, color, shading, symbol and number of cards
+		in hand to the screen for user.
+	Requires: @hand != nil
+	Updates: N/A
+	Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand hand=@hand
 		# system('clear'); system('cls')
@@ -565,7 +565,15 @@ end
 		puts hint.to_s
 	end
 
-
+=begin
+	Author: Ariel
+	Created: 5/29
+	Edit: N/A
+	Description: N/A
+	Requires: N/A
+	Updates: N/A
+	Returns: N/A
+=end
 def handle_no_set
 	while find_set.empty? && !@is_end
 		if @top_card<81
@@ -581,6 +589,7 @@ def handle_no_set
 		end
 	end
 end
+
 =begin
 	Author: Channing, Mike
 	Date: 5/25
@@ -675,7 +684,6 @@ end
 	Author: Mike
 	Date: 5/25
 	Editor:
-
 	Description: Return a check table consists of possible combinations of set from hand.
 	Requires: |hand_stat| = |hand|*3
 				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
@@ -693,7 +701,6 @@ end
 	Updates: N/A
 	Returns: [[Card, Card, Card],[Card,Card,Card],...,[Card,Card,Card]]
 		 where each [Card,Card,Card] is a possible combination of set from hand.
-
 =end
 
 def get_check_table(hand_stat,score)
@@ -741,7 +748,7 @@ end
 	Updates: N/A
 	Returns: [] || [Integer, Integer, Integer]
 		 where for all Integer : 0 < Integer < total_cards
-
+TODO: decide what to do with "none" input from user
 =end
 
 def get_user_cards
@@ -753,7 +760,6 @@ def get_user_cards
 			puts "Command list:" +
 			"\n\thelp\tRedisplay this help menu." +
 			"\n\thint\tDisplay a correct set. Removes one hint from the hint counter." +
-			"\n\tnone\tDraw 3 cards (can't find a set). Maximum of 21 cards in hand." +
 			"\n\tquit\tQuit to main menu without saving." +
 			"\n\tsave\tSave the game. Game continues." +
 			"\n\tshow\tRedisplay the current hand. Useful if screen is full."
@@ -765,17 +771,13 @@ def get_user_cards
 			show_hand
 		when ["hint"]
 			puts get_hint # returns hint (+ number left) or "No more hints available."
-		when ["none"]
-			return []
 		when ["quit"]
 			# setting up conditions to allow for quiting
 			@top_card = 81
 			@hand = []
 			return ["quit"]
-			# menu_get_choice
 		when ["save"]
 			save_game
-			print ">>>[Game saved]<<<"
 		when ["show"]
 			show_hand
 		else
@@ -893,24 +895,22 @@ end
 	TODO missing check that integers must be unique
 =end
 	def good_set_syntax? user_input
-		# user input must have length 0 or 3
-		return true if user_input.length == 0
+		# user input must have length 0
+		# return true if user_input.length == 0
 		return false if user_input.length != 3
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= @hand.length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
 
-
-#Author: Mike
-#Create Date: 5/23
-#Edit: 5/24 by Mike, Minor changes, add documentation
 =begin
+	Author: Mike
+	Create Date: 5/23
+	Edit: 5/24 by Mike, Minor changes, add documentation
 	Requires: card1.class=card2.class=card3.class=Card,
 				attr∈Set(:color,:shading,:symbol,:number)
 	Returns: True if the provided attribute and cards follow set convention and false otherwise
 	Description: Check whether the provided attribute and cards follows Set convention
 =end
-
 	def check_attr?(attr,card1,card2,card3)
 		if(card1[attr]==card2[attr])
 			return false if(card2[attr]!=card3[attr])
@@ -920,17 +920,15 @@ end
 		return true
 	end
 
-
-#Author: Mike
-#Create Date: 5/23
-#Edit: 5/24 by Mike, Minor changes, add documentation
 =begin
+	Author: Mike
+	Create Date: 5/23
+	Edit: 5/24 by Mike, Minor changes, add documentation
 	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4,
 				∀x∈check_order, x∈Set("color","shading","symbol","number")
 	Returns: True if the provided cards form a set, false otherwise
 	Description: Check in order, whether the provided cards form a set
 =end
-
 	def check_set?(card1, card2, card3, check_order)
 		for order in check_order
 			case order
@@ -949,13 +947,13 @@ end
 		return true
 	end
 
-	#Author: Ariel
-	#Create Date: 5/22
-	#Edit: 5/24 by Ariel, add test cases
-	#Edit: 5/26 by Ariel, Minor changes, add documentation
-	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
-	# TODO update test cases according to changes
 =begin
+	Author: Ariel
+	Create Date: 5/22
+	Edit: 5/24 by Ariel, add test cases
+	Edit: 5/26 by Ariel, Minor changes, add documentation
+	Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
+	 TODO update test cases according to changes
 	Requires: hand,user_input,top_card,deck
 	Returns:  hand, top_card
 	Description: after user give the valid input, update will
@@ -971,21 +969,8 @@ end
 			puts "=============Game Over============="+""
 			puts ""
 			show_stat
-		# elsif user_input.empty? && @hand.length<21 && @top_card<81
-		# 	puts "You entered no set. 3 cards will be added."
-		# 	add3
-		# # when user_input==[] && top_card==81 && no sets on hand
-		# elsif user_input.empty? && @top_card==81 && find_set.empty?
-		# 	puts "Congrats! No set on hand and no card in deck. Game is cleared."
-		# 	puts "All Clear! Good Game!"
-		# 	@is_end=true
-		# 	show_stat
-		# # when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
-		# elsif user_input.empty?
-		# 	puts "You entered no set but at least one set exist."
-		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
-			puts user_input.to_s
+			puts "You entered " + user_input.to_s
 			puts
 			@number_of_correct += 1
 			puts "Congrats! You entered a correct set!\n\n",""
@@ -1052,7 +1037,6 @@ end
 =begin
 	Author: Gail Chen
 	Date created: 5/27
-	Edit: 5/27
 	Edit: 5/29 Ariel add score, change format of hint calculation
 	Description:
 		This method prints statistics of this game including total time spend, score,
@@ -1063,19 +1047,17 @@ end
 =end
 	def show_stat
 		puts "=============Statistics============"
-		puts "Score: "+ "%0.2f"%(get_score)
-		puts "Total time: #{@end_time - @start_time + @save_time} seconds"
-		puts "Number of sets: #{@number_of_correct}"
-		puts "Number of hints used: #{@number_of_hint}"
-		# puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
+		puts "Score: #{get_score}"
+		puts "Total time: #{(@end_time - @start_time + @save_time).truncate(2)} seconds"
+		puts "Number of sets found: #{@number_of_correct}"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
 
-	#Author: Mike
-	#Create Date: 5/23
-	#Edit: 5/24 by Mike, minor changes
-	#Edit: 5/27 Mike, minor changes
 =begin
+	Author: Mike
+	Create Date: 5/23
+	Edit: 5/24 by Mike, minor changes
+	Edit: 5/27 Mike, minor changes
 	Requires: check_table.class = Array,
 				for combination in check_table, combination.class = Array, combination.length = 3,
 				∀x∈combination, x.class=Card
@@ -1095,10 +1077,10 @@ end
 		return []
 	end
 
-	#Author: Ariel
-	#Create Date: 5/26
-	#Edit:
 =begin
+	Author: Ariel
+	Create Date: 5/26
+	Edit:
 	Requires: N/A
 	Returns:  N/A
 	Description: Give user tutorial about how to play set game
@@ -1143,7 +1125,7 @@ end
 				card12 = Card.new('red','solid','diamond','3')
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
-				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same","If no set exist, simply push Enter key and 3 new cards will be added",
+				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
 				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to quit Tutorial",""
 				if gets=="\n"
 				end
@@ -1151,15 +1133,17 @@ end
 		end
 	end
 
-	# Author: Channing Jacobs
-	# Date: 5/29
-	# Hint difficulties may need to be changed. No "magic" numbers.
+=begin
+	Author: Channing Jacobs
+	Date: 5/29
+	Hint difficulties may need to be changed. No "magic" numbers.
+=end
 	def get_hint
 		if @number_of_hint != @total_hint
 			@number_of_hint += 1
 			hint = find_set
 			case @total_hint
-			when 5
+			when 5,
 				@hand.each_index {|i| hint.each {|card| print " #{i} " if card == @hand[i]}}
 				puts"\nYou have #{@total_hint - @number_of_hint} hints left."
 			when 10
@@ -1185,20 +1169,38 @@ end
 	Description: Give user score
 =end
 	def get_score
-		return ((36000000/((@end_time - @start_time).to_i + @save_time.to_i))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
+		return ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
 	end
 end
 
-#Author: Ariel
-#Create Date: 5/29
-#Edit:
 =begin
-Requires: N/A
-Returns:  N/A
-Description: Give user score
+	Author: Ariel
+	Create Date: 5/29
+	Edit:
+	Requires: N/A
+	Returns:  N/A
+	Description: Give user score
 =end
 def show_result
 	get_username
-	path="game_result/#{@username}.csv"
-
+	file_name="game_result/#{@username}.csv"
+	puts ""
+	if File.file?(file_name)
+		CSV.foreach(file_name) do |row|
+			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
+			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+		end
+	else
+		puts "No game history avaiable for now"
+	end
+	# puts "Please Enter your email address if you want your game result in CSV file, press other keys to return menu"
+	# VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+	# input=gets.chomp
+	# if input=~ VALID_EMAIL_REGEX
+	# 	send_email
+	# end
 end
+
+# def send_email
+
+# end
