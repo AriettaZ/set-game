@@ -4,10 +4,13 @@
    * **[Rule](#rule)**
    * **[Start Menu](#start-menu)**
    * **[Help](#help)**
+
 ### 3. [Game Setting](#game-setting)
 ### 4. [Team](#team)
 ### 5. [Individual Contributions](#individual-contributions)
-
+  * **[Development](#development)**
+  * **[Testing](#testing)**
+  * **[Meetings](#meetings)**
 ***
 
 ### Overview
@@ -81,21 +84,21 @@ ruby main.rb
 **Command Keyword list:**
 
 * help	- Redisplay this help menu.
-*	hint	- Display a correct set.
-* Removes - one hint from the hint counter.
+*	hint	- Display a correct set. Removes one hint from the hint counter.
 *	quit	- Quit to main menu without saving.
 * save	- Save the game. Game continues.
 * show	- Redisplay the current hand. Useful if screen is full.
 
+***
 
-#### Game Setting
+### Game Setting
 
 #####  Difficulty Level
   * Easy - 27 hints can be used
   * Medium - 10 hints can be used
   * Hard - 5 hints can be used
 
-##### Score
+##### Score Formula
   ```math
   Score=(Constant/(Time Spent))*(Correct sets - Hint used)/Correct sets)
   ```
@@ -112,11 +115,20 @@ ruby main.rb
 |Coding Manager|Mike Lin|
 |Testing Manager|Gail Chen|
 |Documentation Manager| Ariel Zhu|
+
+*Contact Us: osu.magic.team@gmail.com*
+
 ***
 
 ### Individual Contributions
 Please list who did what for each part of the project.
 Also list if people worked together (pair programmed) on a particular section.
+
+#### Development
+
+#### Testing
+
+#### Meetings
 
 * May 22nd:
   * Group came up with the overall algorithm and structure together
