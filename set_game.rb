@@ -12,7 +12,7 @@ class SetGame
 def initialize
 	@start_time = Time.now
 	@end_time=Time.now
-	@save_time = 0
+	@save_time = 0.0
 	@top_card = 0
 	@number_of_hint = 0
 	@number_of_correct = 0
@@ -291,7 +291,7 @@ attr_accessor :is_end
 	def save_game
 		file_name = get_save_information
 		File.write file_name,Marshal.dump({
-			save_time: (Time.now - @start_time) + @save_time.to_i,
+			save_time: (Time.now - @start_time).to_f + @save_time.to_f,
 			top_card: @top_card,
 			number_of_hint: @number_of_hint,
 			number_of_correct: @number_of_correct,
@@ -359,8 +359,9 @@ attr_accessor :is_end
 		@hand = load[:hand]
 		@username = load[:username]
 		@total_hint=load[:total_hint]
+		@is_end = false
 
-		msg = "You have completed #{@number_of_correct} sets (roughly #{@number_of_correct/27.0*100}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
+		msg = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
 		puts
 		(msg.length+10).times {print "*"}
 		puts "\n**** "+msg+" ****"
@@ -480,6 +481,8 @@ end
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
+			@number_of_hint += 1
+			@total_hint += 1
 			puts hint.to_s
 	  	update hint
 			handle_no_set
@@ -820,7 +823,7 @@ end
 =end
 	def good_set_syntax? user_input
 		# user input must have length 0 or 3
-		return true if user_input.length == 0
+		# return true if user_input.length == 0
 		return false if user_input.length != 3
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= @hand.length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
@@ -911,7 +914,7 @@ end
 		# 	puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
-			puts user_input.to_s
+			puts "You entered " + user_input.to_s
 			puts
 			@number_of_correct += 1
 			puts "Congrats! You entered a correct set!\n\n",""
@@ -989,11 +992,10 @@ end
 =end
 	def show_stat
 		puts "=============Statistics============"
-		puts "Score: "+ "%0.2f"%(get_score)
-		puts "Total time: #{@end_time - @start_time + @save_time} seconds"
-		puts "Number of sets: #{@number_of_correct}"
-		puts "Number of hints used: #{@number_of_hint}"
-		# puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
+		puts "Score: #{get_score}"
+		puts "Total time: #{(@end_time - @start_time + @save_time).truncate(2)} seconds"
+		puts "Number of sets found: #{@number_of_correct}"
+		#puts "Number of hints used: #{@number_of_hint}"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
 
@@ -1111,7 +1113,8 @@ end
 	Description: Give user score
 =end
 	def get_score
-		end
+		return ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
+	end
 end
 
 #Author: Ariel
