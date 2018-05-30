@@ -121,32 +121,48 @@ ruby main.rb
 ***
 
 ### Individual Contributions
-Please list who did what for each part of the project.
-Also list if people worked together (pair programmed) on a particular section.
-
 #### Development
 Mike:
 * catg_set
-* check_set
-* find_set
 * get_check_table
+* check_attr?
+* check_set?
 * set_exist
+* find_set
 
 Channing:
-* get_hint
+* find_set
 * organize
 * good_set_syntax
+* organize
+* get_user_cards
+* show_progress
+* puzzle_game
+* good_set_syntax?
+* get_hint
 
 Gail:
-* update
-* replace3
 * add3
+* replace3
+* show_stat
+* menu_get_choice
+* valid_choice?
+* select_level
 * get_hand
 * show_hand
-* valid_choice?
+* card class
 
 Ariel:
 * get_score
+* get_tutorial
+* show_result
+* clear
+* menu_redirect_choice?
+* save_game_result
+* get_deck
+* handle_no_set
+* update
+* card class
 
 #### Testing
 Unit Testing:
@@ -191,7 +207,12 @@ Ariel:
   * Gail: start menu_get_choice and valid_choice?(user_input) function
   * Ariel: menu_redirect_choice and get_tutorial
 * May 26th:
-  * Mike: start save and load game
-  * Gail:
-  * Ariel:
-  * Chinning:
+  * Mike: start save and load game function
+  * Gail: update menu, valid_choice
+  * Ariel: start get_score, update get_tutorial, start get_result
+  * Chinning: start puzzle mode, progress_bar, redo get_user_card and help command list, update main
+* May 30th
+  * Mike: overall documentation and function improvement, unit testing
+  * Gail: overall documentation and function improvement, unit testing
+  * Ariel: Readme, finish show_result, handle_no_set and update update function
+  * Chinning: puzzle mode, unit testing, integration testing
