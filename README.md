@@ -1,12 +1,28 @@
-# Project 2
+# Project 2 Sets
 ### Game of Set
+1. [Overview](#overview)
+2. [User Manual](#user-manual)   
+3. [Roles](#roles)
+4. [Contributions](#contributions)
 
+***
+
+### Overview
+To start the game, enter the following game in the terminal
+
+```
+ruby main.rb
+```
+***
+### User Manual
+
+***
 ### Roles
 * Overall Project Manager: Channing
 * Coding Manager: Mike
 * Testing Manager: Gail
 * Documentation: Ariel
-
+***
 ### Contributions
 Please list who did what for each part of the project.
 Also list if people worked together (pair programmed) on a particular section.

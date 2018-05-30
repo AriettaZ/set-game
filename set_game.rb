@@ -76,6 +76,10 @@ attr_accessor :is_end
 	Created: 5/26
 	Edit: Mike 5/27 change save_time to 0
 	Edit: Ariel 5/29 move start_time setter to get_hand
+	Description: clear game setting related variables
+	Requires: N/A
+	Updates: add @is_end
+	Returns: N/A
 =end
 	def clear
 		@save_time = 0.0
@@ -125,7 +129,7 @@ attr_accessor :is_end
 	the game.
 	Requires: choice.class == integer
 	Updates: N/A
-	Returns: choice == 6 ? false : true
+	Returns: choice == 7 ? false : true
 =end
 	def menu_redirect_choice?(choice)
 		case choice
