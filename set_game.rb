@@ -63,10 +63,11 @@ attr_accessor :is_end
 			puts "[4] Delete Saved Game"
 			puts "[5] Autoplay Mode"
 			puts "[6] Game Result History"
-			puts "[7] Quit"
+			puts "[7] Puzzle Mode"
+			puts "[8] Quit"
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
-			break if valid_choice? user_choice, 7
+			break if valid_choice? user_choice, 8
 		end
 		user_choice.to_i
 	end
@@ -152,7 +153,10 @@ attr_accessor :is_end
 			puts "=========Game Result History========="
 			show_result
 		when 7
-			return false	# indicates exit game
+			puts "=============Puzzle Mode============="
+			puzzle_game
+		when 8
+			return false # indicates exit game		
 		end
 		return true	# don't exit game
 	end
@@ -259,6 +263,7 @@ attr_accessor :is_end
 		handle_no_set
 		until @is_end
 			# sleep(1) # wait 1 second
+			show_progress
 			show_hand
 			user_input = get_user_cards
 			update user_input
@@ -788,18 +793,86 @@ def get_user_cards
 		end
 	end
 end
+
 =begin
-	user_array = [-1]
-	until valid_syntax?(user_array, @hand.size)
-		puts "\nChoose 3 cards from your hand using their # separated by ','."
-		puts "Or type 'none' if you believe no set exists."
-		user_array = gets.chomp.split(",")
-		user_array = [-1] if user_array == [] #user hit enter
-		user_array = [] if user_array.to_s == "[\"none\"]"
-	end
-	user_array.map{|str| str.to_i}.sort
-end
+    Author: Channing Jacobs
+    Created: 5/29
+    Description: Displays the progress of the current game.
+    Requires: N/A
+    Updates: N/A
+    Returns: N/A
 =end
+    def show_progress
+	# bar_size is between 0 and 38
+        finish_size = ((@top_card.to_f / @deck.length.to_f) * 38).to_i
+	remain_size = 38 - finish_size
+	print "["
+	finish_size.times {print '#' } 
+	remain_size.times {print '.'}
+	print "]\n"
+    end
+
+
+=begin
+	Author: Channing Jacobs
+	Date: 5/29
+	Description: Sets up puzzle mode game. Game generated with only one solution.
+	Game can't be saved or scored.
+=end
+
+	def puzzle_game
+		
+		loop do
+			clear
+			get_deck
+			shuffle
+			get_hand
+			solution = find_set
+			next if (solution == [])
+			
+			solution.each {|card_in_set| removed_card = @hand.delete(card_in_set); break if (find_set != []); @hand << removed_card}
+			next if @hand.length < 12
+
+=begin
+
+			card = @hand.delete_at(@hand.find_index(solution[0]))
+			next if (find_set != [])
+			@hand << card
+
+			card = @hand.delete_at(@hand.find_index(solution[1]))
+			next if (find_set != [])
+			@hand << card
+
+			card = @hand.delete_at(@hand.find_index(solution[2]))
+			next if (find_set != [])
+			@hand << card
+=end
+			@hand.shuffle!
+
+			loop do
+				show_hand
+				print "\nEnter your set or type 'quit': "
+				case user_input = gets.chomp.downcase.split(",")
+				when ["quit"]
+					return
+				else
+					if good_set_syntax? user_input
+						# return user defined set in ascending card order
+						if (user_input.map {|card| card.to_i}.sort == solution.map {|card| @hand.find_index(card)}.sort)
+							puts "Great job! You found the only set.\nHit enter to go back to main menu."
+							gets
+							return
+						end
+						puts "Incorrect set. There is only one soltuion. Try again.",""
+					else
+						puts "Invalid command or set syntax."
+					end
+				end
+			end
+			puts "Error in execution."
+			break
+		end
+	end
 
 
 =begin
