@@ -820,7 +820,7 @@ end
 =begin
     Author: Channing Jacobs
     Created: 5/29
-	Edit: N/A
+	Edit: Mike, Gail 5/30 Format output
     Description: Displays the progress of the current game.
     Requires: @top_card != nil, @deck != nil
     Updates: N/A
@@ -828,12 +828,12 @@ end
 =end
     def show_progress
 	# bar_size is between 0 and 38
-        finish_size = ((@top_card.to_f / @deck.length.to_f) * 38).to_i
-		remain_size = 38 - finish_size
-		print "["
-		finish_size.times {print '#' } 
-		remain_size.times {print '.'}
-		print "]\n"
+        finish_size = (((@top_card-12).to_f / @deck.length.to_f) * 30).to_i
+		remain_size = 30 - finish_size
+		print "Progress: "
+		finish_size.times {print '▓' } 
+		remain_size.times {print '░'}
+		puts
     end
 
 
@@ -1153,7 +1153,7 @@ end
 =begin
 	Author: Channing Jacobs
 	Created: 5/29
-	Edit: N/A
+	Edit: Mike 5/30 Format output
 	Description: Output a set to user if they have hint left and show the remaining number of hints
 					Output a message if the user is out of hint
 	Requires: @hand != nil
@@ -1164,7 +1164,9 @@ end
 		if @number_of_hint != @total_hint
 			@number_of_hint += 1
 			hint = find_set
-			@hand.each_index {|i| hint.each {|card| print " #{i} " if card == @hand[i]}}
+#			@hand.each_index {|i| hint.each {|card| print "#{i}," if card == @hand[i]}}
+			hint = hint.map {|card| @hand.find_index(card)}.sort
+			puts "Hint: " + hint[0].to_s+","+hint[1].to_s+","+hint[2].to_s
 			puts"\nYou have #{@total_hint - @number_of_hint} hints left."
 		else
 			puts "You are out of hints. #{@number_of_hint} have been used."
@@ -1220,12 +1222,6 @@ def show_result
 	else
 		puts "No game history avaiable for now"
 	end
-	# puts "Please Enter your email address if you want your game result in CSV file, press other keys to return menu"
-	# VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
-	# input=gets.chomp
-	# if input=~ VALID_EMAIL_REGEX
-	# 	send_email
-	# end
 end
 
 # def send_email
