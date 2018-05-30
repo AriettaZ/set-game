@@ -1,7 +1,7 @@
 ## **Project 2 - The Game of Set **
 #### 1. [Overview](#overview)
 #### 2. [User Manual](#user-manual)
-   * **[User Manual](#user-manual)**
+   * **[Rule](#rule)**
    * **[User Manual](#user-manual)**
    * **[User Manual](#user-manual)**
 
@@ -11,15 +11,20 @@
 ***
 
 ### Overview
-This console-based game of Set is based on card game [Set](https://en.wikipedia.org/wiki/Set_%28game%29) and shares the same rule. On the top of basic functionalities, this game provides tutorial, autoplay, save  and puzzle mode to 
-To start the game, enter the following game in the terminal
+This console-based game of Set is based on card game [Set](https://en.wikipedia.org/wiki/Set_%28game%29) and shares the same rule. On the top of basic functionalities, this game provides tutorial, autoplay mode, saving game, game result statistics and puzzle mode to provide a more user-friendly and enjoyable experience for the players.
+
+To start the game, enter the following code in the terminal
 
 ```
 ruby main.rb
 ```
 ***
 ### User Manual
-
+#### Rule
+The player has a deck of 81 cards varying in four features. The game will end when 
+If there's a set, enter their card numbers separated by ','
+If set is correct, 3 cards will be replaced. If not, the cards will remain the same
+If 21 cards available in the table or no cards in deck, no card will be added to the table
 
 ***
 ### Team

@@ -1129,7 +1129,7 @@ end
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
 				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
-				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to quit Tutorial",""
+				"", "Please press Enter to quit Tutorial",""
 				if gets=="\n"
 				end
 			end
