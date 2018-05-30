@@ -8,6 +8,19 @@ require "test/unit"
 
 class TestUpdate < Test::Unit::TestCase
 =begin
+# elsif user_input.empty? && @hand.length<21 && @top_card<81
+# 	puts "You entered no set. 3 cards will be added."
+# 	add3
+# # when user_input==[] && top_card==81 && no sets on hand
+# elsif user_input.empty? && @top_card==81 && find_set.empty?
+# 	puts "Congrats! No set on hand and no card in deck. Game is cleared."
+# 	puts "All Clear! Good Game!"
+# 	@is_end=true
+# 	show_stat
+# # when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
+# elsif user_input.empty?
+# 	puts "You entered no set but at least one set exist."
+# when user_input!=[] && user_input is a correct set
 	Test plan for testing show_hand method:
 	1. user_input='none' and correct,hand.length<21,top_card< 81
 	2. user_input='none' and wrong,hand.length=21,top_card< 81
