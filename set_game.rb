@@ -819,7 +819,6 @@ end
 	def puzzle_game
 		
 		loop do
-			puts "restart"
 			clear
 			get_deck
 			shuffle
