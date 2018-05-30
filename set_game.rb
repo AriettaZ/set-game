@@ -156,7 +156,7 @@ attr_accessor :is_end
 			puts "=============Puzzle Mode============="
 			puzzle_game
 		when 8
-			return false # indicates exit game		
+			return false # indicates exit game
 		end
 		return true	# don't exit game
 	end
@@ -807,7 +807,7 @@ end
         finish_size = ((@top_card.to_f / @deck.length.to_f) * 38).to_i
 	remain_size = 38 - finish_size
 	print "["
-	finish_size.times {print '#' } 
+	finish_size.times {print '#' }
 	remain_size.times {print '.'}
 	print "]\n"
     end
@@ -821,7 +821,7 @@ end
 =end
 
 	def puzzle_game
-		
+
 		loop do
 			clear
 			get_deck
@@ -829,7 +829,7 @@ end
 			get_hand
 			solution = find_set
 			next if (solution == [])
-			
+
 			solution.each {|card_in_set| removed_card = @hand.delete(card_in_set); break if (find_set != []); @hand << removed_card}
 			next if @hand.length < 12
 
@@ -1193,6 +1193,18 @@ def show_result
 			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
 			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 		end
+		vars=[]
+		7.times do |var|
+			vars.unshift(0)
+		end
+		CSV.foreach(file_name,:headers => false) do |row|
+			vars[0]+=1
+			(1..6).each do |pos|
+				vars[pos]+=row[pos].to_i
+		end
+		end
+		puts "Average".center(18)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
+		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	else
 		puts "No game history avaiable for now"
 	end
