@@ -1113,7 +1113,7 @@ def show_result
 			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 		end
 	else
-		puts "No game history avaiable for now"
+		puts "No game history available for now"
 	end
 	# puts "Please Enter your email address if you want your game result in CSV file, press other keys to return menu"
 	# VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
