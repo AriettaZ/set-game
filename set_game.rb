@@ -439,12 +439,12 @@ def save_game_result
 	file_name = path+"#{@username}.csv"
 	if File.file?(file_name)
 		CSV.open(file_name, "a+") do |csv|
-			csv << [@start_time, @end_time-@start_time+@save_time,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
+			csv << [@start_time, (@end_time - @start_time + @save_time).to_f,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
 		end
 	else
 		CSV.open(file_name, "a+",	:write_headers => true,
-				:headers => ["Start Time","Time Spent(secs)","Score","Number of Correct Sets","Number of Wrong Sets","Number of Total Hints","Number of Used Hints"]) do |csv|
-			csv << [@start_time, @end_time-@start_time+@save_time,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
+				:headers => ["Start Time","Time Spent(secs)","Score","Correct Sets","Wrong Sets","Total Hints","Used Hints"]) do |csv|
+			csv << [@start_time, (@end_time - @start_time + @save_time).to_f,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
 		end
 	end
 end
@@ -738,7 +738,7 @@ end
 	Updates: N/A
 	Returns: [] || [Integer, Integer, Integer]
 		 where for all Integer : 0 < Integer < total_cards
-
+TODO: decide what to do with "none" input from user
 =end
 
 def get_user_cards
@@ -1105,5 +1105,24 @@ end
 =end
 def show_result
 	get_username
-	path="game_result/#{@username}.csv"
+	file_name="game_result/#{@username}.csv"
+	puts ""
+	if File.file?(file_name)
+		CSV.foreach(file_name) do |row|
+			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
+			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+		end
+	else
+		puts "No game history avaiable for now"
+	end
+	# puts "Please Enter your email address if you want your game result in CSV file, press other keys to return menu"
+	# VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
+	# input=gets.chomp
+	# if input=~ VALID_EMAIL_REGEX
+	# 	send_email
+	# end
 end
+
+# def send_email
+
+# end
