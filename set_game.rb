@@ -72,9 +72,9 @@ attr_accessor :is_end
 	#Create: Ariel
 	#Created: 5/26
 	#Edit: Mike 5/27
-  #      Ariel	 5/29 move start_time setter to get_hand
+  	#Edit: Ariel 5/29 move start_time setter to get_hand
 	def clear
-		@save_time = 0
+		@save_time = 0.0
 		@top_card = 0
 		@number_of_hint = 0
 		@number_of_correct = 0
@@ -172,7 +172,6 @@ attr_accessor :is_end
 	#				puts "Sorry, the user name has taken. Please enter another one."
 	#				@username = gets.chomp
 	#			end
-
 	end
 
 =begin
@@ -238,19 +237,15 @@ attr_accessor :is_end
 =begin
 	Author: Mike
 	Date created: 5/26
-	Edit: Gail 5/27
+	Edit: 5/27 Gail added update call after the loop to show the result of game
+	      Channing, moved user save input handling to get_user_cards & added sleep
+	      Ariel: comment out sleep since time measurement, add handle_no_set
 	Description:Continue the game from new_game or load_game
 			by showing the user current hand and let user find a set.
 	Require: SetGame object has all instance variable set up
 	Updates: N/A
 	Returns: N/A
 =end
-
-	#Author: Mike
-	#Edit: Channing, moved user save input handling to get_user_cards & added sleep
-	#Edit: Ariel: comment out sleep since time measurement, add handle_no_set
-	#Creation Date: 5/26
-	#Edit: Gail 5/27 added update call after the loop to show the result of game
 	def continue_game
 		handle_no_set
 		until @is_end
@@ -360,17 +355,13 @@ attr_accessor :is_end
 		@username = load[:username]
 		@total_hint=load[:total_hint]
 		@is_end = false
-
 		msg = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
 		puts
 		(msg.length+10).times {print "*"}
 		puts "\n**** "+msg+" ****"
 		(msg.length+10).times {print "*"}
 		puts
-#		sleep(2)
-
 		continue_game
-
 	end
 
 =begin
@@ -457,6 +448,7 @@ def save_game_result
 		end
 	end
 end
+
 =begin
 	Author: Mike
 	Date created: 5/26
@@ -539,16 +531,16 @@ end
 	end
 
 =begin
-		Author: Gail Chen
-		Created: 5/22
-		Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
-		Edit: 5/28 Channing, added clearing of screen to make output easier to read
-		Description:
-			This method pretty prints #, color, shading, symbol and number of cards
-			in hand to the screen for user.
-		Requires: @hand != nil
-		Updates: N/A
-		Returns: Pretty prints details of cards in hand to the screen.
+	Author: Gail Chen
+	Created: 5/22
+	Edit: 5/24 Mike Lin modified the method to pretty print the details of cards
+	Edit: 5/28 Channing, added clearing of screen to make output easier to read
+	Description:
+		This method pretty prints #, color, shading, symbol and number of cards
+		in hand to the screen for user.
+	Requires: @hand != nil
+	Updates: N/A
+	Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand hand=@hand
 		# system('clear'); system('cls')
@@ -563,7 +555,15 @@ end
 		puts hint.to_s
 	end
 
-
+=begin
+	Author: Ariel
+	Created: 5/29
+	Edit: N/A
+	Description: N/A
+	Requires: N/A
+	Updates: N/A
+	Returns: N/A
+=end
 def handle_no_set
 	while find_set.empty? && !@is_end
 		if @top_card<81
@@ -579,6 +579,7 @@ def handle_no_set
 		end
 	end
 end
+
 =begin
 	Author: Channing, Mike
 	Date: 5/25
@@ -673,7 +674,6 @@ end
 	Author: Mike
 	Date: 5/25
 	Editor:
-
 	Description: Return a check table consists of possible combinations of set from hand.
 	Requires: |hand_stat| = |hand|*3
 				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
@@ -691,7 +691,6 @@ end
 	Updates: N/A
 	Returns: [[Card, Card, Card],[Card,Card,Card],...,[Card,Card,Card]]
 		 where each [Card,Card,Card] is a possible combination of set from hand.
-
 =end
 
 def get_check_table(hand_stat,score)
@@ -751,7 +750,6 @@ def get_user_cards
 			puts "Command list:" +
 			"\n\thelp\tRedisplay this help menu." +
 			"\n\thint\tDisplay a correct set. Removes one hint from the hint counter." +
-			"\n\tnone\tDraw 3 cards (can't find a set). Maximum of 21 cards in hand." +
 			"\n\tquit\tQuit to main menu without saving." +
 			"\n\tsave\tSave the game. Game continues." +
 			"\n\tshow\tRedisplay the current hand. Useful if screen is full."
@@ -763,14 +761,11 @@ def get_user_cards
 			show_hand
 		when ["hint"]
 			puts get_hint # returns hint (+ number left) or "No more hints available."
-		when ["none"]
-			return []
 		when ["quit"]
 			# setting up conditions to allow for quiting
 			@top_card = 81
 			@hand = []
 			return ["quit"]
-			# menu_get_choice
 		when ["save"]
 			save_game
 			print ">>>[Game saved]<<<"
@@ -822,24 +817,22 @@ end
 	TODO missing check that integers must be unique
 =end
 	def good_set_syntax? user_input
-		# user input must have length 0 or 3
+		# user input must have length 0
 		# return true if user_input.length == 0
 		return false if user_input.length != 3
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= @hand.length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
 
-
-#Author: Mike
-#Create Date: 5/23
-#Edit: 5/24 by Mike, Minor changes, add documentation
 =begin
+	Author: Mike
+	Create Date: 5/23
+	Edit: 5/24 by Mike, Minor changes, add documentation
 	Requires: card1.class=card2.class=card3.class=Card,
 				attr∈Set(:color,:shading,:symbol,:number)
 	Returns: True if the provided attribute and cards follow set convention and false otherwise
 	Description: Check whether the provided attribute and cards follows Set convention
 =end
-
 	def check_attr?(attr,card1,card2,card3)
 		if(card1[attr]==card2[attr])
 			return false if(card2[attr]!=card3[attr])
@@ -849,17 +842,15 @@ end
 		return true
 	end
 
-
-#Author: Mike
-#Create Date: 5/23
-#Edit: 5/24 by Mike, Minor changes, add documentation
 =begin
+	Author: Mike
+	Create Date: 5/23
+	Edit: 5/24 by Mike, Minor changes, add documentation
 	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4,
 				∀x∈check_order, x∈Set("color","shading","symbol","number")
 	Returns: True if the provided cards form a set, false otherwise
 	Description: Check in order, whether the provided cards form a set
 =end
-
 	def check_set?(card1, card2, card3, check_order)
 		for order in check_order
 			case order
@@ -878,13 +869,13 @@ end
 		return true
 	end
 
-	#Author: Ariel
-	#Create Date: 5/22
-	#Edit: 5/24 by Ariel, add test cases
-	#Edit: 5/26 by Ariel, Minor changes, add documentation
-	#Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
-	# TODO update test cases according to changes
 =begin
+	Author: Ariel
+	Create Date: 5/22
+	Edit: 5/24 by Ariel, add test cases
+	Edit: 5/26 by Ariel, Minor changes, add documentation
+	Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
+	 TODO update test cases according to changes
 	Requires: hand,user_input,top_card,deck
 	Returns:  hand, top_card
 	Description: after user give the valid input, update will
@@ -900,19 +891,6 @@ end
 			puts "=============Game Over============="+""
 			puts ""
 			show_stat
-		# elsif user_input.empty? && @hand.length<21 && @top_card<81
-		# 	puts "You entered no set. 3 cards will be added."
-		# 	add3
-		# # when user_input==[] && top_card==81 && no sets on hand
-		# elsif user_input.empty? && @top_card==81 && find_set.empty?
-		# 	puts "Congrats! No set on hand and no card in deck. Game is cleared."
-		# 	puts "All Clear! Good Game!"
-		# 	@is_end=true
-		# 	show_stat
-		# # when user_input==[] && (hand.length==21) or hand.length<21 && top_card==81 && has set on hand)
-		# elsif user_input.empty?
-		# 	puts "You entered no set but at least one set exist."
-		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
 			puts "You entered " + user_input.to_s
 			puts
@@ -981,7 +959,6 @@ end
 =begin
 	Author: Gail Chen
 	Date created: 5/27
-	Edit: 5/27
 	Edit: 5/29 Ariel add score, change format of hint calculation
 	Description:
 		This method prints statistics of this game including total time spend, score,
@@ -995,15 +972,14 @@ end
 		puts "Score: #{get_score}"
 		puts "Total time: #{(@end_time - @start_time + @save_time).truncate(2)} seconds"
 		puts "Number of sets found: #{@number_of_correct}"
-		#puts "Number of hints used: #{@number_of_hint}"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
 
-	#Author: Mike
-	#Create Date: 5/23
-	#Edit: 5/24 by Mike, minor changes
-	#Edit: 5/27 Mike, minor changes
 =begin
+	Author: Mike
+	Create Date: 5/23
+	Edit: 5/24 by Mike, minor changes
+	Edit: 5/27 Mike, minor changes
 	Requires: check_table.class = Array,
 				for combination in check_table, combination.class = Array, combination.length = 3,
 				∀x∈combination, x.class=Card
@@ -1023,10 +999,10 @@ end
 		return []
 	end
 
-	#Author: Ariel
-	#Create Date: 5/26
-	#Edit:
 =begin
+	Author: Ariel
+	Create Date: 5/26
+	Edit:
 	Requires: N/A
 	Returns:  N/A
 	Description: Give user tutorial about how to play set game
@@ -1079,15 +1055,17 @@ end
 		end
 	end
 
-	# Author: Channing Jacobs
-	# Date: 5/29
-	# Hint difficulties may need to be changed. No "magic" numbers.
+=begin
+	Author: Channing Jacobs
+	Date: 5/29
+	Hint difficulties may need to be changed. No "magic" numbers.
+=end
 	def get_hint
 		if @number_of_hint != @total_hint
 			@number_of_hint += 1
 			hint = find_set
 			case @total_hint
-			when 5
+			when 5,
 				@hand.each_index {|i| hint.each {|card| print " #{i} " if card == @hand[i]}}
 				puts"\nYou have #{@total_hint - @number_of_hint} hints left."
 			when 10
@@ -1117,16 +1095,15 @@ end
 	end
 end
 
-#Author: Ariel
-#Create Date: 5/29
-#Edit:
 =begin
-Requires: N/A
-Returns:  N/A
-Description: Give user score
+	Author: Ariel
+	Create Date: 5/29
+	Edit:
+	Requires: N/A
+	Returns:  N/A
+	Description: Give user score
 =end
 def show_result
 	get_username
 	path="game_result/#{@username}.csv"
-
 end
