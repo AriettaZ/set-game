@@ -53,7 +53,7 @@ ruby main.rb
   1. Enter username
   2. Choose from a list of saved games
   3. Continue the saved game
-  4. Receive game [score](#score) and results
+  4. Receive game [score](#score-formula) and results
   5. Return to menu
 
 * Delete Saved Game - clean up saved game folder
@@ -100,7 +100,7 @@ ruby main.rb
 
 ##### Score Formula
   ```math
-  Score=(Constant/(Time Spent))*(Correct sets - Hint used)/Correct sets)
+  Score=(Constant/(Time Spent)*(Correct sets - Hint used)/Correct sets)
   ```
 
 
@@ -125,8 +125,54 @@ Please list who did what for each part of the project.
 Also list if people worked together (pair programmed) on a particular section.
 
 #### Development
+Mike:
+* catg_set
+* check_set
+* find_set
+* get_check_table
+* set_exist
+
+Channing:
+* get_hint
+* organize
+* good_set_syntax
+
+Gail:
+* update
+* replace3
+* add3
+* get_hand
+* show_hand
+* valid_choice?
+
+Ariel:
+* get_score
 
 #### Testing
+Unit Testing:
+
+Mike:
+* catg_set
+* check_set
+* find_set
+* get_check_table
+* set_exist
+
+Channing:
+* get_hint
+* organize
+* good_set_syntax
+
+Gail:
+* update
+* replace3
+* add3
+* get_hand
+* show_hand
+* valid_choice?
+
+Ariel:
+* get_score
 
 #### Meetings
 
