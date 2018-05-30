@@ -161,7 +161,7 @@ attr_accessor :is_end
 			puts "=============Puzzle Mode============="
 			puzzle_game
 		when 8
-			return false # indicates exit game		
+			return false # indicates exit game
 		end
 		return true	# don't exit game
 	end
@@ -1143,7 +1143,7 @@ end
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
 				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
-				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to quit Tutorial",""
+				"", "Please press Enter to quit Tutorial",""
 				if gets=="\n"
 				end
 			end
@@ -1205,6 +1205,18 @@ def show_result
 			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
 			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 		end
+		vars=[]
+		7.times do |var|
+			vars.unshift(0)
+		end
+		CSV.foreach(file_name,:headers => false) do |row|
+			vars[0]+=1
+			(1..6).each do |pos|
+				vars[pos]+=row[pos].to_i
+		end
+		end
+		puts "Average".center(18)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
+		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	else
 		puts "No game history avaiable for now"
 	end
