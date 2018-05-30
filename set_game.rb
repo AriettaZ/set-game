@@ -3,6 +3,8 @@
 
 require_relative 'card'
 require 'csv'
+
+
 class SetGame
 
 #Create: Ariel
@@ -69,12 +71,14 @@ attr_accessor :is_end
 		user_choice.to_i
 	end
 
-	#Create: Ariel
-	#Created: 5/26
-	#Edit: Mike 5/27
-  #      Ariel	 5/29 move start_time setter to get_hand
+=begin
+	Author: Ariel
+	Created: 5/26
+	Edit: Mike 5/27 change save_time to 0
+	Edit: Ariel 5/29 move start_time setter to get_hand
+=end
 	def clear
-		@save_time = 0
+		@save_time = 0.0
 		@top_card = 0
 		@number_of_hint = 0
 		@number_of_correct = 0
@@ -238,19 +242,15 @@ attr_accessor :is_end
 =begin
 	Author: Mike
 	Date created: 5/26
-	Edit: Gail 5/27
+	Edit: Gail 5/27 added update call after the loop to show the result of game
+	Edit: Channing, moved user save input handling to get_user_cards & added sleep
+	Edit: Ariel: comment out sleep since time measurement, add handle_no_set
 	Description:Continue the game from new_game or load_game
 			by showing the user current hand and let user find a set.
 	Require: SetGame object has all instance variable set up
 	Updates: N/A
 	Returns: N/A
 =end
-
-	#Author: Mike
-	#Edit: Channing, moved user save input handling to get_user_cards & added sleep
-	#Edit: Ariel: comment out sleep since time measurement, add handle_no_set
-	#Creation Date: 5/26
-	#Edit: Gail 5/27 added update call after the loop to show the result of game
 	def continue_game
 		handle_no_set
 		until @is_end
@@ -301,7 +301,7 @@ attr_accessor :is_end
 			username: @username,
 			total_hint: @total_hint
 			})
-		puts "Your game #{File.basename file_name,'.setgame'} is saved successfully."
+		puts ">>>[Game #{File.basename file_name,'.setgame'} saved under username #{@username}]<<<"
 	end
 
 =begin
@@ -773,7 +773,6 @@ def get_user_cards
 			# menu_get_choice
 		when ["save"]
 			save_game
-			print ">>>[Game saved]<<<"
 		when ["show"]
 			show_hand
 		else
