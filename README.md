@@ -1,12 +1,12 @@
 ## Project 2 - The Game of Set
-#### 1. [Overview](#overview)
-#### 2. [User Manual](#user-manual)
+### 1. [Overview](#overview)
+### 2. [User Manual](#user-manual)
    * **[Rule](#rule)**
    * **[Start Menu](#start-menu)**
    * **[Help](#help)**
-#### 3. [Game Setting](#game-setting)
-#### 4. [Team](#team)
-#### 5. [Individual Contributions](#individual-contributions)
+### 3. [Game Setting](#game-setting)
+### 4. [Team](#team)
+### 5. [Individual Contributions](#individual-contributions)
 
 ***
 
@@ -31,7 +31,7 @@ ruby main.rb
   * If the set is correct, 3 cards in the set will be replaced by 3 new cards from deck
   * If not, the displayed cards will remain the same
 
-#### Start Menu
+### Start Menu
 
 **What to expect for each choice:**
 
@@ -90,12 +90,12 @@ ruby main.rb
 
 #### Game Setting
 
-######  Difficulty Level
+#####  Difficulty Level
   * Easy - 27 hints can be used
   * Medium - 10 hints can be used
   * Hard - 5 hints can be used
 
-###### Score
+##### Score
   ```math
   Score=(Constant/(Time Spent))*(Correct sets - Hint used)/Correct sets)
   ```
