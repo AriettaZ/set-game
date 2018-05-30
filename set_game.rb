@@ -12,7 +12,7 @@ class SetGame
 def initialize
 	@start_time = Time.now
 	@end_time=Time.now
-	@save_time = 0
+	@save_time = 0.0
 	@top_card = 0
 	@number_of_hint = 0
 	@number_of_correct = 0
@@ -291,7 +291,7 @@ attr_accessor :is_end
 	def save_game
 		file_name = get_save_information
 		File.write file_name,Marshal.dump({
-			save_time: (Time.now - @start_time) + @save_time.to_i,
+			save_time: (Time.now - @start_time).to_f + @save_time.to_f,
 			top_card: @top_card,
 			number_of_hint: @number_of_hint,
 			number_of_correct: @number_of_correct,
@@ -359,13 +359,14 @@ attr_accessor :is_end
 		@hand = load[:hand]
 		@username = load[:username]
 		@total_hint=load[:total_hint]
+		@is_end = false
 
-		msg = "You have completed #{@number_of_correct} sets (roughly #{@number_of_correct/27.0*100}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
+		msg = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
 		puts
 		(msg.length+10).times {print "*"}
 		puts "\n**** "+msg+" ****"
 		(msg.length+10).times {print "*"}
-		puts 
+		puts
 #		sleep(2)
 
 		continue_game
@@ -480,6 +481,8 @@ end
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
+			@number_of_hint += 1
+			@total_hint += 1
 			puts hint.to_s
 	  	update hint
 			handle_no_set
@@ -548,7 +551,7 @@ end
 		Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand hand=@hand
-		system('clear'); system('cls')
+		# system('clear'); system('cls')
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
 		hand.length.times{ |card|
@@ -767,6 +770,7 @@ def get_user_cards
 			@top_card = 81
 			@hand = []
 			return ["quit"]
+			# menu_get_choice
 		when ["save"]
 			save_game
 			print ">>>[Game saved]<<<"
@@ -819,7 +823,7 @@ end
 =end
 	def good_set_syntax? user_input
 		# user input must have length 0 or 3
-		return true if user_input.length == 0
+		# return true if user_input.length == 0
 		return false if user_input.length != 3
 		# user input must only contain integers (between 0 and hand.length)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= @hand.length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
@@ -888,6 +892,7 @@ end
 	top_card according to user's input
 =end
 	def update(user_input)
+		system('clear'); system('cls')
 	  # when user_input==[] && hand.length<21 && top_card<81
 		if user_input==["quit"]
 			@is_end=true
@@ -909,13 +914,16 @@ end
 		# 	puts "You entered no set but at least one set exist."
 		# when user_input!=[] && user_input is a correct set
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
+			puts "You entered " + user_input.to_s
+			puts
 			@number_of_correct += 1
-			puts "Congrats! You entered a correct set!\n\n"
+			puts "Congrats! You entered a correct set!\n\n",""
 			replace3(user_input)
 		# when user_input!=[] && user_input is not a correct set
 		else
+			puts user_input.to_s
 			@number_of_wrong += 1
-			puts "Sorry. Wrong set."
+			puts "Sorry. Wrong set.",""
 		end
 	end
 
@@ -984,10 +992,10 @@ end
 =end
 	def show_stat
 		puts "=============Statistics============"
-		puts "Score: "+ "%0.2f"%(get_score)
-		puts "Total time: " + "%0.2f" %(@end_time - @start_time + @save_time) + " seconds"
-		puts "Number of sets: #{@number_of_correct}"
-		puts "Number of hints used: #{@number_of_hint}"
+		puts "Score: #{get_score}"
+		puts "Total time: #{(@end_time - @start_time + @save_time).truncate(2)} seconds"
+		puts "Number of sets found: #{@number_of_correct}"
+		#puts "Number of hints used: #{@number_of_hint}"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
 
@@ -1095,7 +1103,7 @@ end
 			puts "You are out of hints. #{@number_of_hint} have been used."
 		end
 	end
-	
+
 =begin
 	Author: Ariel
 	Create Date: 5/29
@@ -1105,7 +1113,7 @@ end
 	Description: Give user score
 =end
 	def get_score
-		return ((360000/(@end_time - @start_time + @save_time))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
+		return ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
 	end
 end
 
@@ -1119,4 +1127,6 @@ Description: Give user score
 =end
 def show_result
 	get_username
+	path="game_result/#{@username}.csv"
+
 end
