@@ -1156,7 +1156,7 @@ end
 	Edit: Mike 5/30 Format output
 	Description: Output a set to user if they have hint left and show the remaining number of hints
 					Output a message if the user is out of hint
-	Requires: @hand != nil
+	Requires: @hand != nil, there exist a set in hint
 	Updates: @number_of_hint
 	Returns: N/A
 =end

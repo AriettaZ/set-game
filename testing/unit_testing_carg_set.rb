@@ -5,7 +5,7 @@ require_relative "../set_game"
 require "test/unit"
 
 class TestGetScore < Test::Unit::TestCase
-	def test_get_Score_1
+	def test_catg_set
 
 		card1 = Card.new("red","solid","squiggle","3")
 		card2 = Card.new("green","striped","squiggle","2")
@@ -29,7 +29,7 @@ class TestGetScore < Test::Unit::TestCase
 			'3': [card1]
 		}
 		
-		assert_equal([["color", 4.0], ["shading", 7.0], ["symbol", 8.0], ["number", 7.0]],SetGame.new.get_score(hand_stat))
+		assert_equal([["color", 4.0], ["shading", 7.0], ["symbol", 8.0], ["number", 7.0]],SetGame.new.catg_set(hand_stat))
 		
 	end
 end
