@@ -1129,9 +1129,13 @@ def show_result
 	get_username
 	file_name="game_result/#{@username}.csv"
 	puts ""
-	CSV.foreach(file_name) do |row|
-		puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
-		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+	if File.file?(file_name)
+		CSV.foreach(file_name) do |row|
+			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
+			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+		end
+	else
+		puts "No game history avaiable for now"
 	end
 	# puts "Please Enter your email address if you want your game result in CSV file, press other keys to return menu"
 	# VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
@@ -1142,5 +1146,5 @@ def show_result
 end
 
 # def send_email
-#
+
 # end
