@@ -1128,7 +1128,7 @@ end
 				card12 = Card.new('red','solid','diamond','3')
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
-				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
+				puts "","There must be at least one set among displayed cards. To indicate your set, please enter card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
 				"", "Please press Enter to quit Tutorial",""
 				if gets=="\n"
 				end
@@ -1203,6 +1203,7 @@ def show_result
 				vars[pos]+=row[pos].to_i
 		end
 		end
+		vars[0]-=1
 		puts "Average".center(18)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
 		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	else
