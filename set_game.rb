@@ -64,7 +64,7 @@ attr_accessor :is_end
 			puts "[7] Quit"
 			puts "Choose an option from menu by typing the number of that option:"
 			user_choice = gets.chomp
-			break if valid_choice? user_choice, 6
+			break if valid_choice? user_choice, 7
 		end
 		user_choice.to_i
 	end
@@ -985,10 +985,9 @@ end
 	def show_stat
 		puts "=============Statistics============"
 		puts "Score: "+ "%0.2f"%(get_score)
-		puts "Total time: #{@end_time - @start_time + @save_time} seconds"
+		puts "Total time: " + "%0.2f" %(@end_time - @start_time + @save_time) + " seconds"
 		puts "Number of sets: #{@number_of_correct}"
 		puts "Number of hints used: #{@number_of_hint}"
-		# puts "% of hint used to find set: " + "%0.2f" %(@number_of_hint.fdiv(@number_of_correct) * 100) + "%"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
 
@@ -1106,7 +1105,7 @@ end
 	Description: Give user score
 =end
 	def get_score
-		return ((360000/(@end_time.to_i - @start_time.to_i + @save_time.to_i))*((@number_of_correct-@number_of_hint)/@number_of_correct))
+		return ((360000/(@end_time - @start_time + @save_time))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
 	end
 end
 

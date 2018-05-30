@@ -6,19 +6,19 @@
 	- Return true
 		1. max = 3, user_input = "1"
 		2. max = 3, user_input = "3"
-		3. max = 6, user_input = "4"
-		3. max = 6, user_input = "6"
-	- max = 6, Return false
+		3. max = 7, user_input = "4"
+		3. max = 7, user_input = "7"
+	- max = 7, Return false
 		1. max = 3, user_input = "0"
 		2. max = 3, user_input = "4"
 		3. max = 3, user_input = "a"
-		4. max = 6, user_input = "7"
-		5. max = 6, user_input = "s"
-		6. max = 6, user_input = "10"
-		7. max = 6, user_input = "3a"
-		8. max = 6, user_input = "b2b"
-		9. max = 6, user_input = "abc"
-		10. max = 6, user_input = "3ab"
+		4. max = 7, user_input = "8"
+		5. max = 7, user_input = "s"
+		6. max = 7, user_input = "10"
+		7. max = 7, user_input = "3a"
+		8. max = 7, user_input = "b2b"
+		9. max = 7, user_input = "abc"
+		10. max = 7, user_input = "3ab"
 =end
 
 require_relative "../set_game"
@@ -40,18 +40,18 @@ class TestGetHand < Test::Unit::TestCase
 		assert_equal true, game.valid_choice?(user_input, 3)
 	end
 
-	# True Case 3. max = 6, user_input = "4"
+	# True Case 3. max = 7, user_input = "4"
 	def test_valid_choice_true_3
 		game = SetGame.new
 		user_input = "4"
-		assert_equal true, game.valid_choice?(user_input, 6)
+		assert_equal true, game.valid_choice?(user_input, 7)
 	end
 
-	# True Case 4. max = 6, user_input = "6"
+	# True Case 4. max = 7, user_input = "7"
 	def test_valid_choice_true_4
 		game = SetGame.new
-		user_input = "6"
-		assert_equal true, game.valid_choice?(user_input, 6)
+		user_input = "7"
+		assert_equal true, game.valid_choice?(user_input, 7)
 	end
 
 	# False Case 1. max = 3, user_input = "0"
@@ -75,53 +75,53 @@ class TestGetHand < Test::Unit::TestCase
 		assert_equal false, game.valid_choice?(user_input, 3)
 	end
 
-	# False Case 4. max = 6, user_input = "7"
+	# False Case 4. max = 7, user_input = "8"
 	def test_valid_choice_false_4
 		game = SetGame.new
-		user_input = "7"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		user_input = "8"
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
-	# False Case 5. max = 6, user_input = "s"
+	# False Case 5. max = 7, user_input = "s"
 	def test_valid_choice_false_5
 		game = SetGame.new
 		user_input = "s"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
-	# False Case 6. max = 6, user_input = "10"
+	# False Case 6. max = 7, user_input = "10"
 	def test_valid_choice_false_6
 		game = SetGame.new
 		user_input = "10"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
-	# False Case 7. max = 6, user_input = "3a"
+	# False Case 7. max = 7, user_input = "3a"
 	def test_valid_choice_false_7
 		game = SetGame.new
 		user_input = "3a"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
-	# False Case 8. max = 6, user_input = "b2b"
+	# False Case 8. max = 7, user_input = "b2b"
 	def test_valid_choice_false_8
 		game = SetGame.new
 		user_input = "b2b"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
-	# False Case 9. max = 6, user_input = "abc"
+	# False Case 9. max = 7, user_input = "abc"
 	def test_valid_choice_false_9
 		game = SetGame.new
 		user_input = "abc"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
-	# False Case 10. max = 6, user_input = "3ab"
+	# False Case 10. max = 7, user_input = "3ab"
 	def test_valid_choice_false_10
 		game = SetGame.new
 		user_input = "3ab"
-		assert_equal false, game.valid_choice?(user_input, 6)
+		assert_equal false, game.valid_choice?(user_input, 7)
 	end
 
 end
