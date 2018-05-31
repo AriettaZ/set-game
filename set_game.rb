@@ -1178,7 +1178,6 @@ end
 		if @number_of_hint != @total_hint
 			@number_of_hint += 1
 			hint = find_set
-#			@hand.each_index {|i| hint.each {|card| print "#{i}," if card == @hand[i]}}
 			hint = hint.map {|card| @hand.find_index(card)}.sort
 			puts "Hint: " + hint[0].to_s+","+hint[1].to_s+","+hint[2].to_s
 			puts"\nYou have #{@total_hint - @number_of_hint} hints left."
@@ -1245,8 +1244,3 @@ def show_result
 		puts "Sorry. No game history available for #{@username}. The game history is auto-saved at the end of each game."
 	end
 end
-
-
-# def send_email
-
-# end
