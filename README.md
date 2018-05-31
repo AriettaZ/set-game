@@ -129,10 +129,12 @@ Mike:
 * check_set?
 * set_exist
 * find_set
+* save_game
+* get_username
+* continue_game
 
 Channing:
 * find_set
-* organize
 * good_set_syntax
 * organize
 * get_user_cards
