@@ -4,14 +4,14 @@
 require_relative "../set_game"
 require "test/unit"
 
-class TestGetFindSet < Test::Unit::TestCase
+class TestGetHint < Test::Unit::TestCase
 
 =begin
 	Test Plan:
 		1. get_hint from a game with 0 hints used out of 5 hint total  (game hard difficulty)
 		2. get_hint from a game with 0 hints used out of 10 hint total  (game medium difficulty)
 		3. get_hint from a game with 0 hints used out of 27 hint total  (game easy difficulty)
-		
+
 		4. get_hint from a game with 1 hints used out of 5 hint total  (game hard difficulty)
 		5. get_hint from a game with 1 hints used out of 10 hint total  (game medium difficulty)
 		6. get_hint from a game with 1 hints used out of 27 hint total  (game easy difficulty)
@@ -19,7 +19,7 @@ class TestGetFindSet < Test::Unit::TestCase
 		7. get_hint from a game with 4 hints used out of 5 hint total  (game hard difficulty)
 		8. get_hint from a game with 4 hints used out of 10 hint total  (game medium difficulty)
 		9. get_hint from a game with 4 hints used out of 27 hint total  (game easy difficulty)
-		
+
 		10. get_hint from a game with 5 hints used out of 5 hint total  (game hard difficulty)
 		11. get_hint from a game with 10 hints used out of 10 hint total  (game medium difficulty)
 		12. get_hint from a game with 27 hints used out of 27 hint total  (game easy difficulty)

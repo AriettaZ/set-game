@@ -429,26 +429,6 @@ end
 	end
 
 =begin
-    Author: Channing Jacobs
-    Created: 5/29
-	Edit: Mike, Gail 5/30 Format output
-    Description: Displays the progress of the current game.
-    Requires: @top_card != nil, @deck != nil
-    Updates: N/A
-    Returns: N/A
-=end
-    def show_progress
-	# bar_size is between 0 and 38
-      finish_size = (((@top_card-12).to_f / (@deck.length-11).to_f) * 30).to_i
-			remain_size = 30 - finish_size
-			print "\nProgress: "
-			finish_size.times {print '▓' }
-			remain_size.times {print '░'}
-			puts
-			puts
-    end
-
-=begin
 	Author: Channing Jacobs
 	Created: 5/29
 	Edit: Mike 5/30 Format output
