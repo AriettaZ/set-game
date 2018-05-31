@@ -103,7 +103,7 @@ To get the best user experience, please expand the terminal to at least 125*40
 ##### Score
   * The score is a non-negative number.
   * To get a higher score:
-    * Use less hints
+    * Use fewer hints
     * Spend less time
     * Give more correct sets
   * Score calculation is shown as follow:
@@ -112,7 +112,7 @@ To get the best user experience, please expand the terminal to at least 125*40
 Score=(Constant/(Time Spent+1)*(Correct sets - Hint used)/(Correct sets+1))
 ```
 
-##### Naming
+##### Naming Tradition
   * File name and user name can't be empty
   * File name and user name shouldn't start with '.'
 
