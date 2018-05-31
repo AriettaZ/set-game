@@ -33,7 +33,7 @@ class TestGetFindSet < Test::Unit::TestCase
 			game.hand = [card1, card2, card3, card4, card5, card6]
 
 =begin
-		hand_stat
+		hand_stat = 
 		{
 			red: [card1, card3, card4, card5],
 			purple: [],
@@ -69,7 +69,7 @@ class TestGetFindSet < Test::Unit::TestCase
 			game.hand = [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
 =begin
-		hand_stat_table
+		hand_stat = 
 		{
 			red: [card1, card3, card4, card5,card6,card7,card8,card9,card10,card11,card12],
 			purple: [],

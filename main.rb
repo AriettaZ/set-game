@@ -13,4 +13,3 @@ loop do
 end
 
 puts "Goodbye~"
-
