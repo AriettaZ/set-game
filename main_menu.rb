@@ -73,6 +73,7 @@ module MainMenu
 			Returns: false if user input 8 and true if user input∈[1..7]
 =end
 			def menu_redirect_choice?(choice)
+				system('clear'); system('cls')
 				case choice
 				when 1
 				  puts "===========New Game==========="

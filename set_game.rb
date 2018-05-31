@@ -87,9 +87,9 @@ attr_accessor :is_end
 =end
 	def get_username mode="new"
 		puts "Please enter your username:"
-		input = gets.chomp
-		until !input.empty? && input[0,1]!='.'
-			puts "","The username can't be empty or start with '.'. ","Please enter another username:"
+		input = gets.chomp.downcase
+		until !input.empty? && input[0,1]!='.' && input != "menu"
+			puts "","The username can't be empty, menu, or start with '.'. ","Please enter another username:"
 			input = gets.chomp
 		end
 		@username = input
@@ -142,7 +142,7 @@ attr_accessor :is_end
 =begin
 	Author: Mike
 	Created: 5/26
-	Edit: N/A
+	Edit: Channing, fixed bug when no name or name "menu" was used
 	Description: Delete game archive from stored_game/@username/ folder
 	Require: N/A
 	Updates: Selected game file.
@@ -152,8 +152,10 @@ attr_accessor :is_end
 		clear
 		get_username
 		file_name = get_saved_games
-		puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
-		File.delete(file_name) if gets.chomp.downcase[0]=="y"
+		if file_name != "menu"
+			puts "Are you sure you want to delete the game: "+File.basename(file_name,".setgame")+"?"
+			File.delete(file_name) if gets.chomp.downcase[0]=="y"
+		end
 	end
 
 =begin
@@ -218,17 +220,25 @@ attr_accessor :is_end
 					print "\nEnter your set or type 'quit': "
 					case user_input = gets.chomp.downcase.split(",")
 					when ["quit"]
+						system('clear'); system('cls')
 						return
 					else
 						if good_set_syntax? user_input
+							# safe to convert user input
+							user_input = user_input.map {|card| card.to_i}.sort
 							# return user defined set in ascending card order
-							if (user_input.map {|card| card.to_i}.sort == solution.map {|card| @hand.find_index(card)}.sort)
-								puts "Great job! You found the only set.\nHit enter to go back to main menu."
+							if (user_input == solution.map {|card| @hand.find_index(card)}.sort)
+								system('clear'); system('cls')
+								show_hand
+								puts "\n#{user_input[0]},#{user_input[1]},#{user_input[2]}\nGreat job! You found the only set.\nHit enter to go back to main menu."
 								gets
+								system('clear'); system('cls')
 								return
 							end
-							puts "Incorrect set. There is only one soltuion. Try again.",""
+							system('clear'); system('cls')
+							puts "#{user_input[0]},#{user_input[1]},#{user_input[2]}\nIncorrect set. There is only one soltuion. Try again.",""
 						else
+							system('clear'); system('cls')
 							puts "Invalid command or set syntax."
 						end
 					end
@@ -251,7 +261,7 @@ attr_accessor :is_end
 	Returns: N/A
 =end
 	def get_deck
-		for color,shading,symbol,number in $Colors.product($Shadings,$Symbols, $Numbers)
+		for color,shading,symbol,number in Card.Colors.product(Card.Shadings,Card.Symbols, Card.Numbers)
 			@deck.push Card.new(color, shading, symbol, number)
 		end
 	end
@@ -388,7 +398,7 @@ end
 	Requires: user_input.class == Array, hand != nil, 0<=hand.length<=21
 	Updates: N/A
 	Returns: true if (user_input ===
-			[0...$hand.length, 0...$hand.length, 0...$hand.length])
+			[0...hand.length, 0...hand.length, 0...hand.length])
 		 false other wise
 =end
 	def good_set_syntax? user_input

@@ -37,7 +37,7 @@ module FindSet
   				}
   	Require: hand.class == Array; for each element in hand, element.class == Card
   	Updates: N/A
-  	Returns: hash with keys representing card attributes: {$Colors + $Shadings + $Symbols + $Numbers}
+  	Returns: hash with keys representing card attributes: {Card.Colors + Card.Shadings + Card.Symbols + Card.Numbers}
   		 and values corresponding to number of cards with this attribute in hand.
   		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
 
@@ -46,7 +46,7 @@ module FindSet
   		# create hash
   		hand_stat = Hash.new {|k,v| k[v] = []}
   		# create keys based on card attr, set to default [] value
-  		card_attrs = $Colors + $Shadings + $Symbols + $Numbers
+  		card_attrs = Card.Colors + Card.Shadings + Card.Symbols + Card.Numbers
   		card_attrs.each {|attr| hand_stat[attr.intern]}
   		# add cards to hash
   		for card in @hand
@@ -63,9 +63,9 @@ module FindSet
   	Edit: Ariel 5/26 Change formal parameter to instance variables
   	Description: Return a valid array of categories and their number of possible sets formed from a category.
   				For the purpose of reduce number of cases to check for find_set
-  	Example: For category $Colors, red has 3 cards, green has 2 cards, purple has 5 cards.
-  			Then, the possible sets formed from category $Colors is 3C3+5C3+3*2*5=41
-  	Requires: hand_stat != nil and hand_stat is hash with keys representing card attributes: {$Colors + $Shadings + 		$Symbols + $Numbers} and values corresponding to number of cards with this attribute in hand.
+  	Example: For category Card.Colors, red has 3 cards, green has 2 cards, purple has 5 cards.
+  			Then, the possible sets formed from category Card.Colors is 3C3+5C3+3*2*5=41
+  	Requires: hand_stat != nil and hand_stat is hash with keys representing card attributes: {Card.Colors + Card.Shadings + 		Card.Symbols + Card.Numbers} and values corresponding to number of cards with this attribute in hand.
   				hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
   	Updates: N/A
   	Returns: [["color",color_possible_set#],["shading",shading_possible_set#],["symbol",symbol_possible_set#],["number",number_possible_set#]] where for all scores, 0<=scores<=220
@@ -73,29 +73,29 @@ module FindSet
   def catg_set(hand_stat)
   	catg_score=[['color',0],['shading',0],['symbol',0],['number',0]]
 
-  	catg_score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[0][1] += $Colors.reduce 0 do
+  	catg_score[0][1] = Card.Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
+  	catg_score[0][1] += Card.Colors.reduce 0 do
   		|sum, feature|
   		len = hand_stat[feature.intern].length
   		sum + (len*(len-1)*(len-2).to_f/6)
   	end
 
-  	catg_score[1][1] = $Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[1][1] += $Shadings.reduce 0 do
+  	catg_score[1][1] = Card.Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+  	catg_score[1][1] += Card.Shadings.reduce 0 do
   		|sum, feature|
   		len = hand_stat[feature.intern].length
   		sum+(len*(len-1)*(len-2).to_f/6)
   	end
 
-  	catg_score[2][1] =  $Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[2][1] += $Symbols.reduce 0 do
+  	catg_score[2][1] =  Card.Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+  	catg_score[2][1] += Card.Symbols.reduce 0 do
   		|sum, feature|
   		len = hand_stat[feature.intern].length
   		sum+(len*(len-1)*(len-2).to_f/6)
   	end
 
-  	catg_score[3][1] =  $Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[3][1] += $Numbers.reduce 0 do
+  	catg_score[3][1] =  Card.Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+  	catg_score[3][1] += Card.Numbers.reduce 0 do
   		|sum, feature|
   		len = hand_stat[feature.intern].length
   		sum+(len*(len-1)*(len-2).to_f/6)
@@ -110,7 +110,7 @@ module FindSet
   	Editor: N/A
   	Description: Return a check table consists of combinations of set with lowest possible number of sets from hand.
   	Requires: |hand_stat| = |hand|*3
-  				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
+  				for all attribute ∈ (Card.Colors, Card.Shadings, Card.Symbols, Card.Numbers)
   				for all card in hand_stat[:attribute], card has attribute
   				hand_stat = {
   								attribute1:[Card, Card, Card]
@@ -131,13 +131,13 @@ module FindSet
   	check_catg = []
   	case category
   		when "color"
-  			category = $Colors
+  			category = Card.Colors
   		when "shading"
-  			category = $Shadings
+  			category = Card.Shadings
   		when "symbol"
-  			category = $Symbols
+  			category = Card.Symbols
   		when "number"
-  			category = $Numbers
+  			category = Card.Numbers
   	end
 
   	check_table = []
