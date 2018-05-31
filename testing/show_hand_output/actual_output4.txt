@@ -12,3 +12,4 @@
   9: green   solid     oval        3
  10: red     solid     oval        2
  11: green   open      oval        2
+[0, 1, 6]

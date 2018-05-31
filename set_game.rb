@@ -19,7 +19,7 @@ class SetGame
 =end
 def initialize
 	@start_time = Time.now
-	@end_time=Time.now
+	@end_time = Time.now
 	@save_time = 0.0
 	@top_card = 0
 	@number_of_hint = 0
@@ -207,9 +207,9 @@ attr_accessor :is_end
     Created: 5/27
 	Edit: Channing 5/29 Updated loop and shortened method
 	Description:
-		Selects difficulty level from easy, medium, hard. 
-		The easy level, the user can ask for hint 27 times at most. 
-		The medium level gives hints for 10 times at most. 
+		Selects difficulty level from easy, medium, hard.
+		The easy level, the user can ask for hint 27 times at most.
+		The medium level gives hints for 10 times at most.
 		The hard level gives hints for 5 times at most.
 	Require: N/A
 	Updates: @total_hint
@@ -227,7 +227,7 @@ attr_accessor :is_end
 			level = gets.chomp
 			break if valid_choice? level, 3
 		end
-		
+
 		case level
 		when "1" # Easy
 			@total_hint = 27
@@ -320,7 +320,7 @@ attr_accessor :is_end
 		path="stored_game/"+@username+"/"
 		Dir.mkdir path unless Dir.exist? path
 		file_name = path+gets.chomp+".setgame"
-		
+
 		#If the file name exist, ask the user for another file name
 		while File.exist?(file_name) || file_name.downcase.include?("menu")
 			puts "File name exist, please enter a new name."
@@ -334,7 +334,7 @@ attr_accessor :is_end
 				file_name = path+file_name+".setgame"
 			end
 		end
-		
+
 		#Return file name
 		file_name
 	end
@@ -355,9 +355,9 @@ attr_accessor :is_end
 		file_name = get_saved_games
 		return if file_name=="menu"
 		load = Marshal.load File.read(file_name)
-		
+
 		#Load the instance variables
-		@start_time = 0
+		@start_time = Time.now
 		@save_time = load[:save_time]
 		@top_card = load[:top_card]
 		@number_of_hint = load[:number_of_hint]
@@ -368,7 +368,7 @@ attr_accessor :is_end
 		@username = load[:username]
 		@total_hint=load[:total_hint]
 		@is_end = false
-		
+
 		#Output a message for the progress
 		msg1 = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%)"
 		msg2 = "You have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
@@ -378,7 +378,7 @@ attr_accessor :is_end
 		puts "**** "+msg2.center(msg1.length)+" ****"
 		(msg1.length+10).times {print "*"}
 		puts
-		
+
 		continue_game
 	end
 
@@ -394,13 +394,13 @@ attr_accessor :is_end
 	def show_saved_games
 		puts "\n=============Saved Game============="
 		path = "stored_game/"+@username+"/"
-		
+
 		#Check if the user have any saved games
 		if !Dir.exist?(path) || Dir.empty?(path)
 			puts "You don't have saved games.\n\n"
 			return "menu"
 		end
-		
+
 		#Output all the file names of saved games and creation time
 		Dir.foreach(path) do
 			|file_name|
@@ -420,7 +420,7 @@ attr_accessor :is_end
 =end
 	def get_saved_games
 		return "menu" if show_saved_games=="menu"
-		
+
 		#Ask for the file name to load game
 		puts "Please enter file name:(Enter \"menu\" to return menu)"
 		file_name = gets.chomp
@@ -437,7 +437,7 @@ attr_accessor :is_end
 			return "menu" if file_name=="menu"
 			file_name = path+file_name+".setgame"
 		end
-		
+
 		#Return file_name
 		file_name
 	end
@@ -456,7 +456,7 @@ def save_game_result
 	path="game_result/"
 	Dir.mkdir path unless Dir.exist? path
 	file_name = path+"#{@username}.csv"
-	
+
 	#If the statistics already exist, add a new row
 	if File.file?(file_name)
 		CSV.open(file_name, "a+") do |csv|
@@ -475,8 +475,8 @@ end
 	Author: Mike
 	Created: 5/26
 	Edit: Ariel 5/26 Change formal parameter to instance variables
-	Edit: Gail 5/27 Minor changes
-	Edit: Ariel 5/29 Minor changes
+	Edit: Gail 5/29 Add incrementation of @number_of_hint and @total_hint
+	Edit: Ariel 5/29 Add handle_no_set
 	Description: Enter auto_game mode to let the machine play the game.
 	Require: N/A
 	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
@@ -489,13 +489,14 @@ end
 	  get_hand
 		handle_no_set
 		until @is_end
+			show_progress
 			show_hand
 			hint = []
 			find_set.each do |card| hint.push(@hand.index(card)) end
 			@number_of_hint += 1
 			@total_hint += 1
 			puts hint.to_s
-	  		update hint
+			update hint
 			handle_no_set
 		end
 	end
@@ -567,7 +568,7 @@ end
 		#Output the title
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
-		
+
 		#Output the cards
 		hand.length.times{ |card|
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
@@ -583,7 +584,7 @@ end
 	Author: Ariel
 	Created: 5/29
 	Edit: N/A
-	Description: Add 3 cards to hand if hand don't have a set. 
+	Description: Add 3 cards to hand if hand don't have a set.
 					Check and handle the end of game.
 	Requires: @hand != nil, @deck != nil
 	Updates: @end_time, @is_end, @top_card, @hand
@@ -593,10 +594,10 @@ def handle_no_set
 	while find_set.empty? && !@is_end
 		if @top_card<81
 			add3
-			puts "No sets on hand, add three cards"
+			puts "\nNo sets on hand, add three cards"
 		else
 			puts "No sets on hand, no cards in deck, game is cleared"
-			puts "=============Game Over============="+""
+			puts "=============Game Over=============\n\n"
 			@is_end=true
 			@end_time=Time.now()
 			show_stat
@@ -706,7 +707,7 @@ def catg_set(hand_stat)
 		len = hand_stat[feature.intern].length
 		sum+(len*(len-1)*(len-2).to_f/6)
 	end
-	
+
 	catg_score
 end
 
@@ -828,12 +829,13 @@ end
 =end
     def show_progress
 	# bar_size is between 0 and 38
-        finish_size = (((@top_card-12).to_f / @deck.length.to_f) * 30).to_i
-		remain_size = 30 - finish_size
-		print "Progress: "
-		finish_size.times {print '▓' } 
-		remain_size.times {print '░'}
-		puts
+      finish_size = (((@top_card-12).to_f / (@deck.length-11).to_f) * 30).to_i
+			remain_size = 30 - finish_size
+			print "\nProgress: "
+			finish_size.times {print '▓' }
+			remain_size.times {print '░'}
+			puts
+			puts
     end
 
 
@@ -844,7 +846,7 @@ end
 	Description: Sets up puzzle mode game. Game generated only one solution.
 				Game can't be saved, scored or use hint.
 	Requires: N/A
-	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end 
+	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
 	Returns: N/A
 =end
 
@@ -855,14 +857,14 @@ end
 			get_deck
 			shuffle
 			get_hand
-			
+
 			#Set up a single solution game
 			solution = find_set
 			next if (solution == [])
 			solution.each {|card_in_set| removed_card = @hand.delete(card_in_set); break if (find_set != []); @hand << removed_card}
 			next if @hand.length < 12
 			@hand.shuffle!
-			
+
 			#Display message and ask user for input
 			loop do
 				show_hand
@@ -982,13 +984,13 @@ end
 			show_stat
 		#Check the user input form a set and display the correcponding message
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
-			puts "You entered " + user_input.to_s
+			puts "You entered " + user_input[0].to_s+","+user_input[1].to_s+","+user_input[2].to_s
 			puts
 			@number_of_correct += 1
-			puts "Congrats! You entered a correct set!\n\n",""
+			puts "Congrats! You entered a correct set!"
 			replace3(user_input)
 		else
-			puts user_input.to_s
+			puts "You entered " + user_input[0].to_s+","+user_input[1].to_s+","+user_input[2].to_s
 			@number_of_wrong += 1
 			puts "Sorry. Wrong set.",""
 		end
@@ -1019,7 +1021,7 @@ end
 	def replace3(user_input)
 		delete_count = 0
 		user_input.each { |card|
-			#Replace 3 cards 
+			#Replace 3 cards
 			if @hand.size == 12 && @top_card < @deck.size
 				@hand[card] = @deck[@top_card]
 				@top_card += 1
@@ -1063,7 +1065,7 @@ end
 	def show_stat
 		puts "=============Statistics============"
 		puts "Score: #{get_score}"
-		puts "Total time: #{(@end_time - @start_time + @save_time).truncate(2)} seconds"
+		puts "Total time:" + "%0.2f" %(@end_time - @start_time + @save_time) + " seconds"
 		puts "Number of sets found: #{@number_of_correct}"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
@@ -1082,12 +1084,12 @@ end
 				for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
 	Updates: N/A
 	Returns: True if there is at least a set in check_table combinations and false otherwise
-	
+
 =end
 	def set_exist(check_table,score)
 		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
 		order = [sortedScore[1][0]]+[sortedScore[2][0]]+[sortedScore[3][0]]
-		
+
 		for combination in check_table
 			return combination if check_set?(combination[0],combination[1],combination[2],order)
 		end
@@ -1176,16 +1178,22 @@ end
 =begin
 	Author: Ariel
 	Created: 5/29
-	Edit: N/A
+	Edit: Gail 5/30 added if-else statement to return score
 	Description: Give user score calculated by the following function:
-					((360000/((@end_time - @start_time) + @save_time))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
-				Accurate to 2 decimal places
+		((360000/((@end_time - @start_time) + @save_time))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
+		If the calculated score is negative, then return 0;
+		otherwise, return the calculated score (accurate to 2 decimal places).
 	Requires: N/A
 	Updates: N/A
 	Returns: score
 =end
 	def get_score
-		return ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
+		score = ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
+		if score < 0
+			return 0
+		else
+			return score
+		end
 	end
 end
 
@@ -1221,7 +1229,7 @@ def show_result
 		puts "Average".center(18)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
 		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	else
-		puts "No game history avaiable for now"
+		puts "No game history available for now"
 	end
 end
 

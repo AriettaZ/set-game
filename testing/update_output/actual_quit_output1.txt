@@ -1,0 +1,7 @@
+=============Game Over=============
+
+=============Statistics============
+Score: 0.0
+Total time: 0.0 seconds
+Number of sets found: 0
+0/0 hints used
