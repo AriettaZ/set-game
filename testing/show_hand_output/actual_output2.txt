@@ -1,0 +1,6 @@
+  #  Color   Shading   Symbol    Number
+----------------------------------------
+  0: red     open      oval        1
+  1: red     open      oval        3
+  2: green   open      oval        3
+[]

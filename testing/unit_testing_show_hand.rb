@@ -40,8 +40,8 @@ class TestShowHand < Test::Unit::TestCase
 		actual_output = File.new 'show_hand_output/actual_output1.txt', 'w'
 		$stdout = actual_output
 		game = SetGame.new
-		hand = []
-		game.show_hand hand
+		game.hand = []
+		game.show_hand
 		actual_output.close
 		assert_true FileUtils.compare_file('show_hand_output/expected_output1.txt', 'show_hand_output/actual_output1.txt')
 	end
@@ -51,8 +51,8 @@ class TestShowHand < Test::Unit::TestCase
 		actual_output = File.new 'show_hand_output/actual_output2.txt', 'w'
 		$stdout = actual_output
 		game = SetGame.new
-		hand = [CARD1, CARD3, CARD9]
-		game.show_hand hand
+		game.hand = [CARD1, CARD3, CARD9]
+		game.show_hand
 		actual_output.close
 		assert_true FileUtils.compare_file('show_hand_output/expected_output2.txt', 'show_hand_output/actual_output2.txt')
 	end
@@ -62,8 +62,8 @@ class TestShowHand < Test::Unit::TestCase
 		actual_output = File.new 'show_hand_output/actual_output3.txt', 'w'
 		$stdout = actual_output
 		game = SetGame.new
-		hand = [CARD1, CARD3, CARD9, CARD2, CARD8, CARD5]
-		game.show_hand hand
+		game.hand = [CARD1, CARD3, CARD9, CARD2, CARD8, CARD5]
+		game.show_hand
 		actual_output.close
 		assert_true FileUtils.compare_file('show_hand_output/expected_output3.txt', 'show_hand_output/actual_output3.txt')
 	end
@@ -73,8 +73,8 @@ class TestShowHand < Test::Unit::TestCase
 		actual_output = File.new 'show_hand_output/actual_output4.txt', 'w'
 		$stdout = actual_output
 		game = SetGame.new
-		hand = [CARD1, CARD2, CARD15, CARD4, CARD6, CARD9, CARD3, CARD10, CARD7, CARD12, CARD14, CARD8]
-		game.show_hand hand
+		game.hand = [CARD1, CARD2, CARD15, CARD4, CARD6, CARD9, CARD3, CARD10, CARD7, CARD12, CARD14, CARD8]
+		game.show_hand
 		actual_output.close
 		assert_true FileUtils.compare_file('show_hand_output/expected_output4.txt', 'show_hand_output/actual_output4.txt')
 	end
@@ -84,8 +84,8 @@ class TestShowHand < Test::Unit::TestCase
 		actual_output = File.new 'show_hand_output/actual_output5.txt', 'w'
 		$stdout = actual_output
 		game = SetGame.new
-		hand = [CARD1, CARD8, CARD5, CARD4, CARD13, CARD6, CARD7, CARD2, CARD9, CARD10, CARD11, CARD12, CARD3, CARD14, CARD17, CARD16, CARD17, CARD15]
-		game.show_hand hand
+		game.hand = [CARD1, CARD8, CARD5, CARD4, CARD13, CARD6, CARD7, CARD2, CARD9, CARD10, CARD11, CARD12, CARD3, CARD14, CARD17, CARD16, CARD17, CARD15]
+		game.show_hand
 		actual_output.close
 		assert_true FileUtils.compare_file('show_hand_output/expected_output5.txt', 'show_hand_output/actual_output5.txt')
 	end
