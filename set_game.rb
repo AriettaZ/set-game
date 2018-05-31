@@ -839,7 +839,7 @@ end
     Returns: N/A
 =end
     def show_progress
-	# bar_size is between 0 and 38
+			# bar_size is between 0 and 30
       finish_size = (((@top_card-12).to_f / (@deck.length-11).to_f) * 30).to_i
 			remain_size = 30 - finish_size
 			print "\nProgress: "
