@@ -12,4 +12,4 @@ loop do
   break if !game.menu_redirect_choice?(game.menu_get_choice)
 end
 
-puts "Goodbye~"
+puts "Goodbye"
