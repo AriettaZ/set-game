@@ -19,7 +19,7 @@ class SetGame
 =end
 def initialize
 	@start_time = Time.now
-	@end_time=Time.now
+	@end_time = Time.now
 	@save_time = 0.0
 	@top_card = 0
 	@number_of_hint = 0
@@ -357,7 +357,7 @@ attr_accessor :is_end
 		load = Marshal.load File.read(file_name)
 
 		#Load the instance variables
-		@start_time = 0
+		@start_time = Time.now
 		@save_time = load[:save_time]
 		@top_card = load[:top_card]
 		@number_of_hint = load[:number_of_hint]
@@ -1065,7 +1065,7 @@ end
 	def show_stat
 		puts "=============Statistics============"
 		puts "Score: #{get_score}"
-		puts "Total time: #{(@end_time - @start_time + @save_time).truncate(2)} seconds"
+		puts "Total time:" + "%0.2f" %(@end_time - @start_time + @save_time) + " seconds"
 		puts "Number of sets found: #{@number_of_correct}"
 		puts  "#{@number_of_hint}/#{@total_hint} hints used"
 	end
