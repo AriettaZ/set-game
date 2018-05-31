@@ -73,34 +73,15 @@ module FindSet
   def catg_set(hand_stat)
   	catg_score=[['color',0],['shading',0],['symbol',0],['number',0]]
 
-  	catg_score[0][1] = Card.Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[0][1] += Card.Colors.reduce 0 do
-  		|sum, feature|
-  		len = hand_stat[feature.intern].length
-  		sum + (len*(len-1)*(len-2).to_f/6)
-  	end
-
-  	catg_score[1][1] = Card.Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[1][1] += Card.Shadings.reduce 0 do
-  		|sum, feature|
-  		len = hand_stat[feature.intern].length
-  		sum+(len*(len-1)*(len-2).to_f/6)
-  	end
-
-  	catg_score[2][1] =  Card.Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[2][1] += Card.Symbols.reduce 0 do
-  		|sum, feature|
-  		len = hand_stat[feature.intern].length
-  		sum+(len*(len-1)*(len-2).to_f/6)
-  	end
-
-  	catg_score[3][1] =  Card.Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-  	catg_score[3][1] += Card.Numbers.reduce 0 do
-  		|sum, feature|
-  		len = hand_stat[feature.intern].length
-  		sum+(len*(len-1)*(len-2).to_f/6)
-  	end
-
+    [Card.Colors, Card.Shadings, Card.Symbols, Card.Numbers].each_with_index do
+      |category, index|
+      catg_score[index][1] = category.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
+      catg_score[index][1] += category.reduce 0 do
+      		|sum, feature|
+      		len = hand_stat[feature.intern].length
+      		sum + (len*(len-1)*(len-2).to_f/6)
+      	end
+    end
   	catg_score
   end
 
