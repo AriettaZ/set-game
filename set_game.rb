@@ -7,10 +7,16 @@ require 'csv'
 
 class SetGame
 
-#Create: Ariel
-#Create Date: 5/26
-#Edit: Mike 5/27
-#Edit: Ariel 5/29
+=begin
+	Author: Ariel
+	Created: 5/26
+	Edit: Mike 5/27 Change @save_time to 0.0
+	Edit: Ariel 5/29 Add @end_time and @is_end
+	Description: Initialize the instance variables.
+	Requires: N/A
+	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
+	Returns: N/A
+=end
 def initialize
 	@start_time = Time.now
 	@end_time=Time.now
@@ -40,13 +46,11 @@ attr_accessor :is_end
 
 =begin
 	Author: Gail Chen
-	Date: 5/25
-	Edit: 5/26 Gail created and used show_menu method
-		  5/29 Gail shortened method and deleted show_menu method
+	Created: 5/25
+	Edit: Gail 5/26 created and used show_menu method
+	Edit: Gail 5/29 shortened method and deleted show_menu method
 	Description:
-		Prints menu to the screen and get valid user's choice. The menu shows
-		choices of New Game, Tutorial, Load Game, Delette Saved Game,
-		Auto-Playing Game and Quit. The user must choose a valid option by typing
+		Prints menu to the screen and get valid user's choice. The user must choose a valid option by typing
 		the number of that option. The method returns an integer of corresponding
 		user's choice.
 	Requires: N/A
@@ -77,9 +81,9 @@ attr_accessor :is_end
 	Created: 5/26
 	Edit: Mike 5/27 change save_time to 0
 	Edit: Ariel 5/29 move start_time setter to get_hand
-	Description: clear game setting related variables
+	Description: Reinitialize the variables.
 	Requires: N/A
-	Updates: add @is_end
+	Updates: @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
 	Returns: N/A
 =end
 	def clear
@@ -98,13 +102,13 @@ attr_accessor :is_end
 =begin
 	Author: Gail Chen
 	Created: 5/25
-	Edit: 5/26 Gail added a message to ask the user to enter a valid choice
-	      5/27 Gail modified the method to check valid menu option and valid level
+	Edit: Gail 5/26 added a message to ask the user to enter a valid choice
+	Edit: Gail 5/27 modified the method to check valid menu option and valid level
 	Description:
 		Checks user enters an integer between 1 and max where max is the largest
 		integer the user is allowed to enter.
 	Requires:
-		user_input.class == String, max == 6 if this method is called in
+		user_input.class == String, max == 8 if this method is called in
 		menu_get_choice, max == 3 if this method is called in select_level.
 	Updates: N/A
 	Returns:
@@ -122,15 +126,16 @@ attr_accessor :is_end
 =begin
 	Author: Ariel
 	Created: 5/26
-	Edit: 5/26 Gail minor changes
-	Edit: 5/28 Channing, Updated to return a polar value.
-	Edit: 5/29 Ariel add choice 6
+	Edit: Gail 5/26 Minor changes
+	Edit: Channing 5/28 Updated to return a polar value.
+	Edit: Ariel 5/29 Add choice 6 - game result history
+	Edit: Channing 5/29 Add choice 7 - puzzle mode
 	Description: This method redirects user to different tracks.
-	A polar return value tracks whether the user wants to quit
-	the game.
+		A polar return value tracks whether the user wants to quit
+		the game.
 	Requires: choice.class == integer
 	Updates: N/A
-	Returns: choice == 7 ? false : true
+	Returns: false if user input 8 and true if user input∈[1..7]
 =end
 	def menu_redirect_choice?(choice)
 		case choice
@@ -163,9 +168,9 @@ attr_accessor :is_end
 
 =begin
 	Author: Mike
-	Date created: 5/28
+	Created: 5/28
 	Edit: N/A
-	Description: Get username from user
+	Description: Ask user to enter their username.
 	Require: N/A
 	Updates: @username
 	Returns: N/A
@@ -173,24 +178,13 @@ attr_accessor :is_end
 	def get_username mode="new"
 		puts "Please enter your username:"
 		@username = gets.chomp
-	#	case mode
-	#		when "exist"
-	#			unless Dir.exist? "stat/"+username+".setgame.stat" || Dir.exist
-	#				puts "Sorry, the user name. Please enter another one."
-	#				@username = gets.chomp
-	#			end
-	#		when "new"
-	#			while Dir.exist? "stat/"+username+".setgame.stat"
-	#				puts "Sorry, the user name has taken. Please enter another one."
-	#				@username = gets.chomp
-	#			end
 	end
 
 =begin
 	Author: Mike
-	Create Date: 5/26
-	Edit: 5/26 Ariel, Mike
-		  5/27 Gail added select_level
+	Created: 5/26
+	Edit: Ariel, Mike 5/26
+	Edit: Gail 5/27 added select_level
 	Description: Starts a new game.
 	Require: N/A
 	Updates:
@@ -210,20 +204,19 @@ attr_accessor :is_end
 
 =begin
 	Author: Gail Chen
-  Date created: 5/27
-	Edit: Channing, Updated loop and shortened method
+    Created: 5/27
+	Edit: Channing 5/29 Updated loop and shortened method
 	Description:
-		Selects difficulty level from easy, medium, hard. In the easy level,
-		the user can ask for hint 27 times at most and the specific cards in a
-		set wil be given. The medium level gives hints for 10 times at most and
-		tells two of the three cards in the set. The hard level gives hints for
-		5 times at most with one of the three cards in the set.
+		Selects difficulty level from easy, medium, hard.
+		The easy level, the user can ask for hint 27 times at most.
+		The medium level gives hints for 10 times at most.
+		The hard level gives hints for 5 times at most.
 	Require: N/A
 	Updates: @total_hint
 	Returns: N/A
 =end
 	def select_level
-		mode = nil
+		level = nil
 		loop do
 			puts ""
 			puts "Choose difficulty Level:"
@@ -231,16 +224,16 @@ attr_accessor :is_end
 			puts "[2] Medium"
 			puts "[3] Hard"
 			puts "Enter the number of the corresponding difficulty level:"
-			mode = gets.chomp
-			break if valid_choice? mode, 3
+			level = gets.chomp
+			break if valid_choice? level, 3
 		end
 
-		case mode
-		when "1"
+		case level
+		when "1" # Easy
 			@total_hint = 27
-		when "2"
+		when "2" # Medium
 			@total_hint = 10
-		when "3"
+		when "3" # Hard
 			@total_hint = 5
 		end
 	end
@@ -248,13 +241,11 @@ attr_accessor :is_end
 
 =begin
 	Author: Mike
-	Date created: 5/26
-
-	Edit: Gail 5/27 added update call after the loop to show the result of game
-	Edit: Channing, moved user save input handling to get_user_cards & added sleep
-	Edit: Ariel: comment out sleep since time measurement, add handle_no_set
+	Created: 5/26
+	Edit: Channing 5/29 moved user save input handling to get_user_cards
+	Edit: Ariel 5/29 add handle_no_set
 	Description:Continue the game from new_game or load_game
-			by showing the user current hand and let user find a set.
+				by showing the user current hand and let user find a set.
 	Require: SetGame object has all instance variable set up
 	Updates: N/A
 	Returns: N/A
@@ -262,7 +253,6 @@ attr_accessor :is_end
 	def continue_game
 		handle_no_set
 		until @is_end
-			# sleep(1) # wait 1 second
 			show_progress
 			show_hand
 			user_input = get_user_cards
@@ -273,9 +263,9 @@ attr_accessor :is_end
 
 =begin
 	Author: Mike
-	Date created: 5/26
+	Created: 5/26
 	Edit: N/A
-	Description:Delete game archive from saved games
+	Description: Delete game archive from stored_game/@username/ folder
 	Require: N/A
 	Updates: Selected game file.
 	Returns: N/A
@@ -290,9 +280,11 @@ attr_accessor :is_end
 
 =begin
 	Author: Mike
-	Date created: 5/26
-	Edit: Mike 5/27
-	Description:Save a game archive by creating a .setgame file under stored_game directory
+	Created: 5/26
+	Edit: Ariel 5/26 Change formal parameter to instance variables
+	Edit: Ariel 5/27 change the formal parameter to instance variables
+	Edit: Mike 5/27 update the method for the new instance variables
+	Description: Save a game archive by creating a .setgame file under stored_game/@username/ directory
 	Require: N/A
 	Updates: N/A
 	Returns: N/A
@@ -315,18 +307,21 @@ attr_accessor :is_end
 
 =begin
 	Author: Mike
-	Date created: 5/26
-	Edit: Channing (pending on channing_dev #=> allowing for overwriting of files)
-	Description:Get file name for the game to save
+	Created: 5/26
+	Edit: Mike 5/27 Add @username choice
+	Description: Get file name for the game to save
 	Require: N/A
 	Updates: N/A
-	Returns: File name for the game to save
+	Returns: File name (with directory) for the game to save
 =end
 	def get_save_information
+		#Ask and construct file name and create @username directory
 		puts "Please enter file name:"
 		path="stored_game/"+@username+"/"
 		Dir.mkdir path unless Dir.exist? path
 		file_name = path+gets.chomp+".setgame"
+
+		#If the file name exist, ask the user for another file name
 		while File.exist?(file_name) || file_name.downcase.include?("menu")
 			puts "File name exist, please enter a new name."
 			puts "(Enter \"saved\" to see the saved games)"
@@ -339,25 +334,29 @@ attr_accessor :is_end
 				file_name = path+file_name+".setgame"
 			end
 		end
+
+		#Return file name
 		file_name
 	end
 
 =begin
 	Author: Mike
-	Date created: 5/26
+	Created: 5/26
+	Edit: Ariel 5/26 Change formal parameter to instance variables
 	Edit: Mike 5/27 Output message to give more information about the progress
 	Description: Load all instance variables of a game, output a message and let the user continue the game.
 	Require: N/A
-	Updates: N/A
+	Updates: @start_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
 	Returns: N/A
-	#TODO handle bugs in loading games - Talk with Channing
 =end
 	def load_game
+		#Get information for game to load
 		get_username
 		file_name = get_saved_games
 		return if file_name=="menu"
 		load = Marshal.load File.read(file_name)
-		#Load the game
+
+		#Load the instance variables
 		@start_time = 0
 		@save_time = load[:save_time]
 		@top_card = load[:top_card]
@@ -369,92 +368,101 @@ attr_accessor :is_end
 		@username = load[:username]
 		@total_hint=load[:total_hint]
 		@is_end = false
-		msg = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%) and have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
+
+		#Output a message for the progress
+		msg1 = "You have completed #{@number_of_correct} sets (roughly #{(@number_of_correct*100).fdiv(27).truncate(2)}%)"
+		msg2 = "You have #{@total_hint-@number_of_hint} hints left. Lets Continue!"
 		puts
-		(msg.length+10).times {print "*"}
-		puts "\n**** "+msg+" ****"
-		(msg.length+10).times {print "*"}
+		(msg1.length+10).times {print "*"}
+		puts "\n**** "+msg1+" ****"
+		puts "**** "+msg2.center(msg1.length)+" ****"
+		(msg1.length+10).times {print "*"}
 		puts
+
 		continue_game
 	end
 
 =begin
 	Author: Mike
-	Date created: 5/28
+	Created: 5/28
 	Edit: N/A
 	Description: Output saved games with current username
-	Require: N/A
+	Require: stored_game directory created
 	Updates: N/A
 	Returns: N/A
 =end
 	def show_saved_games
-		puts "\n=========Saved Game========="
+		puts "\n=============Saved Game============="
 		path = "stored_game/"+@username+"/"
+
+		#Check if the user have any saved games
 		if !Dir.exist?(path) || Dir.empty?(path)
 			puts "You don't have saved games.\n\n"
 			return "menu"
 		end
+
+		#Output all the file names of saved games and creation time
 		Dir.foreach(path) do
 			|file_name|
-			puts File.basename(file_name,'.setgame')+"  "+File.new(path+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
+			puts File.basename(file_name,'.setgame').ljust(15)+"  "+File.new(path+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
 		end
 		puts
 	end
 
 =begin
 	Author: Mike
-	Date created: 5/26
-	Edit: Mike 5/28
+	Created: 5/26
+	Edit: Mike 5/28 Add menu choice
 	Description: Output a list of saved game and let the user to choose which game to load from.
-	Require: N/A
+	Require: stored_game directory created
 	Updates: N/A
 	Returns: File name for the game to load or "menu" if the user want to go back to menu
 =end
 	def get_saved_games
 		return "menu" if show_saved_games=="menu"
 
+		#Ask for the file name to load game
 		puts "Please enter file name:(Enter \"menu\" to return menu)"
 		file_name = gets.chomp
 		path="stored_game/"+@username+"/"
 		return "menu" if file_name=="menu"
 		file_name = path+file_name+".setgame"
 
+		#If file name not exist, show the saved game list again
 		until File.exist? file_name
 			puts "File name does not exist."
-			puts
-			puts "=========Saved Game========="
-
-			Dir.foreach(path) do
-				|file_name|
-				puts File.basename(file_name,'.setgame')+"  "+File.new(path+file_name).ctime.strftime("%F %T") if File.extname(file_name)==".setgame"
-			end
-
-			puts
-			puts "Please enter file name to load:(Enter \"menu\" to return menu)"
+			show_saved_games
+			puts "Please reenter file name to load:(Enter \"menu\" to return menu)"
 			file_name = gets.chomp
 			return "menu" if file_name=="menu"
 			file_name = path+file_name+".setgame"
 		end
+
+		#Return file_name
 		file_name
 	end
 
 =begin
 	Author: Ariel
-	Date created: 5/29
-	Edit:
-	Description:
+	Created: 5/29
+	Edit: N/A
+	Description: Save game statistics to @username.csv under game_result directory
 	Require: N/A
-	Updates: N/A
-	Returns:
+	Updates: game_result/@username/@username.csv
+	Returns: N/A
 =end
 def save_game_result
+	#Create csv directory and file
 	path="game_result/"
 	Dir.mkdir path unless Dir.exist? path
 	file_name = path+"#{@username}.csv"
+
+	#If the statistics already exist, add a new row
 	if File.file?(file_name)
 		CSV.open(file_name, "a+") do |csv|
 			csv << [@start_time, (@end_time - @start_time + @save_time).to_f,get_score,@number_of_correct,@number_of_wrong,@total_hint,@number_of_hint]
 		end
+	#If the statistics not exist, create the file and add a new row
 	else
 		CSV.open(file_name, "a+",	:write_headers => true,
 				:headers => ["Start Time","Time Spent(secs)","Score","Correct Sets","Wrong Sets","Total Hints","Used Hints"]) do |csv|
@@ -465,25 +473,22 @@ end
 
 =begin
 	Author: Mike
-	Date created: 5/26
-	Edit: Ariel 5/26
-	Edit: Gail 5/27
-	Edit: Ariel 5/29
+	Created: 5/26
+	Edit: Ariel 5/26 Change formal parameter to instance variables
+	Edit: Gail 5/29 Add incrementation of @number_of_hint and @total_hint
+	Edit: Ariel 5/29 Add handle_no_set
 	Description: Enter auto_game mode to let the machine play the game.
 	Require: N/A
-	Updates: N/A
+	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
 	Returns: N/A
 =end
 	def auto_game
-	  #generate 81 cards and shuffled
 	  clear
 	  get_deck
 	  shuffle
-	  #top_card is the next card to be selected in deck
 	  get_hand
 		handle_no_set
 		until @is_end
-			# sleep(1) # wait 1 second
 			show_progress
 			show_hand
 			hint = []
@@ -491,17 +496,18 @@ end
 			@number_of_hint += 1
 			@total_hint += 1
 			puts hint.to_s
-	  	update hint
+			update hint
 			handle_no_set
 		end
 	end
 
 =begin
 	Author: Ariel
-	Date created: 5/21
-	Edit: Mike 5/24
-	Edit: Mike 5/25
-	Edit: Mike 5/27
+	Created: 5/21
+	Edit: Mike 5/24 Simplify the index to for-in loop
+	Edit: Mike 5/25 Simplify deck[x] to deck.push
+	Edit: Ariel 5/26 Change formal parameter to instance variables
+	Edit: Mike 5/27 Simplify for-in loop
 	Description: Create a deck of 81 Card objects. ∀x,y∈deck(x.color!=y.color;x.shading!=y.shading;x.symbol!=y.symbol;x.number!=y.number)
 	Require: N/A
 	Updates: @deck
@@ -515,11 +521,12 @@ end
 
 =begin
 	Author: Mike
-	Date created: 5/22
-	Description: Shuffle the deck
-	Requires: deck != nil
-	Updates: deck
-	Returns: Shuffled deck
+	Created: 5/22
+	Edit: Ariel 5/26 Change formal parameter to instance variables
+	Description: Shuffle the @deck
+	Requires: @deck != nil
+	Updates: @deck
+	Returns: N/A
 =end
 	def shuffle
 		@deck.shuffle!
@@ -527,9 +534,9 @@ end
 
 =begin
 	Author: Gail Chen
-	Date created: 5/22
+	Created: 5/22
 	Edit: 5/25 Gail Chen optimized the method
-	5/29 Ariel add start_time
+	Edit: 5/29 Ariel add start_time
 	Description:
 		This method adds 12 top cards from deck to @deck array.
 	Requires:
@@ -558,13 +565,16 @@ end
 	Returns: Pretty prints details of cards in hand to the screen.
 =end
 	def show_hand hand=@hand
-		# system('clear'); system('cls')
+		#Output the title
 		puts "#".center(5)+"Color".ljust(8)+"Shading".ljust(10)+"Symbol".ljust(10)+"Number"
 		puts "----------------------------------------"
+
+		#Output the cards
 		hand.length.times{ |card|
 			puts "#{card}".rjust(3)+": "+"#{hand[card].color}".ljust(8)+"#{hand[card].shading}".ljust(10)+"#{hand[card].symbol}".ljust(10)+" #{hand[card].number}".rjust(3)
 		}
 
+		#Gives hint for easy development/testing
 		hint = []
 		find_set.each do |card| hint.push(@hand.index(card)) end
 		puts hint.to_s
@@ -574,9 +584,10 @@ end
 	Author: Ariel
 	Created: 5/29
 	Edit: N/A
-	Description: N/A
-	Requires: N/A
-	Updates: N/A
+	Description: Add 3 cards to hand if hand don't have a set.
+					Check and handle the end of game.
+	Requires: @hand != nil, @deck != nil
+	Updates: @end_time, @is_end, @top_card, @hand
 	Returns: N/A
 =end
 def handle_no_set
@@ -597,11 +608,14 @@ end
 
 =begin
 	Author: Channing, Mike
-	Date: 5/25
-	Editor: Mike 5/27
-	Description: Finds 1 or all valid sets in hand.
+	Created: 5/25
+	Editor: Mike 5/27 change function names and method logic
+	Description: Finds 1 valid sets in hand.
+	Requires: @hand != nil
+	Updates: N/A
+	Returns: An array of valid set or an empty array if there don't exist any set.
 =end
-	def find_set(mode = 'hint')
+	def find_set
 		# Create a hash to represent the number of cards in each section of the table
 		hand_stat  = organize
 
@@ -617,15 +631,23 @@ end
 
 =begin
 	Author: Channing
-	Date: 5/25
-	Editor:
+	Created: 5/25
+	Edit: Ariel 5/26 Change formal parameter to instance variables
 	Description: Create a hash to hold statistics (counts) of the number of each card
-	attribute found within the hand.
+				attribute found within the hand.
+	Example: hand_stat = {
+				red: [card1, card2, card5]
+				purple: [card3, card4, card6]
+				green: []
+				...
+				attribute12: [Card, Card, Card, Card]
+				}
 	Require: hand.class == Array; for each element in hand, element.class == Card
 	Updates: N/A
 	Returns: hash with keys representing card attributes: {$Colors + $Shadings + $Symbols + $Numbers}
 		 and values corresponding to number of cards with this attribute in hand.
 		 hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
+
 =end
 	def organize
 		# create hash
@@ -644,52 +666,56 @@ end
 
 =begin
 	Author: Mike
-	Date: 5/25
-	Editor: N/A
-	Description: Return a valid array of categories and their scores.
-	Requires: hand_Stat filled up
+	Created: 5/25
+	Edit: Ariel 5/26 Change formal parameter to instance variables
+	Description: Return a valid array of categories and their number of possible sets formed from a category.
+				For the purpose of reduce number of cases to check for find_set
+	Example: For category $Colors, red has 3 cards, green has 2 cards, purple has 5 cards.
+			Then, the possible sets formed from category $Colors is 3C3+5C3+3*2*5=41
+	Requires: hand_stat != nil and hand_stat is hash with keys representing card attributes: {$Colors + $Shadings + 		$Symbols + $Numbers} and values corresponding to number of cards with this attribute in hand.
+				hash { this_card_attr : [hand.each {|card| card.has(this_card_attr)}]
 	Updates: N/A
-	Returns: [["color",color_score],["shading",shading_score],["symbol",symbol_score],["number",number_score]]
-		 where for all scores, 0<=scores<=220
+	Returns: [["color",color_possible_set#],["shading",shading_possible_set#],["symbol",symbol_possible_set#],["number",number_possible_set#]] where for all scores, 0<=scores<=220
 =end
 def catg_set(hand_stat)
-	score=[['color',0],['shading',0],['symbol',0],['number',0]]
+	catg_score=[['color',0],['shading',0],['symbol',0],['number',0]]
 
-	score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
-	score[0][1] += $Colors.reduce 0 do
+	catg_score[0][1] = $Colors.reduce 1 do|product, feature| product * hand_stat[feature.intern].length end
+	catg_score[0][1] += $Colors.reduce 0 do
 		|sum, feature|
 		len = hand_stat[feature.intern].length
 		sum + (len*(len-1)*(len-2).to_f/6)
 	end
 
-	score[1][1] = $Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-	score[1][1] += $Shadings.reduce 0 do
+	catg_score[1][1] = $Shadings.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	catg_score[1][1] += $Shadings.reduce 0 do
 		|sum, feature|
 		len = hand_stat[feature.intern].length
 		sum+(len*(len-1)*(len-2).to_f/6)
 	end
 
-	score[2][1] =  $Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-	score[2][1] += $Symbols.reduce 0 do
+	catg_score[2][1] =  $Symbols.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	catg_score[2][1] += $Symbols.reduce 0 do
 		|sum, feature|
 		len = hand_stat[feature.intern].length
 		sum+(len*(len-1)*(len-2).to_f/6)
 	end
 
-	score[3][1] =  $Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
-	score[3][1] += $Numbers.reduce 0 do
+	catg_score[3][1] =  $Numbers.reduce 1 do |product, feature| product * hand_stat[feature.intern].length end
+	catg_score[3][1] += $Numbers.reduce 0 do
 		|sum, feature|
 		len = hand_stat[feature.intern].length
 		sum+(len*(len-1)*(len-2).to_f/6)
 	end
-	score
+
+	catg_score
 end
 
 =begin
 	Author: Mike
-	Date: 5/25
-	Editor:
-	Description: Return a check table consists of possible combinations of set from hand.
+	Created: 5/25
+	Editor: N/A
+	Description: Return a check table consists of combinations of set with lowest possible number of sets from hand.
 	Requires: |hand_stat| = |hand|*3
 				for all attribute ∈ ($Colors, $Shadings, $Symbols, $Numbers)
 				for all card in hand_stat[:attribute], card has attribute
@@ -697,20 +723,18 @@ end
 								attribute1:[Card, Card, Card]
 								attribute2:[Card, Card, Card]
 								...
-								attribute3:[Card, Card, Card]
+								attribute12:[Card, Card, Card]
 							}
-
 				score.class = Array
 					for element in score, element.class = Array, element.length = 2
 					for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
 	Updates: N/A
 	Returns: [[Card, Card, Card],[Card,Card,Card],...,[Card,Card,Card]]
-		 where each [Card,Card,Card] is a possible combination of set from hand.
+		 where each [Card,Card,Card] is a possible combination of set (with lowest possible number of sets from )hand.
 =end
-
-def get_check_table(hand_stat,score)
-	sortedScore = score.sort{|a,b| a[1]<=>b[1]}
-	category = sortedScore[0][0]
+def get_check_table(hand_stat,catg_score)
+	sorted_catg_score = catg_score.sort{|a,b| a[1]<=>b[1]}
+	category = sorted_catg_score[0][0]
 	check_catg = []
 	case category
 		when "color"
@@ -737,8 +761,9 @@ end
 
 =begin
 	Author: Channing Jacobs
-	Date: 2/24 (heavily revised on 2/28)
-	Editor: 5/29 Ariel (change return value of quit)
+	Created: 5/24
+	Edit: Channing 5/28 Add help list and add hint, quit, save, show functionality
+	Edit: Ariel 5/29 change return value of quit
 
 	Description: Handles user input. Non-return cases: handles tutorial display,
 	hint display, save_game call, and will show_hand.
@@ -750,12 +775,10 @@ end
 	"none".
 
 	Requires: N/A
-	Updates: N/A
+	Updates: @top_card, @hand
 	Returns: [] || [Integer, Integer, Integer]
 		 where for all Integer : 0 < Integer < total_cards
-TODO: decide what to do with "none" input from user
 =end
-
 def get_user_cards
 	loop do
 		print "\nEnter your set or type 'help': "
@@ -798,8 +821,9 @@ end
 =begin
     Author: Channing Jacobs
     Created: 5/29
+	Edit: Mike, Gail 5/30 Format output
     Description: Displays the progress of the current game.
-    Requires: N/A
+    Requires: @top_card != nil, @deck != nil
     Updates: N/A
     Returns: N/A
 =end
@@ -817,40 +841,31 @@ end
 
 =begin
 	Author: Channing Jacobs
-	Date: 5/29
-	Description: Sets up puzzle mode game. Game generated with only one solution.
-	Game can't be saved or scored.
+	Created: 5/29
+	Edit: N/A
+	Description: Sets up puzzle mode game. Game generated only one solution.
+				Game can't be saved, scored or use hint.
+	Requires: N/A
+	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
+	Returns: N/A
 =end
 
 	def puzzle_game
-
 		loop do
+			#Set up deck and hand
 			clear
 			get_deck
 			shuffle
 			get_hand
+
+			#Set up a single solution game
 			solution = find_set
 			next if (solution == [])
-
 			solution.each {|card_in_set| removed_card = @hand.delete(card_in_set); break if (find_set != []); @hand << removed_card}
 			next if @hand.length < 12
-
-=begin
-
-			card = @hand.delete_at(@hand.find_index(solution[0]))
-			next if (find_set != [])
-			@hand << card
-
-			card = @hand.delete_at(@hand.find_index(solution[1]))
-			next if (find_set != [])
-			@hand << card
-
-			card = @hand.delete_at(@hand.find_index(solution[2]))
-			next if (find_set != [])
-			@hand << card
-=end
 			@hand.shuffle!
 
+			#Display message and ask user for input
 			loop do
 				show_hand
 				print "\nEnter your set or type 'quit': "
@@ -885,36 +900,28 @@ end
 	of conforming to being a string representation of an array. The array
 	of integers represents the cards that were picked from the user's hand.
 	Thus they are indicies of the hand array. There should be 3 cards to
-	form a set. [] indicates that the user believes there is no possible set
-	and the hand may need to be updated. All other inputs are invalid.
+	form a set. All other inputs are invalid.
 	Requires: user_input.class == Array, hand != nil, 0<=hand.length<=21
 	Updates: N/A
 	Returns: true if (user_input ===
-			[0..$hand.length, 0..$hand.length, 0..$hand.length] ||
-			user_input === [])
-		 false else
-
-	TODO make returns clause correct
-	TODO MUST CHANGE THE HARDCODED 2 to $hand.lenght
-	TODO remove comment on the require of main method (or hand...class vars)
-	TODO missing check that integers must be unique
+			[0...$hand.length, 0...$hand.length, 0...$hand.length])
+		 false other wise
 =end
 	def good_set_syntax? user_input
-		# user input must have length 0
-		# return true if user_input.length == 0
 		return false if user_input.length != 3
-		# user input must only contain integers (between 0 and hand.length)
+		# user input must only contain integers (between 0 and hand.length-1)
 		return (user_input.all? {|i| (i.to_i.to_s == i && i.to_i <= @hand.length-1 && i.to_i >= 0 && user_input.count(i) < 2)})
 	end
 
 =begin
 	Author: Mike
-	Create Date: 5/23
+	Created: 5/23
 	Edit: 5/24 by Mike, Minor changes, add documentation
+	Description: Check whether the provided attribute and cards follows Set convention
 	Requires: card1.class=card2.class=card3.class=Card,
 				attr∈Set(:color,:shading,:symbol,:number)
+	Updates: N/A
 	Returns: True if the provided attribute and cards follow set convention and false otherwise
-	Description: Check whether the provided attribute and cards follows Set convention
 =end
 	def check_attr?(attr,card1,card2,card3)
 		if(card1[attr]==card2[attr])
@@ -927,12 +934,13 @@ end
 
 =begin
 	Author: Mike
-	Create Date: 5/23
+	Created: 5/23
 	Edit: 5/24 by Mike, Minor changes, add documentation
+	Description: Check in order provided in check_order, whether the provided cards form a set.
 	Requires: card1.class=card2.class=card3.class=Card, 0<=check_order.length<=4,
 				∀x∈check_order, x∈Set("color","shading","symbol","number")
+	Updates: N/A
 	Returns: True if the provided cards form a set, false otherwise
-	Description: Check in order, whether the provided cards form a set
 =end
 	def check_set?(card1, card2, card3, check_order)
 		for order in check_order
@@ -954,35 +962,35 @@ end
 
 =begin
 	Author: Ariel
-	Create Date: 5/22
-	Edit: 5/24 by Ariel, add test cases
-	Edit: 5/26 by Ariel, Minor changes, add documentation
-	Edit: 5/25 by Channing, added case for finding set with > 12 cards in hand
-	 TODO update test cases according to changes
-	Requires: hand,user_input,top_card,deck
-	Returns:  hand, top_card
+	Created: 5/22
+	Edit: Ariel 5/24 add test cases
+	Edit: Ariel 5/26 Minor changes, add documentation
+	Edit: Channing 5/25 added case for finding set with > 12 cards in hand
 	Description: after user give the valid input, update will
-	give feedback on users choice and change the hand, deck hand
-	top_card according to user's input
+				give feedback on users choice and change the hand, deck hand
+				top_card according to user's input
+	Requires: hand,user_input,top_card,deck
+	Updates: @is_end, @end_time, @number_of_correct, @number_of_wrong
+	Returns: N/A
 =end
 	def update(user_input)
 		system('clear'); system('cls')
-	  # when user_input==[] && hand.length<21 && top_card<81
+		#When user want to quit to main menu
 		if user_input==["quit"]
 			@is_end=true
 			@end_time=Time.now()
 			puts "=============Game Over============="+""
 			puts ""
 			show_stat
+		#Check the user input form a set and display the correcponding message
 		elsif check_set?(@hand[user_input[0]], @hand[user_input[1]],@hand[user_input[2]],["color","shading","symbol","number"])
-			puts "You entered " + user_input.to_s
+			puts "You entered " + user_input[0].to_s+","+user_input[1].to_s+","+user_input[2].to_s
 			puts
 			@number_of_correct += 1
 			puts "Congrats! You entered a correct set!"
 			replace3(user_input)
-		# when user_input!=[] && user_input is not a correct set
 		else
-			puts user_input.to_s
+			puts "You entered " + user_input[0].to_s+","+user_input[1].to_s+","+user_input[2].to_s
 			@number_of_wrong += 1
 			puts "Sorry. Wrong set.",""
 		end
@@ -990,10 +998,10 @@ end
 
 =begin
 	Author: Gail Chen
-	Date created: 5/22
-	Edit:
-		5/24 Gail Chen optimized the method by replacing the for loop with user_input.each {}
-		5/25 Gail Chen modified the method to pass failed tests
+	Created: 5/22
+	Edit: Gail 5/24 optimized the method by replacing the for loop with user_input.each {}
+	Edit: Gail 5/25 modified the method to pass failed tests
+	Edit: Ariel 5/26 Change formal parameter to instance variables
 	Description:
 		This method replaces 3 cards in hand chosen by user with top 3 cards in deck
 		if there are exactly 12 cards in hand and there are cards in deck that
@@ -1013,9 +1021,11 @@ end
 	def replace3(user_input)
 		delete_count = 0
 		user_input.each { |card|
+			#Replace 3 cards
 			if @hand.size == 12 && @top_card < @deck.size
 				@hand[card] = @deck[@top_card]
 				@top_card += 1
+			#Remove 3 cards
 			else
 				@hand.delete_at(card - delete_count)
 				delete_count += 1
@@ -1025,8 +1035,9 @@ end
 
 =begin
 	Author: Gail Chen
-	Date created: 5/22
-	Edit: 5/24 Gail Chen changed the for loop to 3.times
+	Created: 5/22
+	Edit: Gail 5/24 changed the for loop to 3.times
+	Edit: Ariel 5/26 Change formal parameter to instance variables
 	Description: This method adds next 3 top cards from deck to the end of hand.
 	Requires: @deck != nil, @hand.length <= @top_card < @deck.length
 	Updates: @hand.size += 3, @top_card += 3, push 3 top cards from @deck to @hand
@@ -1041,12 +1052,13 @@ end
 
 =begin
 	Author: Gail Chen
-	Date created: 5/27
-	Edit: 5/29 Ariel add score, change format of hint calculation
+	Created: 5/27
+	Edit: Ariel 5/26 Change formal parameter to instance variables
+	Edit: Ariel 5/29 add score, change format of hint calculation
 	Description:
 		This method prints statistics of this game including total time spend, score,
 		number of hints used, percentage of using hint to find a correct set.
-	Requires: N/A
+	Requires: @total_hint != 0
 	Updates: N/A
 	Returns: N/A
 =end
@@ -1060,17 +1072,19 @@ end
 
 =begin
 	Author: Mike
-	Create Date: 5/23
-	Edit: 5/24 by Mike, minor changes
-	Edit: 5/27 Mike, minor changes
+	Created: 5/23
+	Edit: Mike 5/24 minor changes
+	Edit: Mike 5/27 minor changes
+	Description: Check if there exist a set in the check_table
 	Requires: check_table.class = Array,
 				for combination in check_table, combination.class = Array, combination.length = 3,
 				∀x∈combination, x.class=Card
 			  score.class = Array
 				for element in score, element.class = Array, element.length = 2
 				for a,b in element[0] element[1], a∈Set("color","shading","symbol","number"), 0<=b<=220
+	Updates: N/A
 	Returns: True if there is at least a set in check_table combinations and false otherwise
-	Description: Check if there exist a set in the check_table
+
 =end
 	def set_exist(check_table,score)
 		sortedScore = score.sort{|a,b| a[1]<=>b[1]}
@@ -1084,8 +1098,8 @@ end
 
 =begin
 	Author: Ariel
-	Create Date: 5/26
-	Edit:
+	Created: 5/26
+	Edit: N/A
 	Requires: N/A
 	Returns:  N/A
 	Description: Give user tutorial about how to play set game
@@ -1130,8 +1144,8 @@ end
 				card12 = Card.new('red','solid','diamond','3')
 				show_hand [card1, card2, card3, card4, card5, card6, card7, card8, card9,card10, card11, card12]
 
-				puts "","If there's a set, enter their card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
-				"If 21 cards available in the table or no cards in deck, no card will be added to the table","", "Please press Enter to quit Tutorial",""
+				puts "","There must be at least one set among displayed cards. To indicate your set, please enter card numbers separated by ','","If set is correct, 3 cards will be replaced. If not, the cards will remain the same",
+				"", "Please press Enter to quit Tutorial",""
 				if gets=="\n"
 				end
 			end
@@ -1140,26 +1154,22 @@ end
 
 =begin
 	Author: Channing Jacobs
-	Date: 5/29
-	Hint difficulties may need to be changed. No "magic" numbers.
+	Created: 5/29
+	Edit: Mike 5/30 Format output
+	Description: Output a set to user if they have hint left and show the remaining number of hints
+					Output a message if the user is out of hint
+	Requires: @hand != nil
+	Updates: @number_of_hint
+	Returns: N/A
 =end
 	def get_hint
 		if @number_of_hint != @total_hint
 			@number_of_hint += 1
 			hint = find_set
-			case @total_hint
-			when 5,
-				@hand.each_index {|i| hint.each {|card| print " #{i} " if card == @hand[i]}}
-				puts"\nYou have #{@total_hint - @number_of_hint} hints left."
-			when 10
-				@hand.each_index {|i| hint.each {|card| print " #{i} " if card == @hand[i]}}
-				puts"\nYou have #{@total_hint - @number_of_hint} hints left."
-			when 27
-				@hand.each_index {|i| hint.each {|card| print " #{i} " if card == @hand[i]}}
-				puts"\nYou have #{@total_hint - @number_of_hint} hints left."
-			else
-				puts "Error. Number of total_hints is invalid."
-			end
+#			@hand.each_index {|i| hint.each {|card| print "#{i}," if card == @hand[i]}}
+			hint = hint.map {|card| @hand.find_index(card)}.sort
+			puts "Hint: " + hint[0].to_s+","+hint[1].to_s+","+hint[2].to_s
+			puts"\nYou have #{@total_hint - @number_of_hint} hints left."
 		else
 			puts "You are out of hints. #{@number_of_hint} have been used."
 		end
@@ -1167,24 +1177,34 @@ end
 
 =begin
 	Author: Ariel
-	Create Date: 5/29
-	Edit: Mike 5/29
+	Created: 5/29
+	Edit: Gail 5/30 added if-else statement to return score
+	Description: Give user score calculated by the following function:
+		((360000/((@end_time - @start_time) + @save_time))*((@number_of_correct-@number_of_hint)/(@number_of_correct+1)))
+		If the calculated score is negative, then return 0;
+		otherwise, return the calculated score (accurate to 2 decimal places).
 	Requires: N/A
-	Returns:  N/A
-	Description: Give user score
+	Updates: N/A
+	Returns: score
 =end
 	def get_score
-		return ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
+		score = ((360000/((@end_time - @start_time).to_f + @save_time.to_f))*((@number_of_correct-@number_of_hint).fdiv(@number_of_correct+1))).truncate(2)
+		if score < 0
+			return 0
+		else
+			return score
+		end
 	end
 end
 
 =begin
 	Author: Ariel
-	Create Date: 5/29
-	Edit:
+	Created: 5/29
+	Edit: N/A
+	Description: Show the statistics for current user
 	Requires: N/A
+	Updates: @username
 	Returns:  N/A
-	Description: Give user score
 =end
 def show_result
 	get_username
@@ -1195,15 +1215,22 @@ def show_result
 			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
 			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 		end
+		vars=[]
+		7.times do |var|
+			vars.unshift(0)
+		end
+		CSV.foreach(file_name,:headers => false) do |row|
+			vars[0]+=1
+			(1..6).each do |pos|
+				vars[pos]+=row[pos].to_i
+		end
+		end
+		vars[0]-=1
+		puts "Average".center(18)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
+		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 	else
 		puts "No game history available for now"
 	end
-	# puts "Please Enter your email address if you want your game result in CSV file, press other keys to return menu"
-	# VALID_EMAIL_REGEX = /\A[\w+\-.]+@[a-z\d\-]+(\.[a-z]+)*\.[a-z]+\z/i
-	# input=gets.chomp
-	# if input=~ VALID_EMAIL_REGEX
-	# 	send_email
-	# end
 end
 
 # def send_email
