@@ -388,8 +388,6 @@ def get_user_cards
 end
 
 =begin
-<<<<<<< HEAD
-=======
     Author: Channing Jacobs
     Created: 5/29
 	Edit: Mike, Gail 5/30 Format output
@@ -408,60 +406,6 @@ end
 			puts
 			puts
     end
-
-
-=begin
-	Author: Channing Jacobs
-	Created: 5/29
-	Edit: N/A
-	Description: Sets up puzzle mode game. Game generated only one solution.
-				Game can't be saved, scored or use hint.
-	Requires: N/A
-	Updates: @start_time, @end_time, @save_time, @top_card, @number_of_hint, @number_of_correct, @number_of_wrong, @deck, @hand, @username, @total_hint, @is_end
-	Returns: N/A
-=end
-
-	def puzzle_game
-		loop do
-			#Set up deck and hand
-			clear
-			get_deck
-			shuffle
-			get_hand
-
-			#Set up a single solution game
-			solution = find_set
-			next if (solution == [])
-			solution.each {|card_in_set| removed_card = @hand.delete(card_in_set); break if (find_set != []); @hand << removed_card}
-			next if @hand.length < 12
-			@hand.shuffle!
-
-			#Display message and ask user for input
-			loop do
-				show_hand
-				print "\nEnter your set or type 'quit': "
-				case user_input = gets.chomp.downcase.split(",")
-				when ["quit"]
-					return
-				else
-					if good_set_syntax? user_input
-						# return user defined set in ascending card order
-						if (user_input.map {|card| card.to_i}.sort == solution.map {|card| @hand.find_index(card)}.sort)
-							puts "Great job! You found the only set.\nHit enter to go back to main menu."
-							gets
-							return
-						end
-						puts "Incorrect set. There is only one soltuion. Try again.",""
-					else
-						puts "Invalid command or set syntax."
-					end
-				end
-			end
-			puts "Error in execution."
-			break
-		end
-	end
-
 
 =begin
 	Author: Channing Jacobs
