@@ -21,6 +21,8 @@ To start the game, enter the following code in the terminal
 ```
 ruby main.rb
 ```
+To get the best user experience, please expand the terminal to at least 125*40
+
 ***
 
 ### User Manual
@@ -53,7 +55,7 @@ ruby main.rb
   1. Enter username
   2. Choose from a list of saved games
   3. Continue the saved game
-  4. Receive game [score](#score-formula) and results
+  4. Receive game [score](#score) and results
   5. Return to menu
 
 * Delete Saved Game - clean up saved game folder
@@ -94,14 +96,25 @@ ruby main.rb
 ### Game Setting
 
 #####  Difficulty Level
-  * Easy - 27 hints can be used
-  * Medium - 10 hints can be used
-  * Hard - 5 hints can be used
+  * Easy - at most 27 hints can be used
+  * Medium - at most 10 hints can be used
+  * Hard - at most 5 hints can be used
 
-##### Score Formula
-  ```math
-  Score=(Constant/(Time Spent)*(Correct sets - Hint used)/Correct sets)
-  ```
+##### Score
+  * The score is a non-negative number.
+  * To get a higher score:
+    * Use less hints
+    * Spend less time
+    * Give more correct sets
+  * Score calculation is shown as follow:
+
+```math
+Score=(Constant/(Time Spent+1)*(Correct sets - Hint used)/(Correct sets+1))
+```
+
+##### Naming
+  * File name and user name can't be empty
+  * File name and user name shouldn't start with '.'
 
 
 ***
