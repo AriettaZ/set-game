@@ -169,7 +169,7 @@ attr_accessor :is_end
 =begin
 	Author: Mike
 	Created: 5/28
-	Edit: N/A
+	Edit: Ariel 5/30 add name filter
 	Description: Ask user to enter their username.
 	Require: N/A
 	Updates: @username
@@ -177,7 +177,12 @@ attr_accessor :is_end
 =end
 	def get_username mode="new"
 		puts "Please enter your username:"
-		@username = gets.chomp
+		input = gets.chomp
+		until !input.empty? && input[0,1]!='.'
+			puts "","The username can't be empty or starts with '.'. ","Please enter another username:"
+			input = gets.chomp
+		end
+		@username = input
 	end
 
 =begin
@@ -309,6 +314,7 @@ attr_accessor :is_end
 	Author: Mike
 	Created: 5/26
 	Edit: Mike 5/27 Add @username choice
+	EditL Ariel 5/30 add filter to file name
 	Description: Get file name for the game to save
 	Require: N/A
 	Updates: N/A
@@ -319,7 +325,12 @@ attr_accessor :is_end
 		puts "Please enter file name:"
 		path="stored_game/"+@username+"/"
 		Dir.mkdir path unless Dir.exist? path
-		file_name = path+gets.chomp+".setgame"
+		input = gets.chomp
+		until !input.empty? && input[0,1]!='.'
+			puts "","The file name can't be empty or starts with '.'. ","Please enter another file name:"
+			input = gets.chomp
+		end
+		file_name = path+input+".setgame"
 
 		#If the file name exist, ask the user for another file name
 		while File.exist?(file_name) || file_name.downcase.include?("menu")
@@ -991,6 +1002,7 @@ end
 			replace3(user_input)
 		else
 			puts "You entered " + user_input[0].to_s+","+user_input[1].to_s+","+user_input[2].to_s
+			puts
 			@number_of_wrong += 1
 			puts "Sorry. Wrong set.",""
 		end
@@ -1212,7 +1224,7 @@ def show_result
 	puts ""
 	if File.file?(file_name)
 		CSV.foreach(file_name) do |row|
-			puts "#{row[0]}".center(18)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
+			puts "#{row[0][0..19]}".center(20)+"|"+"#{row[1]}".center(20)+"|"+"#{row[2]}".center(15)+"|"+"#{row[3]}".center(15)+"|"+"#{row[4]}".center(15)+"|"+"#{row[5]}".center(15)+"|"+"#{row[6]}".center(15)
 			puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
 		end
 		vars=[]
@@ -1226,12 +1238,14 @@ def show_result
 		end
 		end
 		vars[0]-=1
-		puts "Average".center(18)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
+		puts "Average".center(20)+"|"+"#{vars[1]/vars[0]}".center(20)+"|"+"#{vars[2]/vars[0]}".center(15)+"|"+"#{vars[3]/vars[0]}".center(15)+"|"+"#{vars[4]/vars[0]}".center(15)+"|"+"#{vars[5]/vars[0]}".center(15)+"|"+"#{vars[6]/vars[0]}".center(15)
 		puts "- - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - - -"
+		puts "","If the table is not shown peoperly, please expand the terminal to 125*40 to get the best user experience"
 	else
-		puts "No game history available for now"
+		puts "Sorry. No game history available for #{@username}. The game history is auto-saved at the end of each game."
 	end
 end
+
 
 # def send_email
 
