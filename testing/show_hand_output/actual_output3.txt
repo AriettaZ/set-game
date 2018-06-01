@@ -6,4 +6,3 @@
   3: red     open      oval        2
   4: green   open      oval        2
   5: purple  open      oval        2
-[0, 1, 3]

@@ -267,7 +267,7 @@ class Testupdate < Test::Unit::TestCase
 		assert_equal false, game.is_end
 	end
 
-	# Remove Case 1: hand.size = 3, top_card = 24, remove all 3 cards
+	# Remove Case 1: hand.size = 3, top_card = 24, remove 3 consecutive cards
 	def test_remove_size3
 		game = SetGame.new
 		actual_output = File.new 'update_output/actual_remove_output1.txt', 'w'
@@ -281,6 +281,90 @@ class Testupdate < Test::Unit::TestCase
 		assert_equal 24, game.top_card
 		actual_output.close
 		assert_true FileUtils.compare_file('update_output/expected_remove_output1.txt', 'update_output/actual_remove_output1.txt')
+		assert_equal false, game.is_end
+	end
+
+	# Remove Case 2: hand.size = 3, top_card = 12,  remove 3 cards
+	def test_remove_size3_1
+		game = SetGame.new
+		actual_output = File.new 'update_output/actual_remove_output2.txt', 'w'
+		$stdout = actual_output
+		game.deck = DECK
+		game.hand = [CARD1, CARD2, CARD3,CARD4, CARD5, CARD6,CARD7, CARD8, CARD9,CARD10, CARD11, CARD12]
+		user_input = [0, 3, 6]
+		game.top_card = 12
+		game.update user_input
+		assert_equal 12, game.hand.size
+		assert_equal 15, game.top_card
+		actual_output.close
+		assert_true FileUtils.compare_file('update_output/expected_remove_output2.txt', 'update_output/actual_remove_output2.txt')
+		assert_equal CARD13, game.hand[0]
+		assert_equal CARD2, game.hand[1]
+		assert_equal CARD3, game.hand[2]
+		assert_equal CARD14, game.hand[3]
+		assert_equal CARD5, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD15, game.hand[6]
+		assert_equal CARD8, game.hand[7]
+		assert_equal CARD9, game.hand[8]
+		assert_equal CARD10, game.hand[9]
+		assert_equal CARD11, game.hand[10]
+		assert_equal CARD12, game.hand[11]
+		assert_equal false, game.is_end
+	end
+
+	# Same Case 1: hand.size = 12, top_card = 12, remain hand and top_of_card the same
+	def test_remain_same_1
+		game = SetGame.new
+		actual_output = File.new 'update_output/actual_remain_same1.txt', 'w'
+		$stdout = actual_output
+		game.deck = DECK
+		game.hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9, CARD10, CARD11, CARD12]
+		user_input = [9,7,8]
+		game.top_card = 12
+		game.update user_input
+		assert_equal 12, game.hand.size
+		assert_equal 12, game.top_card
+		actual_output.close
+		assert_true FileUtils.compare_file('update_output/expected_remain_same1.txt', 'update_output/actual_remain_same1.txt')
+		assert_equal CARD1, game.hand[0]
+		assert_equal CARD2, game.hand[1]
+		assert_equal CARD3, game.hand[2]
+		assert_equal CARD4, game.hand[3]
+		assert_equal CARD5, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD7, game.hand[6]
+		assert_equal CARD8, game.hand[7]
+		assert_equal CARD9, game.hand[8]
+		assert_equal CARD10, game.hand[9]
+		assert_equal CARD11, game.hand[10]
+		assert_equal CARD12, game.hand[11]
+		assert_equal false, game.is_end
+	end
+
+	# Same case 2: hand.size = 3, top_card = 21, remain hand and top_of_card the same
+	def test_remain_same_2
+		game = SetGame.new
+		actual_output = File.new 'update_output/actual_remain_same2.txt', 'w'
+		$stdout = actual_output
+		game.deck = DECK
+		game.hand = [CARD1, CARD2, CARD3, CARD4, CARD5, CARD6, CARD7, CARD8, CARD9]
+		user_input = [8,7,0]
+		game.top_card = 24
+		game.update user_input
+		assert_equal 9, game.hand.size
+		assert_equal 24, game.top_card
+		actual_output.close
+		assert_true FileUtils.compare_file('update_output/expected_remain_same2.txt', 'update_output/actual_remain_same2.txt')
+		assert_equal CARD1, game.hand[0]
+		assert_equal CARD2, game.hand[1]
+		assert_equal CARD3, game.hand[2]
+		assert_equal CARD4, game.hand[3]
+		assert_equal CARD5, game.hand[4]
+		assert_equal CARD6, game.hand[5]
+		assert_equal CARD7, game.hand[6]
+		assert_equal CARD8, game.hand[7]
+		assert_equal CARD9, game.hand[8]
 		assert_equal false, game.is_end
 	end
 end

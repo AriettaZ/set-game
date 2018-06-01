@@ -226,8 +226,9 @@ Ariel:
   * Gail: update menu, valid_choice
   * Ariel: start get_score, update get_tutorial, start get_result
   * Chinning: start puzzle mode, progress_bar, redo get_user_card and help command list, update main
-* May 30th
+* May 29th
   * Mike: overall documentation and function improvement, unit testing
   * Gail: overall documentation and function improvement, unit testing
   * Ariel: Readme, finish show_result, handle_no_set and update update function
   * Chinning: puzzle mode, unit testing, integration testing
+* May 31st 
