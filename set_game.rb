@@ -322,9 +322,9 @@ attr_accessor :is_end
 		}
 
 		#Gives hint for easy development/testing
-		hint = []
-		find_set.each do |card| hint.push(@hand.index(card)) end
-		puts hint.to_s
+		# hint = []
+		# find_set.each do |card| hint.push(@hand.index(card)) end
+		# puts hint.to_s
 	end
 
 =begin
@@ -401,7 +401,7 @@ end
       finish_size = (((@top_card-12).to_f / (@deck.length-11).to_f) * 30).to_i
 			remain_size = 30 - finish_size
 			print "\nProgress: "
-			finish_size.times {print '▓' }
+			finish_size.times {print '▓'}
 			remain_size.times {print '░'}
 			puts
 			puts
@@ -487,7 +487,7 @@ end
   	def show_stat
   		puts "=============Statistics============"
   		puts "Score: #{get_score}"
-  		puts "Total time:" + "%0.2f" %(@end_time - @start_time + @save_time) + " seconds"
+  		puts "Total time: " + "%0.2f" %(@end_time - @start_time + @save_time) + " seconds"
   		puts "Number of sets found: #{@number_of_correct}"
   		puts  "#{@number_of_hint}/#{@total_hint} hints used"
   	end

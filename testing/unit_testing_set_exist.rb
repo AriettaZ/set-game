@@ -23,7 +23,7 @@ class TestSetExist < Test::Unit::TestCase
 		card4 = Card.new("red","open","diamond","1")
 		card5 = Card.new("red","solid","oval","2")
 		card6 = Card.new("green","open","oval","1")
-		
+
 		check_table = [[card1,card3,card4],[card1,card3,card5],[card1,card4,card5],[card3,card4,card5]]
 		catg_score = [["color",4],["shading",7],["symbol",8],["number",7]]
 
@@ -63,9 +63,9 @@ class TestSetExist < Test::Unit::TestCase
 
 		assert_equal([card1,card3,card5],SetGame.new.set_exist(check_table,catg_score))
 	end
-	
+
 	def test_set_exist_4
-	
+
 		card1 = Card.new("red","solid","squiggle","3")
 		card2 = Card.new("green","striped","squiggle","2")
 		card3 = Card.new("red","solid","diamond","1")
@@ -75,9 +75,9 @@ class TestSetExist < Test::Unit::TestCase
 		check_table = []
 		assert_equal([],SetGame.new.set_exist(check_table,catg_score))
 	end
-	
-	def test_set_exist_4
-		
+
+	def test_set_exist_5
+
 		card1 = Card.new("red","solid","squiggle","3")
 		card2 = Card.new("green","striped","oval","2")
 		card3 = Card.new("red","solid","diamond","1")
@@ -88,9 +88,9 @@ class TestSetExist < Test::Unit::TestCase
 
 		assert_equal([],SetGame.new.set_exist(check_table,catg_score))
 	end
-	
-	def test_set_exist_5
-		
+
+	def test_set_exist_6
+
 		card1 = Card.new("red","solid","squiggle","3")
 		card2 = Card.new("green","striped","oval","1")
 		card3 = Card.new("red","solid","diamond","1")
