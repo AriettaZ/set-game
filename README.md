@@ -117,7 +117,13 @@ Score=(Constant/(Time Spent+1)*(Correct sets - Hint used)/(Correct sets+1))
   * File name and user name shouldn't start with '.'
 
 ##### Invalid Input
-  * If invalid inputs detected by the game, the player will be prompted to re-enter 
+  * If invalid inputs detected by the game, the player will be prompted to re-enter
+
+##### User File Navigation
+  * Saved games are saved in stored_game folder under username subfolder
+  * Saved game files are named by the users
+  * Saved game result history csv files are saved in game_result folder
+  * Saved game result history csv files are named by username
 
 ***
 
@@ -182,7 +188,8 @@ Ariel:
 * card class
 
 #### Testing
-###### Unit Testing is implemented on single methods:
+##### Test plans can be found under testing folder
+##### Unit Testing is implemented on single methods:
 
 Mike:
 * catg_set
@@ -205,7 +212,7 @@ Gail:
 Ariel:
 * get_score
 
-###### Integration testing was implemented on methods include multiple methods: update and find_set
+##### Integration testing was implemented on methods include multiple methods: update and find_set
 Mike and Channing:
 * find_set
 
@@ -241,3 +248,4 @@ Gail and Ariel:
   * Chinning: puzzle mode, unit testing, integration testing
 * May 31st
   * The team finalized testing and data structure
+  * The team had fun playing our game
