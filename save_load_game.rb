@@ -44,7 +44,7 @@ module SaveLoadGame
   		path="stored_game/"+@username+"/"
   		Dir.mkdir path unless Dir.exist? path
   		input = gets.chomp
-  		until !input.empty? && input[0,1]!='.' && input != menu
+  		until !input.empty? && input[0,1]!='.' && input != 'menu'
   			puts "","The file name can't be empty, menu, or start with '.'. ","Please enter another file name:"
   			input = gets.chomp
   		end

@@ -116,6 +116,8 @@ Score=(Constant/(Time Spent+1)*(Correct sets - Hint used)/(Correct sets+1))
   * File name and user name can't be empty
   * File name and user name shouldn't start with '.'
 
+##### Invalid Input
+  * If invalid inputs detected by the game, the player will be prompted to re-enter 
 
 ***
 
@@ -180,12 +182,11 @@ Ariel:
 * card class
 
 #### Testing
-Unit Testing:
+###### Unit Testing is implemented on single methods:
 
 Mike:
 * catg_set
 * check_set
-* find_set
 * get_check_table
 * set_exist
 
@@ -195,7 +196,6 @@ Channing:
 * good_set_syntax
 
 Gail:
-* update
 * replace3
 * add3
 * get_hand
@@ -204,6 +204,14 @@ Gail:
 
 Ariel:
 * get_score
+
+###### Integration testing was implemented on methods include multiple methods: update and find_set
+Mike and Channing:
+* find_set
+
+Gail and Ariel:
+* update
+
 
 #### Meetings
 
@@ -231,4 +239,5 @@ Ariel:
   * Gail: overall documentation and function improvement, unit testing
   * Ariel: Readme, finish show_result, handle_no_set and update update function
   * Chinning: puzzle mode, unit testing, integration testing
-* May 31st 
+* May 31st
+  * The team finalized testing and data structure
