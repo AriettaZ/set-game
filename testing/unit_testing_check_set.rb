@@ -34,7 +34,7 @@ class TestCheckSet < Test::Unit::TestCase
 			11. 2-2-2-3 True
 =end
 	$test_set=[]
-	for color,shading,symbol in ["red","purple"].product(["striped","solid"],$Symbols)
+	for color,shading,symbol in ["red","purple"].product(["striped","solid"],Card.Symbols)
 		$test_set.push Card.new(color, shading, symbol, "1")
 	end
 
@@ -151,7 +151,7 @@ class TestCheckSet < Test::Unit::TestCase
 	end
 
 	#Check 2-2-2-3 case
-	def test_check_set_10
+	def test_check_set_11
 		order = ["number"]
 		card1 = Card.new("red","striped","diamon","2")
 		card2 = Card.new("red","solid","diamond","2")

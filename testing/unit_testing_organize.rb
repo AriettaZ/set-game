@@ -6,7 +6,7 @@ require_relative "../card.rb"
 require_relative "../set_game.rb"
 
 class OrganizeTest < Test::Unit::TestCase
-	
+
 CARD1 = Card.new("red", "striped", "diamond", "1")
 CARD2 = Card.new("red", "striped", "diamond", "2")
 CARD3 = Card.new("red", "striped", "diamond", "3")
@@ -16,40 +16,31 @@ CARD6 = Card.new("red", "striped", "solid", "3")
 
 	def test_empty_hand
 		game = SetGame.new
-		hand = []
+		game.hand = []
 		hash = Hash.new {|k,v| k[v] = []}
-		attrs = $Colors + $Shadings + $Symbols + $Numbers
+		attrs = Card.Colors + Card.Shadings + Card.Symbols + Card.Numbers
 		attrs.each {|attr| hash[attr.intern]}
-		assert_equal(game.organize(hand), hash)
+		assert_equal(game.organize, hash)
 	end
 
 	def test_one_card_hand
 		game = SetGame.new
-		hand = [CARD1]
+		game.hand = [CARD1]
 		hash = Hash.new {|k,v| k[v] = []}
-		attrs = $Colors + $Shadings + $Symbols + $Numbers
+		attrs = Card.Colors + Card.Shadings + Card.Symbols + Card.Numbers
 		attrs.each {|attr| hash[attr.intern]}
-		[:color,:shading, :symbol, :number].each {|val| hash[CARD1[val].intern].push(CARD1)}		
-		#hash[:red].push(CARD1)
-		#hash[:striped].push(CARD1)
-		#hash[:diamond].push(CARD1)
-		#hash[:"1"].push(CARD1)
-		assert_equal(game.organize(hand), hash)
+		[:color,:shading, :symbol, :number].each {|val| hash[CARD1[val].intern].push(CARD1)}
+		assert_equal(game.organize, hash)
 	end
-
 
 	def test_two_card_hand
 		game = SetGame.new
-		hand = [CARD1, CARD2]
+		game.hand = [CARD1, CARD2]
 		hash = Hash.new {|k,v| k[v] = []}
-		attrs = $Colors + $Shadings + $Symbols + $Numbers
+		attrs = Card.Colors + Card.Shadings + Card.Symbols + Card.Numbers
 		attrs.each {|attr| hash[attr.intern]}
 		[:color,:shading, :symbol, :number].each {|val| hash[CARD1[val].intern].push(CARD1)}
-	[:color,:shading, :symbol, :number].each {|val| hash[CARD2[val].intern].push(CARD2)}		
-		#hash[:red].push(CARD1)
-		#hash[:striped].push(CARD1)
-		#hash[:diamond].push(CARD1)
-		#hash[:"1"].push(CARD1)
-		assert_equal(game.organize(hand), hash)
+	[:color,:shading, :symbol, :number].each {|val| hash[CARD2[val].intern].push(CARD2)}
+		assert_equal(game.organize, hash)
 	end
 end
